@@ -1,0 +1,32 @@
+{
+  "name": "emergency",
+  "version": "0.1.0",
+  "homepage": "https://theredstar.cn/",
+  "bugs": {
+    "url": "https://github.com/redstaroverworld/emergency/issues",
+    "email": "theredstar@aliyun.com"
+  },
+  "license": "MIT",
+  "main": "",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "ant-design-vue": "^2.2.5",
+    "mockjs": "^1.1.0",
+    "vue": "^3.2.2",
+    "vue-router": "^4.0.11",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.4.0",
+    "@vitejs/plugin-vue-jsx": "^1.1.7",
+    "autoprefixer": "^10.3.1",
+    "less": "^4.1.1",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.7",
+    "vite": "^2.4.4",
+    "vite-plugin-components": "^0.13.2"
+  },
+  "private": true
+}
