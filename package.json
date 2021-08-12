@@ -9,7 +9,8 @@
   "license": "MIT",
   "main": "",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "ant-design-vue": "^2.2.5",
