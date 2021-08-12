@@ -1,0 +1,9 @@
+:root {
+  @size: range(0, 100, 2);
+
+  each(@size, {
+    @computed: (@value/16rem);
+
+    --size-@{value}: @computed;
+  });
+}
