@@ -21,13 +21,17 @@ module.exports = {
   theme: {
     extend: {
       // 颜色
-      colors: {
-        "navy-1": "#0E518F",
-        "navy-2": "#0B4070",
-        "navy-3": "#06315D",
-        "navy-4": "#042546",
-        "navy-5": "#051D33",
-      },
+      colors: createCustomPropertyStepper("--color-navy", 5, 1, "navy"),
+    },
+    // 字体
+    fontSize: {
+      12: [`var(--size-12)`, `var(--size-20)`],
+      14: [`var(--size-14)`, `var(--size-22)`],
+      16: [`var(--size-16)`, `var(--size-24)`],
+      18: [`var(--size-18)`, `var(--size-26)`],
+      20: [`var(--size-20)`, `var(--size-24)`],
+      22: [`var(--size-22)`, `var(--size-30)`],
+      24: [`var(--size-24)`, `var(--size-28)`],
     },
     // 尺寸
     spacing: createCustomPropertyStepper("--size", 100, 2),
