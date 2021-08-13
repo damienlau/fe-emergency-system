@@ -1,7 +1,11 @@
 :root {
   // 颜色
   each(@navy-colors, {
-    --color-navy-@{key}:@value;
+    --color-navy-@{key}: @value;
+  });
+
+  each(@theme-colors, {
+    --color-@{key}: @value;
   });
 
   // 尺寸

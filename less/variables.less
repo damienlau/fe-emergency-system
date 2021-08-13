@@ -1,4 +1,6 @@
 // 颜色
+//
+// less-docs-start navy-color-variables
 @navy-colors: {
   1: #0e518f;
   2: #0b4070;
@@ -6,6 +8,29 @@
   4: #042546;
   5: #051d33;
 };
+// less-docs-end navy-color-variables
+// less-docs-start color-variables
+@blue: #1890ff;
+@green: #00c44a;
+@light: #fff;
+@pink: #ff6061;
+@yellow: #f08e3a;
+// less-docs-end color-variables
+// less-docs-start theme-color-variables
+@danger: @pink;
+@primary: @blue;
+@success: @green;
+@warning: @yellow;
+@white: @light;
+
+@theme-colors: {
+  danger: @danger;
+  primary: @primary;
+  success: @success;
+  warning: @warning;
+  white: @white;
+};
+// less-docs-end theme-color-variables
 
 // 尺寸
 @size: range(0, 100, 2);

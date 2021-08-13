@@ -21,7 +21,14 @@ module.exports = {
   theme: {
     extend: {
       // 颜色
-      colors: createCustomPropertyStepper("--color-navy", 5, 1, "navy"),
+      colors: {
+        ...createCustomPropertyStepper("--color-navy", 5, 1, "navy"),
+        danger: `var(--color-danger)`,
+        primary: `var(--color-primary)`,
+        success: `var(--color-success)`,
+        warning: `var(--color-warning)`,
+        white: `var(--color-white)`,
+      },
     },
     // 字体
     fontSize: {
