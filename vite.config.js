@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
+      assets: path.resolve(__dirname, "assets"),
       config: path.resolve(__dirname, "config"),
       website: path.resolve(__dirname, "website"),
     },
