@@ -20,6 +20,14 @@ module.exports = {
   important: true,
   theme: {
     extend: {
+      // 背景图片
+      backgroundImage: () => ({
+        "modal-ultralight": "url('assets/bg_modal_dark_ultralight.png')",
+        "modal-lighter": "url('assets/bg_modal_dark_lighter.png')",
+        "modal-light": "url('assets/bg_modal_dark_light.png')",
+        "modal-heavy": "url('assets/bg_modal_dark_heavy.png')",
+        "modal-bold": "url('assets/bg_modal_dark_bold.png')",
+      }),
       // 颜色
       colors: {
         ...createCustomPropertyStepper("--color-navy", 5, 1, "navy"),
@@ -29,19 +37,35 @@ module.exports = {
         warning: `var(--color-warning)`,
         white: `var(--color-white)`,
       },
+      // 高度
+      height: {
+        "modal-ultralight": "264px",
+        "modal-lighter": "320px",
+        "modal-light": "432px",
+        "modal-heavy": "560px",
+        "modal-bold": "748px",
+      },
+      // 宽度
+      width: {
+        "modal-ultralight": "620px",
+        "modal-lighter": "620px",
+        "modal-light": "620px",
+        "modal-heavy": "920px",
+        "modal-bold": "1416px",
+      },
+      // 字体
+      fontSize: {
+        12: [`var(--size-12)`, `var(--size-20)`],
+        14: [`var(--size-14)`, `var(--size-22)`],
+        16: [`var(--size-16)`, `var(--size-24)`],
+        18: [`var(--size-18)`, `var(--size-26)`],
+        20: [`var(--size-20)`, `var(--size-24)`],
+        22: [`var(--size-22)`, `var(--size-30)`],
+        24: [`var(--size-24)`, `var(--size-28)`],
+      },
+      // 尺寸
+      spacing: createCustomPropertyStepper("--size", 100, 2),
     },
-    // 字体
-    fontSize: {
-      12: [`var(--size-12)`, `var(--size-20)`],
-      14: [`var(--size-14)`, `var(--size-22)`],
-      16: [`var(--size-16)`, `var(--size-24)`],
-      18: [`var(--size-18)`, `var(--size-26)`],
-      20: [`var(--size-20)`, `var(--size-24)`],
-      22: [`var(--size-22)`, `var(--size-30)`],
-      24: [`var(--size-24)`, `var(--size-28)`],
-    },
-    // 尺寸
-    spacing: createCustomPropertyStepper("--size", 100, 2),
   },
   variants: {
     extend: {},
