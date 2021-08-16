@@ -1,3 +1,5 @@
+// 组件-图标
+
 import { defineComponent } from "vue";
 import { createFromIconfontCN } from "@ant-design/icons-vue";
 import defaultConfig from "config/config";

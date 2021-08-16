@@ -11,7 +11,7 @@ const routes = [
       {
         path: "warehouse",
         name: "Warehouse",
-        redirect: { name: "Scanner" },
+        redirect: { name: "Shortcut" },
         component: RouterView,
         children: [
           {
