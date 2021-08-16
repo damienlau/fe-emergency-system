@@ -6,14 +6,17 @@ import { Icon } from "website/components";
 export default defineComponent({
   name: "Modal",
   props: {
+    // 模态框可见状态
     visible: {
       type: Boolean,
       required: true,
     },
+    // 模态框标题
     title: {
       type: String,
       required: false,
     },
+    // 模态框尺寸
     size: {
       type: String,
       required: false,
@@ -40,16 +43,18 @@ export default defineComponent({
         centered
         closable={false}
         footer={null}
+        forceRender={true}
+        destroyOnClose={true}
         onCancel={handleCloseModal}
       >
         <div class={`h-modal-${props.size} w-modal-${props.size}`} class="p-32">
           {/* 模态框头部 */}
-          <div className="pb-24 flex flex-row items-center justify-center">
-            <h3 className="flex-auto text-20 text-center font-medium">
+          <div class="relative pb-24">
+            <h3 class="flex-auto text-20 text-center font-medium">
               {props.title}
             </h3>
             <button
-              className="bg-navy-1 hover:bg-navy-2 w-24 h-24 flex items-center justify-center rounded"
+              class="absolute bg-navy-1 hover:bg-navy-2 w-24 h-24 flex items-center justify-center rounded top-0 right-0"
               onClick={handleCloseModal}
             >
               <Icon type="close" />
