@@ -35,7 +35,6 @@ module.exports = {
         primary: `var(--color-primary)`,
         success: `var(--color-success)`,
         warning: `var(--color-warning)`,
-        white: `var(--color-white)`,
       },
       // 高度
       height: {
