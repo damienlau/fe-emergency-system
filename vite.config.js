@@ -20,5 +20,14 @@ export default defineConfig({
       website: path.resolve(__dirname, "website"),
     },
   },
-  server: { open: { broswer: "google chrome" } },
+  server: {
+    open: { broswer: "google chrome" },
+    proxy: {
+      "/dev-api": {
+        target: "http://192.168.1.7:8090/warehouse",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dev-api/, ""),
+      },
+    },
+  },
 });
