@@ -1,5 +1,4 @@
 .rs-tabs {
-  &,
   &-badge {
     @apply text-white text-opacity-50 hover:text-opacity-80;
   }
@@ -20,7 +19,11 @@
 
     .ant-tabs {
       &-content {
-        @apply flex-1;
+        @apply flex-1 p-16 overflow-hidden;
+
+        & > * {
+          @apply overflow-y-auto;
+        }
       }
     }
   }

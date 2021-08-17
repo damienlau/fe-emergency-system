@@ -21,6 +21,9 @@ export default defineComponent({
       <a-tabs
         class="rs-tabs dark:bg-navy-4 pt-18 rounded"
         class={block.value && "rs-tabs-full"}
+        v-slots={{
+          tabBarExtraContent: () => slots.extra && slots.extra(),
+        }}
       >
         {columns.value.map((tabPane) => {
           return (
