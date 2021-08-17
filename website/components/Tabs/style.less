@@ -1,0 +1,27 @@
+.rs-tabs {
+  &,
+  &-badge {
+    @apply text-white text-opacity-50 hover:text-opacity-80;
+  }
+
+  .ant-tabs {
+    &-bar {
+      @apply px-16;
+    }
+    &-tab-active {
+      .rs-tabs-badge {
+        @apply text-opacity-100 !important;
+      }
+    }
+  }
+
+  &-full {
+    @apply h-full flex flex-col !important;
+
+    .ant-tabs {
+      &-content {
+        @apply flex-1;
+      }
+    }
+  }
+}

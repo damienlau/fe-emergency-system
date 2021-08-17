@@ -1,4 +1,5 @@
 import { defineComponent } from "vue";
+import "./style.less";
 
 export default defineComponent({
   setup() {
@@ -6,7 +7,9 @@ export default defineComponent({
       <>
         <header class="h-72 dark:bg-navy-3 px-32"></header>
         <main class="flex-auto p-16">
-          <router-view />
+          <a-spin spinning={false} wrapperClassName="rs-spin">
+            <router-view />
+          </a-spin>
         </main>
       </>
     );

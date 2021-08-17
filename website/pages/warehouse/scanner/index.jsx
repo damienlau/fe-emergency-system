@@ -9,16 +9,19 @@ export default defineComponent({
     const menus = ref([
       {
         label: "出仓扫描",
+        key: "export",
         icon: "export",
         badgeColor: "warning",
       },
       {
         label: "归仓扫描",
+        key: "import",
         icon: "import",
         badgeColor: "success",
       },
       {
         label: "紧急扫描",
+        key: "emergency",
         icon: "emergency",
         badgeColor: "danger",
       },
@@ -41,9 +44,16 @@ export default defineComponent({
     // 模态框是否可见
     const visible = ref(false);
 
+    // 选中扫描菜单卡片
+    const handleClickMenuItem = (activedItemKey) => {
+      visible.value = !visible.value;
+      formData.value["key"] = activedItemKey;
+    };
+
     // 监听模态框表提交事件
-    const handleFormSubmit = () => {
+    const handleSubmitForm = () => {
       console.log(formData.value);
+      visible.value = !visible.value;
     };
 
     return () => (
@@ -56,7 +66,7 @@ export default defineComponent({
                 // 扫描菜单-卡片
                 <div
                   class="flex flex-col items-center justify-center bg-navy-2 hover:bg-navy-1 hover:cursor-pointer rounded text-16 text-center font-medium"
-                  onClick={() => (visible.value = !visible.value)}
+                  onClick={() => handleClickMenuItem(menuItem.key)}
                 >
                   {/* 扫描菜单-卡片图标 */}
                   <img
@@ -80,11 +90,12 @@ export default defineComponent({
           v-model={[visible.value, "visible"]}
           size="ultralight"
           title="请填写信息"
-        >
+          >
+          {/* 扫描菜单-模态框表单 */}
           <Form
             v-model={[formData.value, "model"]}
             columns={formColumn.value}
-            onSubmit={handleFormSubmit}
+            onSubmit={handleSubmitForm}
           />
         </Modal>
       </>

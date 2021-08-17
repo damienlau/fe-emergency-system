@@ -4,7 +4,11 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ["eslint", "plugin:vue/vue3-strongly-recommended", "prettier"],
+  extends: [
+    "eslint:recommended",
+    "plugin:vue/vue3-strongly-recommended",
+    "prettier",
+  ],
   parserOptions: {
     ecmaVersion: 2021,
     ecmaFeatures: {
