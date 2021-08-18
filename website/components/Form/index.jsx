@@ -1,7 +1,6 @@
 // 组件-表单
 
 import { defineComponent, toRefs } from "vue";
-import { Icon } from "website/components";
 
 export default defineComponent({
   name: "Form",
@@ -33,6 +32,7 @@ export default defineComponent({
         hideRequiredMark={true}
         onFinish={handleSubmit}
       >
+        {/* 表单输入控件 */}
         {columns.value.map((formItem) => {
           return (
             <a-form-item
@@ -50,40 +50,53 @@ export default defineComponent({
               {{
                 label: () => <span class="text-16">{formItem.label}</span>,
                 default: () => {
-                  let element_;
+                  let customElement_;
+
                   switch (formItem.type) {
                     case "select":
-                      element_ = (
+                      customElement_ = (
                         <a-select
                           v-model={[model.value[`${formItem.key}`], "value"]}
+                          allowClear
                           size="large"
                           placeholder={`请选择${formItem.label}`}
                         ></a-select>
                       );
                       break;
 
+                    case "password":
+                      customElement_ = (
+                        <a-input-password
+                          v-model={[model.value[`${formItem.key}`], "value"]}
+                          allowClear
+                          size="large"
+                          placeholder={`请输入${formItem.label}`}
+                        ></a-input-password>
+                      );
+                      break;
+
                     default:
-                      element_ = (
+                      customElement_ = (
                         <a-input
                           v-model={[model.value[`${formItem.key}`], "value"]}
+                          allowClear
                           size="large"
                           placeholder={`请输入${formItem.label}`}
                         ></a-input>
                       );
+                      break;
                   }
 
-                  return element_;
+                  return customElement_;
                 },
               }}
             </a-form-item>
           );
         })}
+        {/* 表单提交按钮 */}
         <a-form-item wrapperCol={{ span: 24 }}>
           <div class="w-full flex flex-row items-center justify-center">
-            <a-button ghost html-type="submit">
-              <Icon class="align-baseline" type="determine" />
-              确定
-            </a-button>
+            {slots.button && slots.button()}
           </div>
         </a-form-item>
       </a-form>
