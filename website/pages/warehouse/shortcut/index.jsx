@@ -1,6 +1,6 @@
 // 一键操作
 
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { Card, Icon, Tabs } from "website/components";
 
@@ -16,52 +16,48 @@ export default defineComponent({
       {
         label: "借货清单",
         count: menuCountTotal.value.borrowCount,
-        key: "borrow",
+        key: "1",
       },
       {
         label: "维修清单",
         count: menuCountTotal.value.repairCount,
-        key: "repair",
+        key: "2",
       },
       {
         label: "保养清单",
         count: menuCountTotal.value.maintainCount,
-        key: "maintain",
+        key: "3",
       },
     ]);
+    // 菜单列表空状态
+    const menuEmpty = ref(true);
     // 卡片列表
-    const cardData = ref([
-      {
-        label: "川-后勤-1",
-      },
-      {
-        label: "川-后勤-2",
-      },
-      {
-        label: "川-后勤-3",
-      },
-      {
-        label: "川-后勤-4",
-      },
-    ]);
+    const cardData = ref([]);
+
+    // 监听点击标签页菜单事件
+    const handleTabClick = (activeKey = menus.value[0].key) => {
+      store
+        .dispatch("warehouseModule/shortcutModule/findShortcutCards", activeKey)
+        .then((response) => {
+          cardData.value = response;
+          menuEmpty.value = !response.length;
+        });
+    };
+
+    onMounted(() => {
+      handleTabClick();
+    });
 
     return () => (
       <Tabs
         block
         columns={menus.value}
+        empty={menuEmpty.value}
+        onTabClick={handleTabClick}
         v-slots={{
           // 菜单附加操作区
           extra: () => (
             <a-space size={8}>
-              <a-button
-                class="flex flex-row items-center p-0"
-                type="text"
-                v-slots={{
-                  icon: () => <Icon type="revoke" />,
-                }}
-              >
-                撤销
-              </a-button>
               <a-button ghost danger>
                 清空借货清单
               </a-button>
@@ -80,7 +76,11 @@ export default defineComponent({
                   title: () => (
                     <p class="text-16 font-medium">
                       <span>{listItem.label}</span>
-                      <span>(17/20)</span>
+                      {listItem.capacities && (
+                        <span>
+                          ({listItem.capacities[0]}/{listItem.capacities[1]})
+                        </span>
+                      )}
                     </p>
                   ),
                   // 卡片自定义附加操作区
@@ -96,7 +96,11 @@ export default defineComponent({
                       移出
                     </a-button>
                   ),
-                  default: () => <p>test</p>,
+                  default: () => (
+                    <div class="flex flex-row">
+                      <a-image class="mr-16" width={108} height={108}></a-image>
+                    </div>
+                  ),
                 }}
               </Card>
             );

@@ -50,7 +50,7 @@ export default defineComponent({
       formData.value["key"] = activedItemKey;
     };
 
-    // 监听模态框表提交事件
+    // 监听模态框表单提交事件
     const handleSubmitForm = () => {
       console.log(formData.value);
       visible.value = !visible.value;
@@ -90,13 +90,22 @@ export default defineComponent({
           v-model={[visible.value, "visible"]}
           size="ultralight"
           title="请填写信息"
-          >
+        >
           {/* 扫描菜单-模态框表单 */}
           <Form
             v-model={[formData.value, "model"]}
             columns={formColumn.value}
             onSubmit={handleSubmitForm}
-          />
+          >
+            {{
+              button: () => (
+                <a-button ghost html-type="submit">
+                  <Icon class="align-baseline" type="determine" />
+                  确定
+                </a-button>
+              ),
+            }}
+          </Form>
         </Modal>
       </>
     );

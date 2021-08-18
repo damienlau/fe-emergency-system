@@ -1,4 +1,5 @@
 // 配置路由
+
 import { RouterView } from "vue-router";
 
 const routes = [
@@ -44,6 +45,19 @@ const routes = [
         path: "command",
         name: "Command",
         component: RouterView,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    name: "User",
+    component: RouterView,
+    redirect: { name: "Login" },
+    children: [
+      {
+        path: "login",
+        name: "Login",
+        component: () => import("website/pages/user/login"),
       },
     ],
   },
