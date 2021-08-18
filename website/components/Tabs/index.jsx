@@ -1,6 +1,7 @@
 // 组件-标签页
 
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, toRefs, watch } from "vue";
+import { Empty } from "website/components";
 import "./style.less";
 
 export default defineComponent({
@@ -13,9 +14,11 @@ export default defineComponent({
     },
     // 是否自动填充至父元素大小
     block: { type: Boolean, required: false, default: true },
+    // 是否显示标签页空状态
+    empty: { type: Boolean, required: false, default: true },
   },
   setup(props, { slots }) {
-    const { columns, block } = toRefs(props);
+    const { columns, block, empty } = toRefs(props);
 
     return () => (
       <a-tabs
@@ -34,7 +37,16 @@ export default defineComponent({
                     <span class="text-18">{tabPane.label}</span>
                   </a-badge>
                 ),
-                default: () => slots.default && slots.default(),
+                default: () =>
+                  empty.value ? (
+                    <Empty class="self-center" />
+                  ) : (
+                    slots.default && (
+                      <section class="w-full h-full overflow-hidden">
+                        {slots.default()}
+                      </section>
+                    )
+                  ),
               }}
             </a-tab-pane>
           );
