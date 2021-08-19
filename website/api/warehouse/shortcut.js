@@ -19,6 +19,11 @@ export function findShortcutData(params) {
   });
 }
 
+// 查询全部数据数量
+export function findShortcutTotalData() {
+  return request.get("/batchPending/count");
+}
+
 // 查询指定数据
 export function findSpecifiedShortcutData(params) {
   return request.get("/batchPending/all", {

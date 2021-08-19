@@ -84,13 +84,13 @@ export default defineComponent({
                 danger
                 onClick={() => handleClickTabExtra("clear")}
               >
-                清空借货清单
+                清空清单数据
               </a-button>
               <a-button
                 type="primary"
                 onClick={() => handleClickTabExtra("operate")}
               >
-                全部借出
+                一键操作
               </a-button>
             </a-space>
           ),
@@ -136,7 +136,28 @@ export default defineComponent({
                   ),
                   default: () => (
                     <div class="flex flex-row">
-                      <a-image class="mr-16" width={108} height={108}></a-image>
+                      <div class="flex-shrink-0 mr-16">
+                        <a-image width={108} height={108}></a-image>
+                      </div>
+                      <div>
+                        <p>
+                          <span class="text-white text-opacity-70">
+                            货架位置
+                          </span>
+                          <span class="text-16">{listItem.position}</span>
+                        </p>
+                        <p>
+                          <span class="text-white text-opacity-70">类型</span>
+                        </p>
+                        <p>
+                          <span class="text-white text-opacity-70">尺寸</span>
+                        </p>
+                        <p>
+                          <span class="text-white text-opacity-70">
+                            箱子编码
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   ),
                 }}
