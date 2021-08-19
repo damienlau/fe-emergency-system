@@ -1,6 +1,6 @@
 // 一键操作
 
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { Card, Icon, Tabs } from "website/components";
 
@@ -31,11 +31,19 @@ export default defineComponent({
     ]);
     // 菜单列表空状态
     const menuEmpty = ref(true);
+    // 菜单当前激活值
+    const menuActiveKey = ref(menus.value[0].key);
     // 卡片列表
     const cardData = ref([]);
 
+    // 监听点击标签页菜单按钮事件
+    const handleClickTabExtra = (type) => {
+      console.log(type);
+    };
+
     // 监听点击标签页菜单事件
-    const handleTabClick = (activeKey = menus.value[0].key) => {
+    const handleClickTabPane = (activeKey = menuActiveKey.value) => {
+      menuActiveKey.value = activeKey;
       store
         .dispatch("warehouseModule/shortcutModule/findShortcutCards", activeKey)
         .then((response) => {
@@ -44,24 +52,46 @@ export default defineComponent({
         });
     };
 
+    // 监听点击卡片删除按钮事件
+    const handleClickCardExtra = (activeKey) => {
+      store
+        .dispatch(
+          "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
+          [{ id: activeKey }]
+        )
+        .then(() => {
+          handleClickTabPane();
+        });
+    };
+
     onMounted(() => {
-      handleTabClick();
+      handleClickTabPane();
     });
 
     return () => (
       <Tabs
+        v-model={[menuActiveKey.value, "activeKey"]}
         block
         columns={menus.value}
         empty={menuEmpty.value}
-        onTabClick={handleTabClick}
+        onTabClick={handleClickTabPane}
         v-slots={{
           // 菜单附加操作区
           extra: () => (
             <a-space size={8}>
-              <a-button ghost danger>
+              <a-button
+                ghost
+                danger
+                onClick={() => handleClickTabExtra("clear")}
+              >
                 清空借货清单
               </a-button>
-              <a-button type="primary">全部借出</a-button>
+              <a-button
+                type="primary"
+                onClick={() => handleClickTabExtra("operate")}
+              >
+                全部借出
+              </a-button>
             </a-space>
           ),
         }}
@@ -85,16 +115,24 @@ export default defineComponent({
                   ),
                   // 卡片自定义附加操作区
                   extra: () => (
-                    <a-button
-                      class="flex flex-row items-center p-0"
-                      type="text"
-                      danger
-                      v-slots={{
-                        icon: () => <Icon type="delete" />,
-                      }}
+                    <a-popconfirm
+                      title={`确认删除吗？`}
+                      ok-text="删除"
+                      cancel-text="取消"
+                      placement="bottomRight"
+                      onConfirm={() => handleClickCardExtra(listItem.key)}
                     >
-                      移出
-                    </a-button>
+                      <a-button
+                        class="flex flex-row items-center p-0"
+                        type="text"
+                        danger
+                        v-slots={{
+                          icon: () => <Icon type="delete" />,
+                        }}
+                      >
+                        移出
+                      </a-button>
+                    </a-popconfirm>
                   ),
                   default: () => (
                     <div class="flex flex-row">

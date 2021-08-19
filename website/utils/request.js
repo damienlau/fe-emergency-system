@@ -41,6 +41,7 @@ instance.interceptors.response.use(
 
     switch (response.data.code) {
       case 400:
+      case 402:
       case 500:
         message.error(response.data.message);
         break;

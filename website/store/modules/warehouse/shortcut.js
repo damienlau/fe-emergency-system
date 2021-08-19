@@ -17,8 +17,12 @@ const getters = {
 };
 const actions = {
   // 删除指定数据
-  deleteSpecifiedShortcutCard: () => {
-    deleteSpecifiedShortcutData().then((response) => {});
+  deleteSpecifiedShortcutCard: ({ commit }, id) => {
+    return new Promise((reslove, reject) => {
+      deleteSpecifiedShortcutData(id).then((response) => {
+        reslove(response.data);
+      });
+    });
   },
   // 查询全部数据
   findShortcutCards: ({ commit }, activeKey) => {
