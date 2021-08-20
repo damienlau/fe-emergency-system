@@ -9,9 +9,9 @@ const { shelf } = defaultConfig;
 
 const state = () => ({
   totals: {
-    borrowCount: 1,
-    repairCount: 68,
-    maintainCount: 388,
+    borrowCount: 0,
+    repairCount: 0,
+    maintainCount: 0,
   },
 });
 const getters = {
@@ -80,13 +80,21 @@ const actions = {
   findShortcutTotalNum: ({ commit }) => {
     return new Promise((resolve, reject) => {
       findShortcutTotalData().then((response) => {
-        console.log(response);
-        resolve(response);
+        commit("SET_TOTAL", {
+          borrowCount: response.data.outNum,
+          repairCount: response.data.weiXiuNum,
+          maintainCount: response.data.baoYangNum,
+        });
+        resolve();
       });
     });
   },
 };
-const mutations = {};
+const mutations = {
+  SET_TOTAL: (state, count) => {
+    state.totals = count;
+  },
+};
 
 export default {
   namespaced: true,

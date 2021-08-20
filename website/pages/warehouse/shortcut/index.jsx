@@ -7,25 +7,27 @@ import { Card, Icon, Tabs } from "website/components";
 export default defineComponent({
   setup() {
     const store = useStore();
-    // 菜单数据条数
-    const menuCountTotal = computed(
-      () => store.state.warehouseModule.shortcutModule.totals
-    );
     // 菜单配置项
     const menus = ref([
       {
         label: "借货清单",
-        count: menuCountTotal.value.borrowCount,
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.totals.borrowCount
+        ),
         key: "1",
       },
       {
         label: "维修清单",
-        count: menuCountTotal.value.repairCount,
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.totals.repairCount
+        ),
         key: "2",
       },
       {
         label: "保养清单",
-        count: menuCountTotal.value.maintainCount,
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.totals.maintainCount
+        ),
         key: "3",
       },
     ]);
