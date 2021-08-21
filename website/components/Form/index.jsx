@@ -60,7 +60,16 @@ export default defineComponent({
                           allowClear
                           size="large"
                           placeholder={`请选择${formItem.label}`}
-                        ></a-select>
+                        >
+                          {formItem.options &&
+                            formItem.options.map((option) => {
+                              return (
+                                <a-select-option value={option.key}>
+                                  {option.label}
+                                </a-select-option>
+                              );
+                            })}
+                        </a-select>
                       );
                       break;
 

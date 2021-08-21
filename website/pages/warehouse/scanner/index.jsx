@@ -1,15 +1,12 @@
 // 出/归仓扫描
 
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { Form, Icon, Modal } from "website/components";
 
 export default defineComponent({
   setup() {
     const store = useStore();
-    store.dispatch("taskModule/eventModule/findTaskEvents").then((response) => {
-      console.log(response);
-    });
     // 扫描菜单配置项
     const menus = ref([
       {
@@ -36,6 +33,7 @@ export default defineComponent({
       {
         label: "事件",
         type: "select",
+
         key: "event",
         // option: store.dispatch(""),
       },
@@ -61,6 +59,20 @@ export default defineComponent({
       console.log(formData.value);
       visible.value = !visible.value;
     };
+
+    onMounted(() => {
+      // 获取表单选择框选项
+      store
+        .dispatch("taskModule/eventModule/findTaskEvents")
+        .then((response) => {
+          formColumn.value[0].options = response.map((option) => {
+            return {
+              key: option.id,
+              label: option.eventName,
+            };
+          });
+        });
+    });
 
     return () => (
       <>

@@ -22,11 +22,9 @@ const getters = {
 const actions = {
   // 删除指定数据
   deleteSpecifiedShortcutCard: ({ dispatch }, id) => {
-    return dispatch("findShortcutTotalNum").then(() => {
-      return new Promise((reslove, reject) => {
-        deleteSpecifiedShortcutData(id).then((response) => {
-          reslove(response.data);
-        });
+    return new Promise((reslove, reject) => {
+      deleteSpecifiedShortcutData(id).then((response) => {
+        reslove(response.data);
       });
     });
   },
