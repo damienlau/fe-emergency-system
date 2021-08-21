@@ -1,10 +1,15 @@
 // 出/归仓扫描
 
 import { defineComponent, ref } from "vue";
-import { Form, Modal } from "website/components";
+import { useStore } from "vuex";
+import { Form, Icon, Modal } from "website/components";
 
 export default defineComponent({
   setup() {
+    const store = useStore();
+    store.dispatch("taskModule/eventModule/findTaskEvents").then((response) => {
+      console.log(response);
+    });
     // 扫描菜单配置项
     const menus = ref([
       {
@@ -32,6 +37,7 @@ export default defineComponent({
         label: "事件",
         type: "select",
         key: "event",
+        // option: store.dispatch(""),
       },
       {
         label: "借货人工号",

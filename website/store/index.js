@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import taskModule from "./modules/task";
 import warehouseModule from "./modules/warehouse";
 import userModule from "./modules/user";
 
@@ -11,5 +12,5 @@ export default createStore({
       state.loading = !state.loading;
     },
   },
-  modules: { warehouseModule, userModule },
+  modules: { taskModule, warehouseModule, userModule },
 });

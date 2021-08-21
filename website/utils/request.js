@@ -26,8 +26,10 @@ instance.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    console.log(error);
+  () => {
+    message.error(`请求失败，请稍后重试`, () => {
+      store.commit("SET_LOADING");
+    });
   }
 );
 
@@ -43,15 +45,19 @@ instance.interceptors.response.use(
       case 400:
       case 402:
       case 500:
-        message.error(response.data.message);
+        message.error(response.data.message).then((a) => {
+          console.log(a, 123);
+        });
         break;
       default:
         message.success(response.data.message);
         return response.data;
     }
   },
-  (error) => {
-    console.log(error);
+  () => {
+    message.error(`网络错误，请稍后重试`, () => {
+      store.commit("SET_LOADING");
+    });
   }
 );
 
