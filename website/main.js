@@ -10,4 +10,4 @@ const app = createApp(App);
 app.use(Antd);
 app.use(Router);
 app.use(Store);
-app.mount("#redstar");
+app.mount("#redstar"); 
