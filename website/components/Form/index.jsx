@@ -42,7 +42,7 @@ export default defineComponent({
               rules={[
                 {
                   required: formItem.required,
-                  message: `${formItem.label}为必填项`,
+                  message: `${formItem.label || formItem.placeholder}为必填项`,
                   trigger: "blur",
                 },
               ]}
