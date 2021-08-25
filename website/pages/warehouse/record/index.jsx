@@ -65,12 +65,7 @@ export default defineComponent({
           // initRepairTable();
           break;
         case "4":
-          store
-            .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
-            .then((res) => {
-              console.log(res, "res");
-              initMaintainTable(res);
-            });
+          initMaintainTable();
           break;
       }
     };
@@ -93,68 +88,95 @@ export default defineComponent({
       dataSource = [];
     };
     // 渲染保养列表
-    const initMaintainTable = (res) => {
-      showHeader = true;
-      columns = [
-        {
-          title: "物资名称",
-          dataIndex: "materialName",
-          key: "materialName",
-        },
-        { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
-        {
-          title: "保养公司",
-          dataIndex: "personnelCompany",
-          key: "personnelCompany",
-        },
-        { title: "保养人", dataIndex: "personnelName", key: "personnelName" },
-        {
-          title: "保养人联系方式",
-          dataIndex: "personnelPhone",
-          key: "personnelPhone",
-        },
-        { title: "状态", dataIndex: "status", key: "status" },
-        { title: "是否出仓库", dataIndex: "test", key: "test" },
-        { title: "问题描述", dataIndex: "description", key: "description" },
-        { title: "保养开始时间", dataIndex: "startTime", key: "startTime" },
-        { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
-        {
-          title: "操作",
-          key: "operation",
-          slots: {
-            customRender: "operation",
-          },
-        },
-      ];
-      console.log(res, "reser");
-      dataSource = [];
-      res.content.map((item) => {
-        console.log(item, "item");
-        item.detailList.map((val) => {
-          dataSource.push({
-            materialName: val.materialInfo.materialName,
-            boxName: val.materialInfo.boxName,
-            personnelCompany: item.personnelCompany,
-            personnelName: item.personnelName,
-            personnelPhone: item.personnelPhone,
-            description: item.description,
-            startTime: val.startTime,
-            endTime: val.endTime,
+    const initMaintainTable = () => {
+      store
+        .dispatch("warehouseModule/recordModule/getMaintainList")
+        .then((res) => {
+          console.log(res, "reser");
+          showHeader = true;
+          columns = [
+            {
+              title: "物资名称",
+              dataIndex: "materialName",
+              key: "materialName",
+            },
+            { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
+            {
+              title: "保养公司",
+              dataIndex: "personnelCompany",
+              key: "personnelCompany",
+            },
+            {
+              title: "保养人",
+              dataIndex: "personnelName",
+              key: "personnelName",
+            },
+            {
+              title: "保养人联系方式",
+              dataIndex: "personnelPhone",
+              key: "personnelPhone",
+            },
+            {
+              title: "状态",
+              dataIndex: "status",
+              key: "status",
+              slots: { customRender: "status" },
+            },
+            {
+              title: "是否出仓库",
+              dataIndex: "isOutWarehouseText",
+              key: "isOutWarehouseText",
+            },
+            {
+              title: "问题描述",
+              dataIndex: "description",
+              key: "description",
+            },
+            {
+              title: "保养开始时间",
+              dataIndex: "startTime",
+              key: "startTime",
+            },
+            { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
+            {
+              title: "操作",
+              key: "id",
+              slots: {
+                customRender: "operation",
+              },
+            },
+          ];
+          dataSource = [];
+          res.content.map((item) => {
+            item.detailList.map((val) => {
+              dataSource.push({
+                materialName: val.materialInfo.materialName,
+                boxName: val.materialInfo.boxName,
+                personnelCompany: item.personnelCompany,
+                personnelName: item.personnelName,
+                personnelPhone: item.personnelPhone,
+                status: val.status,
+                isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
+                description: item.description,
+                startTime: val.startTime,
+                endTime: val.endTime,
+                id: item.id,
+              });
+            });
           });
         });
-      });
-
       console.log(dataSource, "dataSource");
     };
 
     // 点击保养完成
-    const handleClickFinish = (id) => {
-      console.log(id, "id");
+    const handleClickFinish = (record) => {
+      const id = record.id;
+      console.log(id);
       if (!id) return;
       store
         .dispatch("warehouseModule/recordModule/changeMaintainStatus", id)
         .then(() => {
-          handleClickTabPane();
+          initMaintainTable();
         });
     };
     onMounted(() => {
@@ -178,8 +200,16 @@ export default defineComponent({
               class="text-white"
             >
               {{
+                status: ({ status }) => (
+                  <span class="text-white">{status}</span>
+                ),
                 operation: ({ record }) => (
-                  <a-button ghost onClick={handleClickFinish(record.id)}>
+                  <a-button
+                    ghost
+                    onClick={() => {
+                      handleClickFinish(record);
+                    }}
+                  >
                     保养完成
                   </a-button>
                 ),
