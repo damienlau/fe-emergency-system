@@ -63,7 +63,7 @@ export default defineComponent({
           "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.",
       },
     ];
-    const columns = [
+    let columns = [
       { title: "Name", dataIndex: "name", key: "name", width: 400 },
       {
         title: "",
@@ -142,14 +142,31 @@ export default defineComponent({
         case "4":
           store
             .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
-            .then((response) => {
-              console.log(response, "res");
-              this.initMaintainTable();
+            .then((res) => {
+              console.log(res, "res");
+              initMaintainTable(res);
             });
           break;
       }
     };
-
+    const initMaintainTable = (res) => {
+      console.log(res);
+      columns = [
+        { title: "Name", dataIndex: "name", key: "name", width: 400 },
+        {
+          title: "",
+          dataIndex: "",
+          key: "num",
+          slots: { customRender: "num" },
+        },
+        {
+          title: "",
+          dataIndex: "",
+          key: "time",
+          slots: { customRender: "time" },
+        },
+      ];
+    };
     onMounted(() => {
       handleClickTabPane();
     });
