@@ -62,6 +62,8 @@ module.exports = {
         22: [`var(--size-22)`, `var(--size-30)`],
         24: [`var(--size-24)`, `var(--size-28)`],
       },
+      // 行高
+      lineHeight: createCustomPropertyStepper("--size", 100, 2),
       // 尺寸
       spacing: createCustomPropertyStepper("--size", 100, 2),
     },
