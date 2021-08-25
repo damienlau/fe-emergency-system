@@ -61,7 +61,9 @@ export default defineComponent({
         {columns.value.map((menuItem) => {
           return (
             <a-menu-item key={menuItem.key}>
-              <span class="text-16 font-medium">{menuItem.label}</span>
+              <span class="w-96 inline-block text-center text-16 font-medium">
+                {menuItem.label}
+              </span>
             </a-menu-item>
           );
         })}

@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { Menu, PageHeader } from "website/components";
@@ -47,11 +47,7 @@ export default defineComponent({
           </PageHeader>
         </header>
         <main class="flex-auto overflow-hidden p-16">
-          <a-spin
-            delay={888}
-            spinning={store.state.loading}
-            wrapperClassName="rs-spin"
-          >
+          <a-spin spinning={store.state.loading} wrapperClassName="rs-spin">
             <router-view />
           </a-spin>
         </main>
