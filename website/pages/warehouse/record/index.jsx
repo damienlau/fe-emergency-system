@@ -143,8 +143,8 @@ export default defineComponent({
           store
             .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
             .then((response) => {
-              // cardData.value = response;
-              // menuEmpty.value = !response.length;
+              console.log(response, "res");
+              this.initMaintainTable();
             });
           break;
       }

@@ -13,7 +13,6 @@ const actions = {
   getMaintainList: () => {
     return new Promise((reslove) => {
       getMaintenanceList().then((res) => {
-        console.log(res, "resreer");
         reslove(res.data);
       });
     });
