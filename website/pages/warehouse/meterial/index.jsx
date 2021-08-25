@@ -2,6 +2,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   setup() {
-    return () => <h1>仓库物资</h1>;
+    return () => <h1>test</h1>;
   },
+  
 });
