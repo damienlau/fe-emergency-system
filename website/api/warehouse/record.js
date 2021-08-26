@@ -2,13 +2,13 @@
 
 import request from "website/utils/request";
 
-// 保养记录列表
-export function getMaintenanceList(params) {
+// 保养/维修记录列表
+export function findMaintenanceData(params) {
   return request.get("/maintenance/list", {
     params,
   });
 }
-// 保养记录-点击保养完成
-export function changeMaintenanceStatus(params) {
+// 更新保养记录状态
+export function updateSpecifiedMaintenanceData(params) {
   return request.post("/maintenance/update", params);
 }

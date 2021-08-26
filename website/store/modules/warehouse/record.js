@@ -1,25 +1,85 @@
 import {
-  getMaintenanceList,
-  changeMaintenanceStatus,
+  findMaintenanceData,
+  updateSpecifiedMaintenanceData,
 } from "website/api/warehouse/record";
-const state = () => ({
-  totals: {
-    eventCount: 250, // 事件记录
-    dailyCount: 0, // 日常记录
-    repairCount: 0, // 维修记录
-    maintainCount: 0, // 保养记录
+const state = () => ({});
+const maintainColumns = [
+  {
+    title: "物资名称",
+    dataIndex: "materialName",
+    key: "materialName",
   },
-});
+  { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
+  {
+    title: "保养公司",
+    dataIndex: "personnelCompany",
+    key: "personnelCompany",
+  },
+  {
+    title: "保养人",
+    dataIndex: "personnelName",
+    key: "personnelName",
+  },
+  {
+    title: "保养人联系方式",
+    dataIndex: "personnelPhone",
+    key: "personnelPhone",
+  },
+  {
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
+    slots: { customRender: "status" },
+  },
+  {
+    title: "是否出仓库",
+    dataIndex: "isOutWarehouseText",
+    key: "isOutWarehouseText",
+  },
+  {
+    title: "问题描述",
+    dataIndex: "description",
+    key: "description",
+  },
+  {
+    title: "保养开始时间",
+    dataIndex: "startTime",
+    key: "startTime",
+  },
+  { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
+  {
+    title: "操作",
+    key: "id",
+    slots: {
+      customRender: "operation",
+    },
+  },
+];
 const getters = {};
 const actions = {
-  // 获取保养记录列表
-  getMaintainList: () => {
+  // 获取维修/保养记录列表
+  getMaintainList: (context, key) => {
     return new Promise((reslove) => {
-      const params = {
-        operationType: 1, // 1 保养 2 维修
-      };
-      getMaintenanceList(params).then((res) => {
-        reslove(res.data);
+      const maintainTableData = [];
+      findMaintenanceData({ operationType: key }).then((res) => {
+        res.data.content.map((item) => {
+          item.detailList.map((val) => {
+            maintainTableData.push({
+              materialName: val.materialInfo.materialName,
+              boxName: val.materialInfo.boxName,
+              personnelCompany: item.personnelCompany,
+              personnelName: item.personnelName,
+              personnelPhone: item.personnelPhone,
+              status: val.status,
+              isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
+              description: item.description,
+              startTime: val.startTime,
+              endTime: val.endTime,
+              id: item.id,
+            });
+          });
+        });
+        reslove({ tableData: maintainTableData, tableColumn: maintainColumns });
       });
     });
   },
@@ -30,12 +90,13 @@ const actions = {
         id: id,
         status: 2,
       };
-      changeMaintenanceStatus(params).then((res) => {
+      updateSpecifiedMaintenanceData(params).then((res) => {
         // reslove(res.data);
       });
     });
   },
 };
+
 const mutations = {};
 
 export default {
