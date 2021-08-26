@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, ref, toRefs } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Menu",
@@ -29,10 +29,11 @@ export default defineComponent({
   },
   emits: ["select"],
   setup(props, { emit }) {
+    const route = useRoute();
     const router = useRouter();
     const { columns, bordered, height, routerLink } = toRefs(props);
     // 菜单当前激活值
-    const menuActiveKey = ref([`${columns.value[0].key}`]);
+    const menuActiveKey = ref(Array.of(route.name || columns.value[0].key));
 
     // 监听选中菜单项事件
     const handleClickMenuItem = ({ keyPath }) => {
