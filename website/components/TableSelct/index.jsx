@@ -18,13 +18,13 @@ export default defineComponent({
       },
     },
   },
-  emits: ["update:select", "submit"],
+  emits: ["update:model", "submit"],
   setup(props, { slots, emit }) {
     const { columns, select } = toRefs(props);
-
+    console.log(select, "select");
     // 监听表单提交事件
     const handleSubmit = () =>
-      emit("submit", emit("update:select", select.value));
+      emit("submit", emit("update:model", select.value));
 
     return () => (
       <a-form layout="inline">
@@ -43,6 +43,7 @@ export default defineComponent({
                     case "input":
                       customElement_ = (
                         <a-input-search
+                          v-model={[select.value[`${formItem.key}`], "value"]}
                           allowClear
                           size="default"
                           placeholder={formItem.placeholder || ""}
@@ -53,7 +54,7 @@ export default defineComponent({
                     case "select":
                       customElement_ = (
                         <a-select
-                          // v-select={[select.value[`${formItem.key}`], "value"]}
+                          v-model={[select.value[`${formItem.key}`], "value"]}
                           allowClear
                           size="default"
                           placeholder={formItem.placeholder || ""}

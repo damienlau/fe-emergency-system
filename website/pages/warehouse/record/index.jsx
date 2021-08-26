@@ -1,5 +1,5 @@
 // 借还记录
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { Tabs, TableSelct } from "website/components";
 
@@ -104,6 +104,15 @@ export default defineComponent({
           handleClickTabPane();
         });
     };
+
+    watch(
+      () => {
+        return tableSelectObj.value;
+      },
+      ({ data }) => {
+        console.log(data, "data");
+      }
+    );
     onMounted(() => {
       handleClickTabPane();
     });
@@ -122,6 +131,7 @@ export default defineComponent({
               v-model={[tableSelectObj.value, "select"]}
               columns={tableSelctColum.value}
             ></TableSelct>
+            <span>{tableSelectObj.value}</span>
             <a-table
               dataSource={tableData.value}
               columns={tableColumn.value}
