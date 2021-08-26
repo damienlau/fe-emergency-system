@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, ref, toRefs } from "vue";
+import { computed, defineComponent, onMounted, ref, toRefs, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
@@ -33,22 +33,30 @@ export default defineComponent({
     const router = useRouter();
     const { columns, bordered, height, routerLink } = toRefs(props);
     // 菜单当前激活值
-    const menuActiveKey = ref(Array.of(route.name || columns.value[0].key));
+    const menuActiveKey = ref(Array.of(columns.value[0].key));
 
     // 监听选中菜单项事件
     const handleClickMenuItem = ({ keyPath }) => {
       menuActiveKey.value = keyPath;
-
       // 激活当前菜单项时以 Key 作为 Name 进行路由跳转
       if (routerLink.value) {
         router.push({ name: keyPath.join() });
       } else {
-        emit("select", menuActiveKey.value);
+        emit("select", keyPath);
       }
     };
 
     onMounted(() => {
-      handleClickMenuItem({ keyPath: menuActiveKey.value });
+      // 检测当前路由位置，如果不在指定页面就跳转到默认路由
+      let currentRoute_ = columns.value.find((routeItem) => {
+        return routeItem.key == route.name;
+      });
+
+      handleClickMenuItem({
+        keyPath: currentRoute_
+          ? Array.of(currentRoute_["key"])
+          : menuActiveKey.value,
+      });
     });
 
     return () => (
