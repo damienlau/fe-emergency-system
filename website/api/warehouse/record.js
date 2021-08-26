@@ -12,3 +12,9 @@ export function findMaintenanceData(params) {
 export function updateSpecifiedMaintenanceData(params) {
   return request.post("/maintenance/detail/update", params);
 }
+// 查询事件全部数据
+export function findEventData(params) {
+  return request.get("/outForm/event/all", {
+    params,
+  });
+}

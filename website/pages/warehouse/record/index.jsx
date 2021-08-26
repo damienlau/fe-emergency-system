@@ -63,13 +63,19 @@ export default defineComponent({
     const menuEmpty = ref(false);
     // 菜单当前激活值
     const menuActiveKey = ref(menus.value[0].key); //监听点击标签页菜单事件
-
     // 监听点击标签页菜单事件
     const handleClickTabPane = (activeKey = menuActiveKey.value) => {
       menuActiveKey.value = activeKey; // 请求接口
       if (activeKey === "1" || activeKey === "2") {
         store
           .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
+          .then((response) => {
+            tableData.value = response.tableData;
+            tableColumn.value = response.tableColumn;
+          });
+      } else if (activeKey === "event") {
+        store
+          .dispatch("warehouseModule/recordModule/getEventList")
           .then((response) => {
             tableData.value = response.tableData;
             tableColumn.value = response.tableColumn;
@@ -104,7 +110,49 @@ export default defineComponent({
           handleClickTabPane();
         });
     };
-
+    const renderStatus = (status) => {
+      return (
+        <p style={status == 1 ? "color:red" : "color:green"}>
+          {status == 1 ? "保养中" : "已完成"}
+        </p>
+      );
+    };
+    const rendEventNumDetail = (record) => {
+      return (
+        <div class="flex flex-row">
+          <span class="text-white text-opacity-70 mr-4">总物资:</span>
+          <span class="text-white  mr-40">
+            {record.numDetail.totalNumber || "0"}
+          </span>
+          <span class="text-white text-opacity-70 mr-4">未出仓:</span>
+          <span class="text-white  mr-40">
+            {record.numDetail.notOutNumber || "0"}
+          </span>
+          <span class="text-white text-opacity-70 mr-4">已归还:</span>
+          <span class="text-white  mr-40">
+            {record.numDetail.returnNumber || "0"}
+          </span>
+          <span class="text-white text-opacity-70 mr-4">未归还:</span>
+          <span class="text-white  mr-40">
+            {record.numDetail.noReturnNumber || "0"}
+          </span>
+        </div>
+      );
+    };
+    const rendEventTime = (record) => {
+      return (
+        <div class="flex flex-row items-center justify-end">
+          <span class="text-white text-opacity-70 mr-4">开始时间:</span>
+          <span class="text-white  mr-40">
+            {record.eventTime.startTime || "--"}
+          </span>
+          <span class="text-white text-opacity-70 mr-4">结束时间:</span>
+          <span class="text-white  mr-40">
+            {record.eventTime.endTime || "--"}
+          </span>
+        </div>
+      );
+    };
     watch(
       () => {
         return tableSelectObj.value;
@@ -139,18 +187,10 @@ export default defineComponent({
               class="text-white"
             >
               {{
-                status: ({ record }) => (
-                  <span class="text-white">{record}</span>
-                ),
+                status: ({ text }) => renderStatus(text),
                 operation: ({ record }) => handleClickFinish(record),
-                // time: () => (
-                //   <div class="flex flex-row">
-                //     <span class="text-white text-opacity-70">开始时间:</span>
-                //     <span class="text-white text-opacity-70 mr-8">--</span>
-                //     <span class="text-white text-opacity-70">结束时间:</span>
-                //     <span class="text-white text-opacity-70 mr-8">--</span>
-                //   </div>
-                // ),
+                numDetail: ({ record }) => rendEventNumDetail(record),
+                eventTime: ({ record }) => rendEventTime(record),
                 // expandedRowRender: () =>
                 //   expandDataSource.length && (
                 //     <a-table

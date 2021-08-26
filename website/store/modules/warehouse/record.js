@@ -2,6 +2,7 @@ import moment from "moment";
 import {
   findMaintenanceData,
   updateSpecifiedMaintenanceData,
+  findEventData,
 } from "website/api/warehouse/record";
 const state = () => ({});
 const maintainColumns = [
@@ -28,8 +29,8 @@ const maintainColumns = [
   },
   {
     title: "状态",
-    dataIndex: "status",
     key: "status",
+    dataIndex: "status",
     slots: { customRender: "status" },
   },
   {
@@ -53,6 +54,29 @@ const maintainColumns = [
     key: "id",
     slots: {
       customRender: "operation",
+    },
+  },
+];
+const eventColumns = [
+  {
+    title: "事件名称",
+    dataIndex: "eventName",
+    key: "eventName",
+  },
+  {
+    title: "数量详情",
+    dataIndex: "numDetail",
+    key: "numDetail",
+    slots: {
+      customRender: "numDetail",
+    },
+  },
+  {
+    title: "时间",
+    dataIndex: "eventTime",
+    key: "eventTime",
+    slots: {
+      customRender: "eventTime",
     },
   },
 ];
@@ -81,6 +105,30 @@ const actions = {
           });
         });
         reslove({ tableData: maintainTableData, tableColumn: maintainColumns });
+      });
+    });
+  },
+  // 获取事件列表
+  getEventList: ({ dispatch }) => {
+    return new Promise((reslove) => {
+      const eventTableData = [];
+      findEventData().then((res) => {
+        console.log(res, "resssser");
+        res.data.map((item) => {
+          eventTableData.push({
+            eventName: item.eventName,
+            numDetail: item,
+            eventTime: {
+              startTime: item.startTime,
+              endTime: item.endTime,
+            },
+            id: item.id,
+          });
+        });
+        reslove({
+          tableData: eventTableData,
+          tableColumn: eventColumns,
+        });
       });
     });
   },
