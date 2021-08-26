@@ -1,6 +1,6 @@
 // 组件-标签页
 
-import { defineComponent, toRefs, watch } from "vue";
+import { defineComponent, onMounted, ref, toRefs } from "vue";
 import { Empty } from "website/components";
 import "./style.less";
 
@@ -17,14 +17,33 @@ export default defineComponent({
     // 是否显示标签页空状态
     empty: { type: Boolean, required: false, default: true },
   },
-  setup(props, { slots }) {
+  emits: ["select"],
+  setup(props, { emit, slots }) {
     const { columns, block, empty } = toRefs(props);
+    // 默认选中的标签页选项卡
+    const tabActiveKey = ref(columns.value[0].key);
+
+    // 监听点击标签页选项卡事件
+    const handleTabClick = (key = tabActiveKey.value) => {
+      tabActiveKey.value = key;
+      emit(
+        "select",
+        tabActiveKey.value,
+        columns.value.filter((item) => (item.key = key))
+      );
+    };
+
+    onMounted(() => {
+      handleTabClick();
+    });
 
     return () => (
       <a-tabs
+        v-model={[tabActiveKey.value, "activeKey"]}
         class="rs-tabs dark:bg-navy-4 pt-18 rounded"
         class={block.value && "rs-tabs-full"}
         animated={false}
+        onTabClick={handleTabClick}
         v-slots={{
           tabBarExtraContent: () => slots.extra && slots.extra(),
         }}
