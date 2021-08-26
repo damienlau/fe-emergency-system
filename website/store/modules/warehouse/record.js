@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
   findMaintenanceData,
   updateSpecifiedMaintenanceData,
@@ -75,7 +76,7 @@ const actions = {
               description: item.description,
               startTime: val.startTime,
               endTime: val.endTime,
-              id: item.id,
+              id: val.id,
             });
           });
         });
@@ -84,11 +85,13 @@ const actions = {
     });
   },
   // 保养记录-点击保养完成
-  changeMaintainStatus: ({ dispatch }, id) => {
+  changeMaintainStatus: ({ dispatch }, data) => {
     return new Promise((reslove) => {
       const params = {
-        id: id,
+        operationType: data.key,
+        id: data.id,
         status: 2,
+        endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       };
       updateSpecifiedMaintenanceData(params).then((res) => {
         // reslove(res.data);

@@ -10,5 +10,5 @@ export function findMaintenanceData(params) {
 }
 // 更新保养记录状态
 export function updateSpecifiedMaintenanceData(params) {
-  return request.post("/maintenance/update", params);
+  return request.post("/maintenance/detail/update", params);
 }

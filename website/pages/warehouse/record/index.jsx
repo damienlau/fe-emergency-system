@@ -1,7 +1,7 @@
 // 借还记录
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Tabs } from "website/components";
+import { Tabs, TableSelct } from "website/components";
 
 export default defineComponent({
   setup() {
@@ -27,6 +27,38 @@ export default defineComponent({
     ]);
     const tableData = ref([]);
     const tableColumn = ref([]);
+    // table 搜索配置
+    const tableSelectObj = ref({});
+    const tableSelctColum = ref([
+      {
+        type: "input",
+        key: "test",
+        label: "测试",
+        placeholder: "侧是是是",
+      },
+      {
+        type: "input",
+        key: "test2",
+        label: "测试2",
+        placeholder: "侧是是是",
+      },
+      {
+        type: "select",
+        key: "test3",
+        label: "测试3",
+        placeholder: "全部",
+        options: [
+          {
+            label: "dddddd",
+            key: "1",
+          },
+          {
+            label: "dddddd",
+            key: "2",
+          },
+        ],
+      },
+    ]);
     // 菜单列表空状态
     const menuEmpty = ref(false);
     // 菜单当前激活值
@@ -47,12 +79,27 @@ export default defineComponent({
         tableColumn.value = [];
       }
     };
-    // 点击保养完成
     const handleClickFinish = (record) => {
+      if (record.status === 2) return false;
+      return (
+        <a-button
+          ghost
+          onClick={() => {
+            changeMaintainStatus(record);
+          }}
+        >
+          {menuActiveKey.value === "1" ? "维修完成" : "保养完成"}
+        </a-button>
+      );
+    };
+    const changeMaintainStatus = (record) => {
       const id = record.id;
       if (!id) return;
       store
-        .dispatch("warehouseModule/recordModule/changeMaintainStatus", id)
+        .dispatch("warehouseModule/recordModule/changeMaintainStatus", {
+          id: id,
+          key: menuActiveKey.value,
+        })
         .then(() => {
           handleClickTabPane();
         });
@@ -71,6 +118,10 @@ export default defineComponent({
           onTabClick={handleClickTabPane}
         >
           <section class="overflow-y-auto">
+            <TableSelct
+              v-model={[tableSelectObj.value, "select"]}
+              columns={tableSelctColum.value}
+            ></TableSelct>
             <a-table
               dataSource={tableData.value}
               columns={tableColumn.value}
@@ -78,19 +129,10 @@ export default defineComponent({
               class="text-white"
             >
               {{
-                status: ({ status }) => (
-                  <span class="text-white">{status}</span>
+                status: ({ record }) => (
+                  <span class="text-white">{record}</span>
                 ),
-                operation: ({ record }) => (
-                  <a-button
-                    ghost
-                    onClick={() => {
-                      handleClickFinish(record);
-                    }}
-                  >
-                    保养完成
-                  </a-button>
-                ),
+                operation: ({ record }) => handleClickFinish(record),
                 // time: () => (
                 //   <div class="flex flex-row">
                 //     <span class="text-white text-opacity-70">开始时间:</span>
