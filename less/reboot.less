@@ -504,11 +504,11 @@
 @menu-item-height: 40px;
 @menu-item-group-height: @line-height-base;
 @menu-collapsed-width: 80px;
-@menu-bg: @component-background;
+@menu-bg: transparent;
 @menu-popup-bg: @component-background;
-@menu-item-color: @text-color;
+@menu-item-color: fade(@white, 50%);
 @menu-inline-submenu-bg: @background-color-light;
-@menu-highlight-color: @primary-color;
+@menu-highlight-color: @text-color;
 @menu-highlight-danger-color: @error-color;
 @menu-item-active-bg: @primary-1;
 @menu-item-active-danger-bg: @red-1;
@@ -546,16 +546,16 @@
 // Table
 // --
 @table-bg: @component-background;
-@table-header-bg: @background-color-light;
+@table-header-bg: @navy-colors[4];
 @table-header-color: @heading-color;
 @table-header-sort-bg: @background-color-base;
 @table-body-sort-bg: rgba(0, 0, 0, 0.01);
-@table-row-hover-bg: @primary-1;
+@table-row-hover-bg: @primary-10;
 @table-selected-row-color: inherit;
-@table-selected-row-bg: @primary-1;
+@table-selected-row-bg: @primary-10;
 @table-body-selected-sort-bg: @table-selected-row-bg;
 @table-selected-row-hover-bg: darken(@table-selected-row-bg, 2%);
-@table-expanded-row-bg: #fbfbfb;
+@table-expanded-row-bg: @navy-colors[4];
 @table-padding-vertical: 16px;
 @table-padding-horizontal: 16px;
 @table-border-radius-base: @border-radius-base;

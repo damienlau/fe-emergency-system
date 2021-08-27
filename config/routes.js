@@ -6,13 +6,12 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    redirect: { name: "Warehouse" },
     component: () => import("website/layouts/BasicLayout"),
     children: [
       {
         path: "warehouse",
         name: "Warehouse",
-        redirect: { name: "Shortcut" },
+        meta: { navigator: true },
         component: RouterView,
         children: [
           {

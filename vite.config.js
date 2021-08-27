@@ -24,7 +24,7 @@ export default defineConfig({
     open: { broswer: "google chrome" },
     proxy: {
       "/dev-api": {
-        target: "http://192.168.1.7:8090/warehouse",
+        target: "http://192.168.1.80/warehouse",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/dev-api/, ""),
       },

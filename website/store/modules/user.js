@@ -8,6 +8,7 @@ const getters = {};
 const actions = {
   userLogin: ({ commit }, userData) => {
     getSpecifiedUserData(userData).then((response) => {
+      console.log(response.data);
       response.data.userName && commit("SET_NAME", response.data.userName);
     });
   },
