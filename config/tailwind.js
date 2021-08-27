@@ -39,7 +39,9 @@ module.exports = {
       // 高度
       height: {
         "modal-ultralight": "264px",
+		"modal-lightermin":"314px",
         "modal-lighter": "320px",
+		"modal-lightmin":"411px",
         "modal-light": "432px",
         "modal-heavy": "560px",
         "modal-bold": "748px",
@@ -47,6 +49,7 @@ module.exports = {
       // 宽度
       width: {
         "modal-ultralight": "620px",
+		"modal-lightermin":"314px",
         "modal-lighter": "620px",
         "modal-light": "620px",
         "modal-heavy": "920px",
