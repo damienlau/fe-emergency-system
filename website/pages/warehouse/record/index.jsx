@@ -25,8 +25,12 @@ export default defineComponent({
         key: "2",
       },
     ]);
+    // 表格数据
     const tableData = ref([]);
     const tableColumn = ref([]);
+    // 展开表格数据
+    const expandTableData = ref([]);
+    const expandTableColumn = ref([]);
     // table 搜索配置
     const tableSelectObj = ref({});
     const tableSelctColum = ref([
@@ -89,6 +93,7 @@ export default defineComponent({
       if (record.status === 2) return false;
       return (
         <a-button
+          size="small"
           ghost
           onClick={() => {
             changeMaintainStatus(record);
@@ -109,6 +114,31 @@ export default defineComponent({
         .then(() => {
           handleClickTabPane();
         });
+    };
+    const handleClickCancel = (record) => {
+      return (
+        <a-button
+          ghost
+          danger
+          onClick={() => {
+            changeEventStatus(record);
+          }}
+        >
+          取消出仓
+        </a-button>
+      );
+    };
+    const changeEventStatus = (record) => {
+      const id = record.id;
+      if (!id) return;
+      // store
+      //   .dispatch("warehouseModule/recordModule/changeMaintainStatus", {
+      //     id: id,
+      //     key: menuActiveKey.value,
+      //   })
+      //   .then(() => {
+      //     handleClickTabPane();
+      //   });
     };
     const renderStatus = (status) => {
       return (
@@ -153,6 +183,61 @@ export default defineComponent({
         </div>
       );
     };
+    const rendEventExpandTable = (record) => {
+      store
+        .dispatch("warehouseModule/recordModule/getEventExpandList", record.id)
+        .then((response) => {
+          // expandTableData.value = response.tableData;
+          // expandTableColumn.value = response.tableColumn;
+        });
+      return (
+        <a-table
+          dataSource={expandTableData.value}
+          columns={expandTableColumn.value}
+          pagination={false}
+          class="text-white"
+          rowKey={(record) => record.key}
+        >
+          {{
+            status: ({ text }) => renderEventExpendStatus(text),
+            operation: ({ record }) => handleClickCancel(record),
+            time: ({ record }) => rendEventExpendTime(record),
+            customTitle: () => {
+              return (
+                <>
+                  <span class="text-warning">生成清单时间</span>
+                  <span>/出仓时间</span>
+                </>
+              );
+            },
+          }}
+        </a-table>
+      );
+    };
+    const renderEventExpendStatus = (status) => {
+      return (
+        <p
+          style={
+            status == 1
+              ? "color:red"
+              : status == 2
+              ? "color:green"
+              : "color:orange"
+          }
+        >
+          {status == 1 ? "已出仓" : status == 2 ? "已归还" : "待出仓"}
+        </p>
+      );
+    };
+    const rendEventExpendTime = (record) => {
+      return (
+        <div class="flex flex-row items-center justify-end">
+          <span style={record.status == 3 ? "color:orange" : ""}>
+            {record.time || "--"}
+          </span>
+        </div>
+      );
+    };
     watch(
       () => {
         return tableSelectObj.value;
@@ -173,6 +258,8 @@ export default defineComponent({
           columns={menus.value}
           empty={menuEmpty.value}
           onTabClick={handleClickTabPane}
+          rowKey={(index) => index}
+          size="small"
         >
           <section class="overflow-y-auto">
             <TableSelct
@@ -181,24 +268,27 @@ export default defineComponent({
             ></TableSelct>
             <span>{tableSelectObj.value}</span>
             <a-table
+              class="text-white"
+              rowKey={(record, index) => record.key || record.id || index}
               dataSource={tableData.value}
               columns={tableColumn.value}
+              pagination={menuActiveKey.value === "event" ? false : true}
               showHeader={menuActiveKey.value === "event" ? false : true}
-              class="text-white"
+              rowClassName={() => {
+                if (menuActiveKey.value === "event")
+                  return "dark:bg-navy-1 bg-opacity-70";
+              }}
+              expandedRowRender={
+                menuActiveKey.value === "event"
+                  ? ({ record }) => rendEventExpandTable(record)
+                  : null
+              }
             >
               {{
                 status: ({ text }) => renderStatus(text),
                 operation: ({ record }) => handleClickFinish(record),
                 numDetail: ({ record }) => rendEventNumDetail(record),
                 eventTime: ({ record }) => rendEventTime(record),
-                // expandedRowRender: () =>
-                //   expandDataSource.length && (
-                //     <a-table
-                //       dataSource={expandDataSource}
-                //       columns={expandColumns}
-                //       pagination={false}
-                //     ></a-table>
-                //   ),
               }}
             </a-table>
           </section>

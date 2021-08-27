@@ -3,6 +3,7 @@ import {
   findMaintenanceData,
   updateSpecifiedMaintenanceData,
   findEventData,
+  findEventExpandData,
 } from "website/api/warehouse/record";
 const state = () => ({});
 const maintainColumns = [
@@ -60,12 +61,11 @@ const maintainColumns = [
 const eventColumns = [
   {
     title: "事件名称",
-    dataIndex: "eventName",
     key: "eventName",
+    width: "15%",
   },
   {
     title: "数量详情",
-    dataIndex: "numDetail",
     key: "numDetail",
     slots: {
       customRender: "numDetail",
@@ -73,11 +73,69 @@ const eventColumns = [
   },
   {
     title: "时间",
-    dataIndex: "eventTime",
     key: "eventTime",
     slots: {
       customRender: "eventTime",
     },
+  },
+];
+const eventExpandColumns = [
+  {
+    title: "箱子/物资名称",
+    dataIndex: "goodsName",
+    key: "goodsName",
+  },
+  {
+    title: "所属箱子",
+    dataIndex: "boxName",
+    key: "boxName",
+  },
+  {
+    title: "借贷科室",
+    dataIndex: "dapartmentType",
+    key: "dapartmentType",
+  },
+  {
+    title: "借贷人",
+    dataIndex: "personnelName",
+    key: "personnelName",
+  },
+  {
+    title: "借贷人联系方式",
+    dataIndex: "personnelPhone",
+    key: "personnelPhone",
+  },
+  {
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
+    slots: { customRender: "status" },
+  },
+
+  {
+    title: "归还人",
+    dataIndex: "returnMan",
+    key: "returnMan",
+  },
+  {
+    title: "归还人联系方式",
+    dataIndex: "returnPhone",
+    key: "returnPhone",
+  },
+  {
+    dataIndex: "time",
+    key: "time",
+    slots: { title: "customTitle", customRender: "time" },
+  },
+  {
+    title: "归还时间",
+    dataIndex: "returnTime",
+    key: "returnTime",
+  },
+  {
+    title: "操作",
+    key: "operation",
+    slots: { customRender: "operation" },
   },
 ];
 const getters = {};
@@ -113,7 +171,6 @@ const actions = {
     return new Promise((reslove) => {
       const eventTableData = [];
       findEventData().then((res) => {
-        console.log(res, "resssser");
         res.data.map((item) => {
           eventTableData.push({
             eventName: item.eventName,
@@ -128,6 +185,31 @@ const actions = {
         reslove({
           tableData: eventTableData,
           tableColumn: eventColumns,
+        });
+      });
+    });
+  },
+  // 获取事件展开列表
+  getEventExpandList: ({ dispatch }, id) => {
+    return new Promise((reslove) => {
+      const eventExpandTableData = [];
+      findEventExpandData({ eventId: id }).then((res) => {
+        // console.log(res, "reserserse");
+        res.data.map((item) => {
+          item.outDetailSet.map((val) => {
+            // eventExpandTableData.push({
+            //   boxName: "ccccccccc",
+            //   // goodsName:
+            //   //   val.resourceType == 1
+            //   //     ? val.materialInfo.materialName
+            //   //     : val.materialInfo.boxName,
+            //   // boxName: val.materialInfo.boxName,
+            // });
+          });
+        });
+        reslove({
+          tableData: eventExpandTableData,
+          tableColumn: eventExpandColumns,
         });
       });
     });

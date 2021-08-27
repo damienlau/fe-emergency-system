@@ -18,3 +18,9 @@ export function findEventData(params) {
     params,
   });
 }
+// 查询事件展开数据
+export function findEventExpandData(params) {
+  return request.get("/outForm/event/detail", {
+    params,
+  });
+}
