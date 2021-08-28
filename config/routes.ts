@@ -46,11 +46,12 @@ const routes = [
                 path: "pending",
                 name: "Pending",
                 meta: { label: "待出仓" },
-                component: () =>
-                  import("website/pages/warehouse/scanner/pending"),
+                component: () => import("website/pages/warehouse/scanner/pending"),
               },
-            ],
+            ]
+           
           },
+			
         ],
       },
       {

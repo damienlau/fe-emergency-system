@@ -3,7 +3,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { Menu, PageHeader } from "website/components";
 import defaultConfig from "config/config";
-import "./style.less";
+// import "./style.less";
 
 export default defineComponent({
   setup() {
@@ -19,7 +19,6 @@ export default defineComponent({
           return item;
         }
       });
-
       // 获取路由动态配置
       return route.matched[index_].children.map((routeItem) => {
         return {
