@@ -184,7 +184,7 @@ export default defineComponent({
         </div>
       );
     };
-    const rendEventExpandTable = (record, index) => {
+    const rendEventExpandTable = (record) => {
       store
         .dispatch("warehouseModule/recordModule/getEventExpandList", record.id)
         .then((response) => {
@@ -263,8 +263,6 @@ export default defineComponent({
           rowKey={(index) => index}
           size="small"
         >
-
-          
           <section class="overflow-y-auto">
             <TableSelct
               v-model={[tableSelectObj.value, "select"]}
