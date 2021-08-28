@@ -19,7 +19,6 @@ export default defineComponent({
           return item;
         }
       });
-
       // 获取路由动态配置
       return route.matched[index_].children.map((routeItem) => {
         return {

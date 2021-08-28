@@ -3,7 +3,7 @@ import App from "./App";
 import Antd from "ant-design-vue";
 import Router from "./router";
 import Store from "./store";
-import "../less/index.less";
+import "./less/index.less";
 
 const app = createApp(App);
 
