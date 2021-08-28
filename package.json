@@ -23,6 +23,8 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/mockjs": "^1.0.4",
+    "@types/node": "^16.7.4",
     "@vitejs/plugin-vue": "^1.4.0",
     "@vitejs/plugin-vue-jsx": "^1.1.7",
     "@vue/compiler-sfc": "^3.2.4",
