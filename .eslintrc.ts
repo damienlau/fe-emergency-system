@@ -3,6 +3,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    es6: true,
   },
   extends: [
     "eslint:recommended",
@@ -10,7 +11,8 @@ module.exports = {
     "prettier",
   ],
   parserOptions: {
-    ecmaVersion: 2021,
+    ecmaVersion: 6,
+    sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
