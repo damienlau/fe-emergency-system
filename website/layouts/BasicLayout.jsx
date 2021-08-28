@@ -29,6 +29,7 @@ export default defineComponent({
       });
     });
 
+    // 监听选中菜单项事件
     const handleSelectMenuItem = (item) => {
       console.log(item);
     };
