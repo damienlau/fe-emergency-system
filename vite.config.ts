@@ -5,7 +5,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 
 export default defineConfig({
   css: {
-    modules: { localsConvention: "camelCase" },
+    // modules: { localsConvention: "camelCase" },
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
@@ -21,7 +21,7 @@ export default defineConfig({
     },
   },
   server: {
-    open: { broswer: "google chrome" },
+    open: true,
     proxy: {
       "/dev-api": {
         target: "http://192.168.1.80/warehouse",

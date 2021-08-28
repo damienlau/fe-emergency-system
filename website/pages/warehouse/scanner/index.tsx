@@ -128,6 +128,7 @@ export default defineComponent({
             }}
           </Form>
         </Modal>
+        <RouterView></RouterView>
       </>
     );
   },
