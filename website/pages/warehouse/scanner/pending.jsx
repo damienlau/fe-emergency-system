@@ -2,7 +2,7 @@
 
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Form, Icon, Modalpending } from "website/components";
+import { Icon, Modalpending } from "website/components";
 
 export default defineComponent({
   setup() {
@@ -27,20 +27,6 @@ export default defineComponent({
 	const handleClickPendingItem = (activedItemkey)=>{
 		visible.value = !visible.value;
 	}
-	const formColumn = ref([
-	  {
-	    label: "事件",
-	    type: "select",
-	
-	    key: "event",
-	    // option: store.dispatch(""),
-	  },
-	  {
-	    label: "借货人工号",
-	    key: "number",
-	    required: true,
-	  },
-	]);
 		
 	const titileColumn = ref([
 	  {
@@ -191,7 +177,7 @@ export default defineComponent({
 			menuActiveKey={menuActiveKey.value}
 			menuEmpty={menuEmpty.value}		
 		>
-		   <a-button ghost html-type="submit" onClick={handleSubmitForm}>		          
+		  <a-button ghost html-type="submit" onClick={handleSubmitForm}>		          
 				返回扫描
 			</a-button>
 			<a-button ghost html-type="submit" onClick={handleSubmitForm}>		          

@@ -1,6 +1,7 @@
 // 出/归仓扫描
 
 import { defineComponent, onMounted, ref } from "vue";
+import { RouterView } from "vue-router";
 import { useStore } from "vuex";
 import { Form, Icon, Modal } from "website/components";
 
@@ -125,6 +126,7 @@ export default defineComponent({
             }}
           </Form>
         </Modal>
+        <RouterView></RouterView>
       </>
     );
   },
