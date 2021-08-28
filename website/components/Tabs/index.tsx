@@ -2,7 +2,7 @@
 
 import { defineComponent, onMounted, ref, toRefs } from "vue";
 import { Empty } from "website/components";
-import "./style.less";
+// import "./style.less";
 
 export default defineComponent({
   name: "Tabs",
