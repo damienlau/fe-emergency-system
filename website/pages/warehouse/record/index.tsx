@@ -191,14 +191,6 @@ export default defineComponent({
                 operation: ({ record }) => handleClickFinish(record),
                 numDetail: ({ record }) => rendEventNumDetail(record),
                 eventTime: ({ record }) => rendEventTime(record),
-                // expandedRowRender: () =>
-                //   expandDataSource.length && (
-                //     <a-table
-                //       dataSource={expandDataSource}
-                //       columns={expandColumns}
-                //       pagination={false}
-                //     ></a-table>
-                //   ),
               }}
             </a-table>
           </section>

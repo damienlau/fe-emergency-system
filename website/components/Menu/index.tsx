@@ -48,15 +48,14 @@ export default defineComponent({
 
     onMounted(() => {
       // 检测当前路由位置，如果不在指定页面就跳转到默认路由
-      let currentRoute_ = columns.value.find((routeItem) => {
-        return routeItem.key == route.name;
-      });
-
-      handleClickMenuItem({
-        keyPath: currentRoute_
-          ? Array.of(currentRoute_["key"])
-          : menuActiveKey.value,
-      });
+      // let currentRoute_ = columns.value.find((routeItem) => {
+      //   return routeItem.key == route.name;
+      // });
+      // handleClickMenuItem({
+      //   keyPath: currentRoute_
+      //     ? Array.of(currentRoute_["key"])
+      //     : menuActiveKey.value,
+      // });
     });
 
     return () => (

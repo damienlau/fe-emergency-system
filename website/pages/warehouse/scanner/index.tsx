@@ -1,13 +1,14 @@
 // 出/归仓扫描
 
 import { defineComponent, onMounted, ref } from "vue";
-import { RouterView } from "vue-router";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Form, Icon, Modal } from "website/components";
 
 export default defineComponent({
   setup() {
     const store = useStore();
+    const router = useRouter();
     // 扫描菜单配置项
     const menus = ref([
       {
@@ -58,6 +59,7 @@ export default defineComponent({
     // 监听模态框表单提交事件
     const handleSubmitForm = () => {
       console.log(formData.value);
+      router.push({ name: "Pending" });
       visible.value = !visible.value;
     };
 
