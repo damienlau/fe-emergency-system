@@ -197,19 +197,19 @@ const actions = {
         // console.log(res, "reserserse");
         res.data.map((item) => {
           item.outDetailSet.map((val) => {
-            // eventExpandTableData.push({
-            //   boxName: "ccccccccc",
-            //   // goodsName:
-            //   //   val.resourceType == 1
-            //   //     ? val.materialInfo.materialName
-            //   //     : val.materialInfo.boxName,
-            //   // boxName: val.materialInfo.boxName,
-            // });
+            eventExpandTableData.push({
+              boxName: "ccccccccc",
+              // goodsName:
+              //   val.resourceType == 1
+              //     ? val.materialInfo.materialName
+              //     : val.materialInfo.boxName,
+              // boxName: val.materialInfo.boxName,
+            });
           });
         });
         reslove({
-          tableData: eventExpandTableData,
-          tableColumn: eventExpandColumns,
+          expandTableData: eventExpandTableData,
+          expandTableColumn: eventExpandColumns,
         });
       });
     });

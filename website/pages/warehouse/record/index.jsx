@@ -1,5 +1,5 @@
 // 借还记录
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, h, nextTick, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { Tabs, TableSelct } from "website/components";
 
@@ -81,6 +81,7 @@ export default defineComponent({
         store
           .dispatch("warehouseModule/recordModule/getEventList")
           .then((response) => {
+            console.log(response.tableData, "1");
             tableData.value = response.tableData;
             tableColumn.value = response.tableColumn;
           });
@@ -183,36 +184,37 @@ export default defineComponent({
         </div>
       );
     };
-    const rendEventExpandTable = (record) => {
+    const rendEventExpandTable = (record, index) => {
       store
         .dispatch("warehouseModule/recordModule/getEventExpandList", record.id)
         .then((response) => {
-          // expandTableData.value = response.tableData;
-          // expandTableColumn.value = response.tableColumn;
+          // expandTableData.value = response.expandTableData;
+          // expandTableColumn.value = response.expandTableColumn;
+          // return <h1>111111111111111111</h1>;
         });
-      return (
-        <a-table
-          dataSource={expandTableData.value}
-          columns={expandTableColumn.value}
-          pagination={false}
-          class="text-white"
-          rowKey={(record) => record.key}
-        >
-          {{
-            status: ({ text }) => renderEventExpendStatus(text),
-            operation: ({ record }) => handleClickCancel(record),
-            time: ({ record }) => rendEventExpendTime(record),
-            customTitle: () => {
-              return (
-                <>
-                  <span class="text-warning">生成清单时间</span>
-                  <span>/出仓时间</span>
-                </>
-              );
-            },
-          }}
-        </a-table>
-      );
+      // return (
+      //   <a-table
+      //     dataSource={expandTableData.value}
+      //     columns={expandTableColumn.value}
+      //     pagination={false}
+      //     class="text-white"
+      //     rowKey={(record) => record.key}
+      //   >
+      //     {{
+      //       status: ({ text }) => renderEventExpendStatus(text),
+      //       operation: ({ record }) => handleClickCancel(record),
+      //       time: ({ record }) => rendEventExpendTime(record),
+      //       customTitle: () => {
+      //         return (
+      //           <>
+      //             <span class="text-warning">生成清单时间</span>
+      //             <span>/出仓时间</span>
+      //           </>
+      //         );
+      //       },
+      //     }}
+      //   </a-table>
+      // );
     };
     const renderEventExpendStatus = (status) => {
       return (
