@@ -1,5 +1,5 @@
 :root {
-  // 颜色
+  // Colors
   each(@navy-colors, {
     --color-navy-@{key}: @value;
   });
@@ -8,8 +8,8 @@
     --color-@{key}: @value;
   });
 
-  // 尺寸
-  each(@size, {
+  // Sizing
+  each(@sizes, {
     @computed: (@value/16rem);
 
     --size-@{value}: @computed;

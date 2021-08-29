@@ -309,7 +309,7 @@ export default defineComponent({
           block
           columns={menus.value}
           empty={menuEmpty.value}
-          onSelect={handleClickTabPane}
+          onClick={handleClickTabPane}
           rowKey={(index) => index}
           size="small"
         >
