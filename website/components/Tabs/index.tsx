@@ -10,14 +10,13 @@ export default defineComponent({
   },
   props: {
     center: { type: Boolean, required: false, default: false },
-    columns: { type: Array, required: true },
+    columns: { type: Object, required: true },
   },
   setup(props, { slots, emit }) {
-    const { center, columns } = toRefs(props);
-    const tabActiveKey = ref<string | number>(columns.value[0].key);
+    const tabActiveKey = ref<string | number>(props.columns[0].key);
     const tabNavbarCenterClasses = computed(() => {
       return {
-        "ant-tabs-nav-center h-full dark:bg-navy-4 rounded": center.value,
+        "ant-tabs-nav-center h-full dark:bg-navy-4 rounded": props.center,
       };
     });
 
@@ -38,7 +37,7 @@ export default defineComponent({
       >
         {{
           default: () => {
-            return columns.value.map(
+            return props.columns.map(
               (row: { label: string; key: string; count?: number }) => {
                 return (
                   <TabPane key={row.key}>
