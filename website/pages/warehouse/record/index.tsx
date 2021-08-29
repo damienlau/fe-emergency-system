@@ -271,7 +271,6 @@ export default defineComponent({
       //   });
     };
     const renderStatus = (status) => {
-      console.log(status, "ss");
       return (
         <p style={status == 2 ? "color:green" : "color:red"}>
           {status == 2 ? "已完成" : "维修中"}
