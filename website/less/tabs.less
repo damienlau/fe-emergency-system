@@ -2,16 +2,42 @@
   @apply h-full flex flex-col rounded;
 
   &-bar {
-    @apply border-navy-1 px-16;
+    @apply border-navy-1 pt-16 px-16;
   }
 
-  &-nav-center {
-    .@{tab-prefix-cls}-nav-scroll {
-      @apply flex flex-row items-center justify-center;
+  &-nav {
+    .@{tab-prefix-cls}-tab {
+      .@{badge-prefix-cls} {
+        @apply text-18 text-white text-opacity-50;
+      }
+
+      &-active {
+        .@{badge-prefix-cls} {
+          @apply text-opacity-90;
+        }
+      }
+    }
+
+    &-center {
+      .@{tab-prefix-cls}-bar {
+        @apply border-none;
+
+        .@{tab-prefix-cls}-nav {
+          @apply border-b border-solid border-danger;
+
+          &-scroll {
+            @apply flex flex-row items-center justify-center;
+          }
+        }
+      }
     }
   }
 
   &-content {
     @apply flex-auto p-16;
+
+    .@{tab-prefix-cls}-tabpane {
+      @apply h-full;
+    }
   }
 }
