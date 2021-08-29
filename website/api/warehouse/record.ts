@@ -25,5 +25,7 @@ export function findEventExpandData(params) {
     params,
   });
 }
-
-// 维修记录
+// 查询日常全部数据
+export function findDailyData() {
+  return request.get("/outForm/event/daily");
+}

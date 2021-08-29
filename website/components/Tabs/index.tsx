@@ -26,6 +26,7 @@ export default defineComponent({
     // 监听点击标签页选项卡事件
     const handleTabClick = (key = tabActiveKey.value) => {
       tabActiveKey.value = key;
+      console.log(tabActiveKey.value, "tabActiveKey.value");
       emit(
         "select",
         tabActiveKey.value,

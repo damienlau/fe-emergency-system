@@ -29,8 +29,65 @@ export default defineComponent({
     const tableData = ref([]);
     const tableColumn = ref([]);
     // 展开表格数据
-    const expandTableData = ref([]);
-    const expandTableColumn = ref([]);
+    const expandTableColumn = ref([
+      {
+        title: "箱子/物资名称",
+        dataIndex: "goodsName",
+        key: "goodsName",
+      },
+      {
+        title: "所属箱子",
+        dataIndex: "boxName",
+        key: "boxName",
+      },
+      {
+        title: "借贷科室",
+        dataIndex: "dapartmentName",
+        key: "dapartmentName",
+      },
+      {
+        title: "借贷人",
+        dataIndex: "personnelName",
+        key: "personnelName",
+      },
+      {
+        title: "借贷人联系方式",
+        dataIndex: "personnelPhone",
+        key: "personnelPhone",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
+        slots: { customRender: "status" },
+      },
+
+      {
+        title: "归还人",
+        dataIndex: "returnMan",
+        key: "returnMan",
+      },
+      {
+        title: "归还人联系方式",
+        dataIndex: "returnPhone",
+        key: "returnPhone",
+      },
+      {
+        dataIndex: "time",
+        key: "time",
+        slots: { title: "customTitle", customRender: "time" },
+      },
+      {
+        title: "归还时间",
+        dataIndex: "returnTime",
+        key: "returnTime",
+      },
+      {
+        title: "操作",
+        key: "operation",
+        slots: { customRender: "operation" },
+      },
+    ]);
     // table 搜索配置
     const tableSelectObj = ref({});
     const tableSelctColum = ref([
@@ -69,6 +126,7 @@ export default defineComponent({
     const menuActiveKey = ref(menus.value[0].key); //监听点击标签页菜单事件
     // 监听点击标签页菜单事件
     const handleClickTabPane = (activeKey = menuActiveKey.value) => {
+      console.log(activeKey, "activeKey");
       menuActiveKey.value = activeKey; // 请求接口
       if (activeKey === "1" || activeKey === "2") {
         store
@@ -81,7 +139,13 @@ export default defineComponent({
         store
           .dispatch("warehouseModule/recordModule/getEventList")
           .then((response) => {
-            console.log(response.tableData, "1");
+            tableData.value = response.tableData;
+            tableColumn.value = response.tableColumn;
+          });
+      } else if (activeKey === "daily") {
+        store
+          .dispatch("warehouseModule/recordModule/getDailyList")
+          .then((response) => {
             tableData.value = response.tableData;
             tableColumn.value = response.tableColumn;
           });
@@ -185,36 +249,30 @@ export default defineComponent({
       );
     };
     const rendEventExpandTable = (record) => {
-      store
-        .dispatch("warehouseModule/recordModule/getEventExpandList", record.id)
-        .then((response) => {
-          // expandTableData.value = response.expandTableData;
-          // expandTableColumn.value = response.expandTableColumn;
-          // return <h1>111111111111111111</h1>;
-        });
-      // return (
-      //   <a-table
-      //     dataSource={expandTableData.value}
-      //     columns={expandTableColumn.value}
-      //     pagination={false}
-      //     class="text-white"
-      //     rowKey={(record) => record.key}
-      //   >
-      //     {{
-      //       status: ({ text }) => renderEventExpendStatus(text),
-      //       operation: ({ record }) => handleClickCancel(record),
-      //       time: ({ record }) => rendEventExpendTime(record),
-      //       customTitle: () => {
-      //         return (
-      //           <>
-      //             <span class="text-warning">生成清单时间</span>
-      //             <span>/出仓时间</span>
-      //           </>
-      //         );
-      //       },
-      //     }}
-      //   </a-table>
-      // );
+      return (
+        <a-table
+          dataSource={record.eventExpandTableData}
+          columns={expandTableColumn.value}
+          pagination={false}
+          align={"left"}
+          class="text-white"
+          rowKey={(record) => record.key}
+        >
+          {{
+            customTitle: () => {
+              return (
+                <>
+                  <span class="text-warning">生成清单时间</span>
+                  <span>/出仓时间</span>
+                </>
+              );
+            },
+            status: ({ text }) => renderEventExpendStatus(text),
+            operation: ({ record }) => handleClickCancel(record),
+            time: ({ record }) => rendEventExpendTime(record),
+          }}
+        </a-table>
+      );
     };
     const renderEventExpendStatus = (status) => {
       return (
@@ -235,19 +293,11 @@ export default defineComponent({
       return (
         <div class="flex flex-row items-center justify-end">
           <span style={record.status == 3 ? "color:orange" : ""}>
-            {record.time || "--"}
+            {record.time}
           </span>
         </div>
       );
     };
-    watch(
-      () => {
-        return tableSelectObj.value;
-      },
-      ({ data }) => {
-        console.log(data, "data");
-      }
-    );
     onMounted(() => {
       handleClickTabPane();
     });
@@ -259,7 +309,7 @@ export default defineComponent({
           block
           columns={menus.value}
           empty={menuEmpty.value}
-          onTabClick={handleClickTabPane}
+          onSelect={handleClickTabPane}
           rowKey={(index) => index}
           size="small"
         >
@@ -291,6 +341,17 @@ export default defineComponent({
                 operation: ({ record }) => handleClickFinish(record),
                 numDetail: ({ record }) => rendEventNumDetail(record),
                 eventTime: ({ record }) => rendEventTime(record),
+                customTitle: () => {
+                  return (
+                    <>
+                      <span class="text-warning">生成清单时间</span>
+                      <span>/出仓时间</span>
+                    </>
+                  );
+                },
+                dailyStatus: ({ text }) => renderEventExpendStatus(text),
+                dailyOperation: ({ record }) => handleClickCancel(record),
+                dailyTime: ({ record }) => rendEventExpendTime(record),
               }}
             </a-table>
           </section>
