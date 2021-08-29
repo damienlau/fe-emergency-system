@@ -90,74 +90,137 @@ export default defineComponent({
     ]);
     // table 搜索配置
     const tableSelectObj = ref({});
-    const tableSelctColum = ref([
-      {
-        type: "input",
-        key: "test",
-        label: "测试",
-        placeholder: "侧是是是",
-      },
-      {
-        type: "input",
-        key: "test2",
-        label: "测试2",
-        placeholder: "侧是是是",
-      },
-      {
-        type: "select",
-        key: "test3",
-        label: "测试3",
-        placeholder: "全部",
-        options: [
-          {
-            label: "dddddd",
-            key: "1",
-          },
-          {
-            label: "dddddd",
-            key: "2",
-          },
-        ],
-      },
-    ]);
+    const tableSelctColum = ref([]);
     // 菜单列表空状态
     const menuEmpty = ref(false);
     // 菜单当前激活值
     const menuActiveKey = ref(menus.value[0].key); //监听点击标签页菜单事件
     // 监听点击标签页菜单事件
     const handleClickTabPane = (activeKey = menuActiveKey.value) => {
-      console.log(activeKey, "activeKey");
-      menuActiveKey.value = activeKey; // 请求接口
+      menuActiveKey.value = activeKey;
+      tableSelectObj.value = {}; // 清空搜索框
+      setSearchColumn(activeKey);
       if (activeKey === "1" || activeKey === "2") {
-        store
-          .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
-          .then((response) => {
-            console.log(response, "ffff");
-            tableData.value = response.tableData;
-            tableColumn.value = response.tableColumn;
-          });
+        getMaintainList({});
       } else if (activeKey === "event") {
-        store
-          .dispatch("warehouseModule/recordModule/getEventList")
-          .then((response) => {
-            tableData.value = response.tableData;
-            tableColumn.value = response.tableColumn;
-          });
+        getEventList({});
       } else if (activeKey === "daily") {
-        store
-          .dispatch("warehouseModule/recordModule/getDailyList")
-          .then((response) => {
-            console.log(response, "response");
-            tableData.value = response.tableData;
-            tableColumn.value = response.tableColumn;
-          });
-      } else {
-        tableData.value = [];
-        tableColumn.value = [];
+        getDailyList({});
+      }
+    };
+    const getMaintainList = (search) => {
+      store
+        .dispatch("warehouseModule/recordModule/getMaintainList", {
+          activeKey: menuActiveKey.value,
+          search,
+        })
+        .then((response) => {
+          tableData.value = response.tableData;
+          tableColumn.value = response.tableColumn;
+        });
+    };
+    const getEventList = (search) => {
+      store
+        .dispatch("warehouseModule/recordModule/getEventList", search)
+        .then((response) => {
+          tableData.value = response.tableData;
+          tableColumn.value = response.tableColumn;
+        });
+    };
+    const getDailyList = (search) => {
+      store
+        .dispatch("warehouseModule/recordModule/getDailyList", search)
+        .then((response) => {
+          tableData.value = response.tableData;
+          tableColumn.value = response.tableColumn;
+        });
+    };
+    const setSearchColumn = (activeKey) => {
+      if (activeKey === "1" || activeKey === "2") {
+        tableSelctColum.value = [
+          {
+            key: "test",
+            placeholder: "保养公司/保养人搜索",
+          },
+          {
+            key: "test2",
+            placeholder: "物资搜索",
+          },
+          {
+            type: "select",
+            key: "test3",
+            label: "是否出仓库",
+            placeholder: "全部",
+            options: [
+              {
+                label: "是",
+                key: true,
+              },
+              {
+                label: "否",
+                key: false,
+              },
+            ],
+          },
+        ];
+      } else if (activeKey === "event") {
+        tableSelctColum.value = [
+          {
+            key: "test",
+            placeholder: "事件搜索",
+          },
+          {
+            key: "test2",
+            placeholder: "箱子搜索",
+          },
+        ];
+      } else if (activeKey === "daily") {
+        tableSelctColum.value = [
+          {
+            key: "test",
+            placeholder: "人员搜索",
+          },
+          {
+            key: "test2",
+            placeholder: "物资搜索",
+          },
+          {
+            type: "select",
+            key: "test3",
+            label: "借贷科室",
+            placeholder: "全部",
+            options: [
+              {
+                label: "dddddd",
+                key: "1",
+              },
+              {
+                label: "dddddd",
+                key: "2",
+              },
+            ],
+          },
+          {
+            type: "select",
+            key: "test4",
+            label: "状态",
+            placeholder: "全部",
+            options: [
+              {
+                label: "dddddd",
+                key: "1",
+              },
+              {
+                label: "dddddd",
+                key: "2",
+              },
+            ],
+          },
+        ];
       }
     };
     const handleClickFinish = (record) => {
-      if (record.status === 2) return false;
+      if (record.status == 2) return false;
       return (
         <a-button
           size="small"
@@ -208,9 +271,10 @@ export default defineComponent({
       //   });
     };
     const renderStatus = (status) => {
+      console.log(status, "ss");
       return (
-        <p style={status == 1 ? "color:red" : "color:green"}>
-          {status == 1 ? "保养中" : "已完成"}
+        <p style={status == 2 ? "color:green" : "color:red"}>
+          {status == 2 ? "已完成" : "维修中"}
         </p>
       );
     };
@@ -300,6 +364,17 @@ export default defineComponent({
         </div>
       );
     };
+    const handSearch = () => {
+      const activeKey = menuActiveKey.value;
+      const search = tableSelectObj.value;
+      if (activeKey === "1" || activeKey === "2") {
+        getMaintainList(search);
+      } else if (activeKey === "event") {
+        getEventList(search);
+      } else if (activeKey === "daily") {
+        getDailyList(search);
+      }
+    };
     onMounted(() => {
       handleClickTabPane();
     });
@@ -307,6 +382,7 @@ export default defineComponent({
     return () => (
       <>
         <Tabs
+          class="dark:bg-navy-4"
           v-model={[menuActiveKey.value, "activeKey"]}
           block
           columns={menus.value}
@@ -317,16 +393,22 @@ export default defineComponent({
         >
           <section class="overflow-y-auto">
             <TableSelct
-              v-model={[tableSelectObj.value, "select"]}
+              v-model={[tableSelectObj.value, "model"]}
               columns={tableSelctColum.value}
+              onSearch={handSearch}
             ></TableSelct>
-            <span>{tableSelectObj.value}</span>
+            <span>{tableSelectObj.value.test}</span>
             <a-table
               class="text-white"
               rowKey={(record, index) => record.key || record.id || index}
               dataSource={tableData.value}
               columns={tableColumn.value}
-              pagination={menuActiveKey.value === "event" ? false : true}
+              pagination={
+                menuActiveKey.value === "event" ||
+                menuActiveKey.value === "daily"
+                  ? false
+                  : true
+              }
               showHeader={menuActiveKey.value === "event" ? false : true}
               rowClassName={() => {
                 if (menuActiveKey.value === "event")

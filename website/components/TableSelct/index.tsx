@@ -11,27 +11,28 @@ export default defineComponent({
       required: false,
     },
     // 搜索数据对象
-    select: {
+    model: {
       type: Object,
-      default() {
-        return {};
-      },
+      required: true,
     },
   },
-  emits: ["update:model", "submit"],
+  emits: ["search", "update:model"],
   setup(props, { slots, emit }) {
-    const { columns, select } = toRefs(props);
-    console.log(select, "select");
-    // 监听表单提交事件
-    const handleSubmit = () =>
-      emit("submit", emit("update:model", select.value));
+    const { columns, model } = toRefs(props);
+    const handleSearch = () => {
+      emit("update:model", model.value);
+      emit("search");
+    };
 
     return () => (
-      <a-form layout="inline">
+      <a-form model={model.value} layout="inline" class="m-3">
         {/* 表单输入控件 */}
         {columns.value.map((formItem) => {
           return (
-            <a-form-item colon={formItem.colon || false} name={formItem.key}>
+            <a-form-item
+              name={formItem.key}
+              colon={formItem.label ? true : false}
+            >
               {{
                 label: () =>
                   formItem.label && (
@@ -40,24 +41,14 @@ export default defineComponent({
                 default: () => {
                   let customElement_;
                   switch (formItem.type) {
-                    case "input":
-                      customElement_ = (
-                        <a-input-search
-                          v-model={[select.value[`${formItem.key}`], "value"]}
-                          allowClear
-                          size="default"
-                          placeholder={formItem.placeholder || ""}
-                          onSearch={handleSubmit}
-                        ></a-input-search>
-                      );
-                      break;
                     case "select":
                       customElement_ = (
                         <a-select
-                          v-model={[select.value[`${formItem.key}`], "value"]}
+                          v-model={[model.value[`${formItem.key}`], "value"]}
                           allowClear
                           size="default"
                           placeholder={formItem.placeholder || ""}
+                          onChange={handleSearch}
                           style="width: 100%"
                         >
                           {formItem.options &&
@@ -69,6 +60,17 @@ export default defineComponent({
                               );
                             })}
                         </a-select>
+                      );
+                      break;
+                    default:
+                      customElement_ = (
+                        <a-input-search
+                          v-model={[model.value[`${formItem.key}`], "value"]}
+                          allowClear
+                          size="default"
+                          placeholder={formItem.placeholder || ""}
+                          onSearch={handleSearch}
+                        ></a-input-search>
                       );
                       break;
                   }

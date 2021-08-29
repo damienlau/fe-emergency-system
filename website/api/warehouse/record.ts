@@ -26,6 +26,6 @@ export function findEventExpandData(params) {
   });
 }
 // 查询日常全部数据
-export function findDailyData() {
-  return request.get("/outForm/event/daily");
+export function findDailyData(params) {
+  return request.get("/outForm/event/daily", { params });
 }

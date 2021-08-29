@@ -142,42 +142,47 @@ const dailyColumns = [
 const getters = {};
 const actions = {
   // 获取维修/保养记录列表
-  getMaintainList: (context, key) => {
+  getMaintainList: (context, { activeKey, search }) => {
+    console.log(activeKey, search);
     return new Promise((reslove) => {
-      findMaintenanceData({ operationType: key }).then((res) => {
-        const maintainTableData = [];
-        console.log(res, "reserer");
-        if (res && res.data && res.data.content.length > 0) {
-          res.data.content.map((item) => {
-            item.detailList.map((val) => {
-              maintainTableData.push({
-                materialName: val.materialInfo.materialName,
-                boxName: val.materialInfo.boxName,
-                personnelCompany: item.personnelCompany,
-                personnelName: item.personnelName,
-                personnelPhone: item.personnelPhone,
-                status: val.status,
-                isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
-                description: item.description,
-                startTime: val.startTime,
-                endTime: val.endTime,
-                id: val.id,
+      findMaintenanceData({ operationType: activeKey, ...search }).then(
+        (res) => {
+          const maintainTableData = [];
+          if (res && res.data && res.data.content.length > 0) {
+            res.data.content.map((item) => {
+              item.detailList.map((val) => {
+                maintainTableData.push({
+                  materialName: val.materialInfo.materialName,
+                  boxName: val.materialInfo.boxName,
+                  personnelCompany: item.personnelCompany,
+                  personnelName: item.personnelName,
+                  personnelPhone: item.personnelPhone,
+                  status: val.status,
+                  isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
+                  description: item.description,
+                  startTime: val.startTime,
+                  endTime: val.endTime,
+                  id: val.id,
+                });
               });
             });
+          }
+          reslove({
+            tableData: maintainTableData,
+            tableColumn: maintainColumns,
           });
         }
-        reslove({ tableData: maintainTableData, tableColumn: maintainColumns });
-      });
+      );
     });
   },
   // 获取事件列表
-  getEventList: ({ dispatch }) => {
+  getEventList: ({ dispatch }, search) => {
     return new Promise((reslove) => {
       findEventData().then((res) => {
         const eventTableData = [];
         if (res && res.data.length > 0) {
           res.data.map((item) => {
-            findEventExpandData({ eventId: item.id }).then((res) => {
+            findEventExpandData({ eventId: item.id, ...search }).then((res) => {
               const eventExpandTableData = [];
               res.data.map((item) => {
                 if (item.outDetailSet.length > 0) {
@@ -224,9 +229,9 @@ const actions = {
   },
 
   // 获取日常列表
-  getDailyList: () => {
+  getDailyList: ({ dispatch }, search) => {
     return new Promise((reslove, reject) => {
-      findDailyData().then((res) => {
+      findDailyData({ ...search }).then((res) => {
         const dailyTableData = [];
         if (res && res.data.length > 0) {
           res.data.map((item) => {
