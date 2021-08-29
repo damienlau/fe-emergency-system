@@ -132,6 +132,7 @@ export default defineComponent({
         store
           .dispatch("warehouseModule/recordModule/getMaintainList", activeKey)
           .then((response) => {
+            console.log(response, "ffff");
             tableData.value = response.tableData;
             tableColumn.value = response.tableColumn;
           });
@@ -146,6 +147,7 @@ export default defineComponent({
         store
           .dispatch("warehouseModule/recordModule/getDailyList")
           .then((response) => {
+            console.log(response, "response");
             tableData.value = response.tableData;
             tableColumn.value = response.tableColumn;
           });

@@ -144,25 +144,28 @@ const actions = {
   // 获取维修/保养记录列表
   getMaintainList: (context, key) => {
     return new Promise((reslove) => {
-      const maintainTableData = [];
       findMaintenanceData({ operationType: key }).then((res) => {
-        res.data.content.map((item) => {
-          item.detailList.map((val) => {
-            maintainTableData.push({
-              materialName: val.materialInfo.materialName,
-              boxName: val.materialInfo.boxName,
-              personnelCompany: item.personnelCompany,
-              personnelName: item.personnelName,
-              personnelPhone: item.personnelPhone,
-              status: val.status,
-              isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
-              description: item.description,
-              startTime: val.startTime,
-              endTime: val.endTime,
-              id: val.id,
+        const maintainTableData = [];
+        console.log(res, "reserer");
+        if (res && res.data && res.data.content.length > 0) {
+          res.data.content.map((item) => {
+            item.detailList.map((val) => {
+              maintainTableData.push({
+                materialName: val.materialInfo.materialName,
+                boxName: val.materialInfo.boxName,
+                personnelCompany: item.personnelCompany,
+                personnelName: item.personnelName,
+                personnelPhone: item.personnelPhone,
+                status: val.status,
+                isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
+                description: item.description,
+                startTime: val.startTime,
+                endTime: val.endTime,
+                id: val.id,
+              });
             });
           });
-        });
+        }
         reslove({ tableData: maintainTableData, tableColumn: maintainColumns });
       });
     });
@@ -170,79 +173,84 @@ const actions = {
   // 获取事件列表
   getEventList: ({ dispatch }) => {
     return new Promise((reslove) => {
-      const eventTableData = [];
       findEventData().then((res) => {
-        res.data.map((item) => {
-          findEventExpandData({ eventId: item.id }).then((res) => {
-            const eventExpandTableData = [];
-            res.data.map((item) => {
-              if (item.outDetailSet.length > 0) {
-                item.outDetailSet.map((val) => {
-                  eventExpandTableData.push({
-                    goodsName:
-                      val.resourceType == 1
-                        ? (val.materialInfo && val.materialInfo.materialName) ||
-                          "--"
-                        : (val.materialInfo && val.materialInfo.boxName) ||
-                          "--",
-                    boxName: val.materialInfo && val.materialInfo.boxName,
-                    departmentName: "后台没提供",
-                    personnelName: item.personnelName,
-                    personnelPhone: item.personnelPhone,
-                    status: item.status,
-                    returnMan: val.returnMan || "--",
-                    returnPhone: val.returnPhone || "--",
-                    returnTime: val.returnTime || "--",
+        const eventTableData = [];
+        if (res && res.data.length > 0) {
+          res.data.map((item) => {
+            findEventExpandData({ eventId: item.id }).then((res) => {
+              const eventExpandTableData = [];
+              res.data.map((item) => {
+                if (item.outDetailSet.length > 0) {
+                  item.outDetailSet.map((val) => {
+                    eventExpandTableData.push({
+                      goodsName:
+                        val.resourceType == 1
+                          ? (val.materialInfo &&
+                              val.materialInfo.materialName) ||
+                            "--"
+                          : (val.materialInfo && val.materialInfo.boxName) ||
+                            "--",
+                      boxName: val.materialInfo && val.materialInfo.boxName,
+                      departmentName: "后台没提供",
+                      personnelName: item.personnelName,
+                      personnelPhone: item.personnelPhone,
+                      status: item.status,
+                      returnMan: val.returnMan || "--",
+                      returnPhone: val.returnPhone || "--",
+                      returnTime: val.returnTime || "--",
+                    });
                   });
-                });
-              }
-            });
-            eventTableData.push({
-              eventName: item.eventName || "--",
-              numDetail: item,
-              eventTime: {
-                startTime: item.startTime,
-                endTime: item.endTime,
-              },
-              id: item.id,
-              eventExpandTableData: eventExpandTableData,
-            });
-            reslove({
-              tableData: eventTableData,
-              tableColumn: eventColumns,
+                }
+              });
+              eventTableData.push({
+                eventName: item.eventName || "--",
+                numDetail: item,
+                eventTime: {
+                  startTime: item.startTime,
+                  endTime: item.endTime,
+                },
+                id: item.id,
+                eventExpandTableData: eventExpandTableData,
+              });
+              reslove({
+                tableData: eventTableData,
+                tableColumn: eventColumns,
+              });
             });
           });
-        });
+        }
       });
     });
   },
 
   // 获取日常列表
   getDailyList: () => {
-    return new Promise((reslove) => {
+    return new Promise((reslove, reject) => {
       findDailyData().then((res) => {
         const dailyTableData = [];
-        res.data.map((item) => {
-          if (item.outDetailSet.length > 0) {
-            item.outDetailSet.map((val) => {
-              dailyTableData.push({
-                goodsName:
-                  val.resourceType == 1
-                    ? (val.materialInfo && val.materialInfo.materialName) ||
-                      "--"
-                    : (val.materialInfo && val.materialInfo.boxName) || "--",
-                boxName: val.materialInfo && val.materialInfo.boxName,
-                departmentName: "后台没提供",
-                personnelName: item.personnelName,
-                personnelPhone: item.personnelPhone,
-                status: item.status,
-                returnMan: val.returnMan || "--",
-                returnPhone: val.returnPhone || "--",
-                returnTime: val.returnTime || "--",
+        if (res && res.data.length > 0) {
+          res.data.map((item) => {
+            if (item.outDetailSet.length > 0) {
+              item.outDetailSet.map((val) => {
+                dailyTableData.push({
+                  goodsName:
+                    val.resourceType == 1
+                      ? (val.materialInfo && val.materialInfo.materialName) ||
+                        "--"
+                      : (val.materialInfo && val.materialInfo.boxName) || "--",
+                  boxName: val.materialInfo && val.materialInfo.boxName,
+                  departmentName: "后台没提供",
+                  personnelName: item.personnelName,
+                  personnelPhone: item.personnelPhone,
+                  status: item.status,
+                  returnMan: val.returnMan || "--",
+                  returnPhone: val.returnPhone || "--",
+                  returnTime: val.returnTime || "--",
+                });
               });
-            });
-          }
-        });
+            }
+          });
+        }
         reslove({
           tableData: dailyTableData,
           tableColumn: dailyColumns,
