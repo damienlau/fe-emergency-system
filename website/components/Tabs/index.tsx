@@ -1,6 +1,12 @@
 import { computed, defineComponent, onMounted, ref, toRefs } from "vue";
 import { Badge, TabPane, Tabs } from "ant-design-vue";
 
+type TabPaneProps = {
+  label: string;
+  key: string;
+  count?: number;
+};
+
 export default defineComponent({
   name: "Tabs",
   emits: {
@@ -16,7 +22,7 @@ export default defineComponent({
     const tabActiveKey = ref<string | number>(props.columns[0].key);
     const tabNavbarCenterClasses = computed(() => {
       return {
-        "ant-tabs-nav-center h-full dark:bg-navy-4 rounded": props.center,
+        "ant-tabs-nav-center h-full rounded": props.center,
       };
     });
 
@@ -37,30 +43,28 @@ export default defineComponent({
       >
         {{
           default: () => {
-            return props.columns.map(
-              (row: { label: string; key: string; count?: number }) => {
-                return (
-                  <TabPane key={row.key}>
-                    {{
-                      default: () => (
-                        <section class="h-full overflow-hidden">
-                          {slots.default?.()}
-                        </section>
-                      ),
-                      tab: () => (
-                        <Badge
-                          count={row.count}
-                          overflowCount={999}
-                          offset={[16, 0]}
-                        >
-                          {row.label}
-                        </Badge>
-                      ),
-                    }}
-                  </TabPane>
-                );
-              }
-            );
+            return props.columns.map((row: TabPaneProps) => {
+              return (
+                <TabPane key={row.key}>
+                  {{
+                    default: () => (
+                      <section class="h-full overflow-hidden">
+                        {slots.default?.()}
+                      </section>
+                    ),
+                    tab: () => (
+                      <Badge
+                        count={row.count}
+                        overflowCount={999}
+                        offset={[16, 0]}
+                      >
+                        {row.label}
+                      </Badge>
+                    ),
+                  }}
+                </TabPane>
+              );
+            });
           },
           tabBarExtraContent: () => slots.extra?.(),
         }}
