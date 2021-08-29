@@ -1,0 +1,17 @@
+.@{tab-prefix-cls} {
+  @apply h-full flex flex-col rounded;
+
+  &-bar {
+    @apply border-navy-1 px-16;
+  }
+
+  &-nav-center {
+    .@{tab-prefix-cls}-nav-scroll {
+      @apply flex flex-row items-center justify-center;
+    }
+  }
+
+  &-content {
+    @apply flex-auto p-16;
+  }
+}

@@ -10,7 +10,7 @@ message.config({
 
 // 创建请求实例
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_APP_REQUEST_URL,
   timeout: 23333,
 });
 

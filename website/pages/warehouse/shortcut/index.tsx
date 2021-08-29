@@ -137,7 +137,7 @@ export default defineComponent({
           block
           columns={menus.value}
           empty={menuEmpty.value}
-          onTabClick={handleClickTabPane}
+          onClick={handleClickTabPane}
           v-slots={{
             // 菜单附加操作区
             extra: () => (

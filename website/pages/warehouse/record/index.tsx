@@ -259,12 +259,10 @@ export default defineComponent({
           block
           columns={menus.value}
           empty={menuEmpty.value}
-          onTabClick={handleClickTabPane}
+          onClick={handleClickTabPane}
           rowKey={(index) => index}
           size="small"
         >
-
-          
           <section class="overflow-y-auto">
             <TableSelct
               v-model={[tableSelectObj.value, "select"]}
