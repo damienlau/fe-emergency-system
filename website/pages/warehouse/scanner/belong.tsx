@@ -3,14 +3,14 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { Modal as AntModal } from "ant-design-vue";
-import { Form, Icon, Modal, Tabs, Empty, Card } from "website/components";
+import { Form, Icon, Modal, Tabs, Empty, Card, } from "website/components";
 
 export default defineComponent({
   setup() {
     const store = useStore();
-    // 待出仓标题及数据展示
+    // 待归仓标题及数据展示
     const pengdingDelivery = ref({
-      label: "待出仓物资",
+      label: "待归仓物资",
       type: "string",
       key: "pengding",
       data: [
@@ -34,14 +34,16 @@ export default defineComponent({
     });
     // 已出仓标题及数据展示
     const finishedDelivery = ref({
-      label: "已出仓物资",
+      label: "已归仓物资",
       type: "string",
       key: "finished",
     });
-    //扫描出仓模态框是否可见
+    //扫描归仓模态框是否可见
     const visible = ref(false);
-    //扫描出仓模态框控制
-    const handleClickPendingItem = (activedItemkey) => {
+    //扫描归仓模态框是否可见
+    const visiblesecond = ref(false);
+    //扫描归仓模态框控制
+    const handleClickPendingItem = () => {
       visible.value = !visible.value;
     };
     const menus = ref([
@@ -60,6 +62,21 @@ export default defineComponent({
         key: "3",
         count: 20,
       },
+    ]);
+    // 确定归仓配置项
+    const formColumn = ref([
+      {
+        label: "归还人",
+        key: "name",
+      },
+      {
+        label: "归还人工号",
+        key: "number",
+      },
+      {
+        label: "联系电话",
+        key: "telephone",
+      }
     ]);
     // 菜单列表空状态
     const menuEmpty = ref(true);
@@ -81,7 +98,7 @@ export default defineComponent({
           menuEmpty.value = !response.length;
         });
     }
-    //已出仓物资移除事件
+    //已归仓物资移除事件
     const handleClickDelete = () => {
       
     }
@@ -119,8 +136,21 @@ export default defineComponent({
         }
       })
     }
+    // 确定归仓模态框表单数据
+    const formData = ref({});
+    // 确定归仓表单卡片
+    const handleClickMenuItem = () => {
+      console.log(visiblesecond.value)
+      visiblesecond.value = !visiblesecond.value;
+    };
+
+    // 监听模态框表单提交事件
+    const handleSubmitForm = () => {      
+      visiblesecond.value = !visiblesecond.value;
+    };
+    
     onMounted(() => {
-      // 获取待出仓物资
+      // 获取待归仓物资
       //  store
       //    .dispatch("")
       //    .then((response) => {
@@ -138,9 +168,9 @@ export default defineComponent({
 
     return () => (
       <>
-        {/* 出仓扫描 */}
+        {/* 归仓扫描 */}
         <div class="h-full flex">
-          {/* 出仓扫描-待出仓物资 */}
+          {/* 归仓扫描-待归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1">
@@ -180,13 +210,13 @@ export default defineComponent({
               </a-layout-content>
             </a-layout>
           </div>
-          {/* 出仓扫描-图标箭头 */}
+          {/* 出归扫描-图标箭头 */}
           <Icon
             style="font-size:76px;color:#0e518f;width:140px;"
             class="flex items-center justify-center"
             type="arrow-right-filling"
           />
-          {/* 出仓扫描-已出仓物资 */}
+          {/* 出归扫描-已归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
@@ -237,7 +267,7 @@ export default defineComponent({
             </a-layout>
           </div>
         </div>
-        {/* 扫描出仓模态框 */}
+        {/* 扫描归仓模态框 */}
         <Modal
           v-model={[visible.value, "visible"]}
           size="heavy"
@@ -334,11 +364,32 @@ export default defineComponent({
             <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>
               返回扫描
             </a-button>
-            <a-button ghost html-type="submit" onClick={handleSubmit}>
-              确定出仓
+            <a-button ghost html-type="submit" onClick={handleClickMenuItem}>
+              确定归仓
             </a-button>
-          </div>
+          </div>          
         </Modal>
+        <Modal
+          v-model={[visiblesecond.value, "visible"]}
+          size="ultralight"
+          title="请填写信息"
+        >
+          {/* 扫描菜单-模态框表单 */}
+          <Form
+            v-model={[formData.value, "model"]}
+            columns={formColumn.value}
+            onSubmit={handleSubmitForm}
+          >
+            {{
+              button: () => (
+                <a-button ghost html-type="submit">
+                  <Icon class="align-baseline" type="determine" />
+                  确定
+                </a-button>
+              ),
+            }}
+          </Form>
+        </Modal>       
       </>
     );
   },
