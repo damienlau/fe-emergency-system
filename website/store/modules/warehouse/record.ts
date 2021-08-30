@@ -59,6 +59,70 @@ const maintainColumns = [
     },
   },
 ];
+const options = [
+  {
+    label: "急救/重症",
+    key: "1",
+  },
+  {
+    label: "门诊",
+    key: "2",
+  },
+  {
+    label: "后勤",
+    key: "3",
+  },
+
+  {
+    label: "指挥",
+    key: "4",
+  },
+  {
+    label: "重症",
+    key: "5",
+  },
+
+  {
+    label: "超声",
+    key: "6",
+  },
+  {
+    label: "清创",
+    key: "7",
+  },
+  {
+    label: "留观",
+    key: "8",
+  },
+  {
+    label: "药房",
+    key: "9",
+  },
+  {
+    label: "耗材",
+    key: "10",
+  },
+  {
+    label: "手术",
+    key: "11",
+  },
+  {
+    label: "防疫/隔离",
+    key: "12",
+  },
+  {
+    label: "消毒",
+    key: "13",
+  },
+  {
+    label: "住院",
+    key: "14",
+  },
+  {
+    label: "检验",
+    key: "15",
+  },
+];
 const eventColumns = [
   {
     title: "事件名称",
@@ -93,8 +157,8 @@ const dailyColumns = [
   },
   {
     title: "借贷科室",
-    dataIndex: "dapartmentName",
-    key: "dapartmentName",
+    dataIndex: "departmentName",
+    key: "departmentName",
   },
   {
     title: "借贷人",
@@ -140,10 +204,18 @@ const dailyColumns = [
   },
 ];
 const getters = {};
+const getDepartmentName = (type) => {
+  let getDepartmentName;
+  options.map((item) => {
+    if (item.key == type) {
+      getDepartmentName = item.label;
+    }
+  });
+  return getDepartmentName;
+};
 const actions = {
   // 获取维修/保养记录列表
   getMaintainList: (context, { activeKey, search }) => {
-    console.log(activeKey, search);
     return new Promise((reslove) => {
       findMaintenanceData({ operationType: activeKey, ...search }).then(
         (res) => {
@@ -163,6 +235,8 @@ const actions = {
                   startTime: val.startTime,
                   endTime: val.endTime,
                   id: val.id,
+                  returnTime: val.returnTime || "--",
+                  time: val.outTime || "--",
                 });
               });
             });
@@ -196,13 +270,14 @@ const actions = {
                           : (val.materialInfo && val.materialInfo.boxName) ||
                             "--",
                       boxName: val.materialInfo && val.materialInfo.boxName,
-                      departmentName: "后台没提供",
+                      departmentName: getDepartmentName(item.departmentType),
                       personnelName: item.personnelName,
                       personnelPhone: item.personnelPhone,
                       status: item.status,
                       returnMan: val.returnMan || "--",
                       returnPhone: val.returnPhone || "--",
                       returnTime: val.returnTime || "--",
+                      time: val.outTime || "--",
                     });
                   });
                 }
@@ -244,13 +319,13 @@ const actions = {
                         "--"
                       : (val.materialInfo && val.materialInfo.boxName) || "--",
                   boxName: val.materialInfo && val.materialInfo.boxName,
-                  departmentName: "后台没提供",
+                  departmentName: getDepartmentName(item.departmentType),
                   personnelName: item.personnelName,
                   personnelPhone: item.personnelPhone,
                   status: item.status,
                   returnMan: val.returnMan || "--",
                   returnPhone: val.returnPhone || "--",
-                  returnTime: val.returnTime || "--",
+                  returnTime: val.outTime || "--",
                 });
               });
             }
