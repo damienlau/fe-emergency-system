@@ -8,4 +8,4 @@ import "./warehouse/shortcut";
 // ) {
 // }
 
-Mock.setup({ timeout: "100-2000" });
+Mock.setup({ timeout: "23" });
