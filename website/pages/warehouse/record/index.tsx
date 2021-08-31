@@ -161,7 +161,7 @@ export default defineComponent({
       },
     ]);
     // 展开表格数据
-    const expandTableColumn = ref([
+    const maintainExpandTableColumn = ref([
       {
         title: "箱子/物资名称",
         dataIndex: "goodsName",
@@ -508,7 +508,7 @@ export default defineComponent({
       return (
         <a-table
           dataSource={record.eventExpandTableData}
-          columns={expandTableColumn.value}
+          columns={maintainExpandTableColumn.value}
           pagination={false}
           align={"left"}
           class="text-white"
