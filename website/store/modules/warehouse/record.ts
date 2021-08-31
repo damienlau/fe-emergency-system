@@ -5,6 +5,7 @@ import {
   findEventData,
   findEventExpandData,
   findDailyData,
+  deleteOutDetailData,
 } from "website/api/warehouse/record";
 const state = () => ({});
 const options = [
@@ -145,6 +146,7 @@ const actions = {
                       returnPhone: val.returnPhone || "--",
                       returnTime: val.returnTime || "--",
                       time: val.outTime || "--",
+                      id: val.id,
                     });
                   });
                 }
@@ -192,6 +194,7 @@ const actions = {
                   returnMan: val.returnMan || "--",
                   returnPhone: val.returnPhone || "--",
                   returnTime: val.outTime || "--",
+                  id: val.id,
                 });
               });
             }
@@ -214,6 +217,14 @@ const actions = {
       };
       updateSpecifiedMaintenanceData(params).then((res) => {
         reslove(res.data);
+      });
+    });
+  },
+  // 删除指定数据
+  deleteOutDetailData: ({ dispatch }, id) => {
+    return new Promise((reslove, reject) => {
+      deleteOutDetailData(id).then((response) => {
+        reslove(response.data);
       });
     });
   },

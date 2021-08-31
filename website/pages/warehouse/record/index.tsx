@@ -453,14 +453,13 @@ export default defineComponent({
     const changeEventStatus = (record) => {
       const id = record.id;
       if (!id) return;
-      // store
-      //   .dispatch("warehouseModule/recordModule/changeMaintainStatus", {
-      //     id: id,
-      //     key: menuActiveKey.value,
-      //   })
-      //   .then(() => {
-      //     handleClickTabPane();
-      //   });
+      store
+        .dispatch("warehouseModule/recordModule/deleteOutDetailData", {
+          id: id,
+        })
+        .then(() => {
+          handleClickTabPane();
+        });
     };
     const renderStatus = (status) => {
       return (

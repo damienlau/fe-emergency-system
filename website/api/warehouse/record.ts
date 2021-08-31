@@ -29,3 +29,7 @@ export function findEventExpandData(params) {
 export function findDailyData(params) {
   return request.get("/outForm/event/daily", { params });
 }
+// 删除指定数据
+export function deleteOutDetailData(params) {
+  return request.get("/outDetail/delete", { params });
+}
