@@ -28,6 +28,138 @@ export default defineComponent({
     // 表格数据
     const tableData = ref([]);
     const tableColumn = ref([]);
+    const tableMaintainColumn = ref([
+      {
+        title: "物资名称",
+        dataIndex: "materialName",
+        key: "materialName",
+      },
+      { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
+      {
+        title: "保养公司",
+        dataIndex: "personnelCompany",
+        key: "personnelCompany",
+      },
+      {
+        title: "保养人",
+        dataIndex: "personnelName",
+        key: "personnelName",
+      },
+      {
+        title: "保养人联系方式",
+        dataIndex: "personnelPhone",
+        key: "personnelPhone",
+      },
+      {
+        title: "状态",
+        key: "status",
+        dataIndex: "status",
+        slots: { customRender: "status" },
+      },
+      {
+        title: "是否出仓库",
+        dataIndex: "isOutWarehouseText",
+        key: "isOutWarehouseText",
+      },
+      {
+        title: "问题描述",
+        dataIndex: "description",
+        key: "description",
+      },
+      {
+        title: "保养开始时间",
+        dataIndex: "startTime",
+        key: "startTime",
+      },
+      { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
+      {
+        title: "操作",
+        key: "id",
+        slots: {
+          customRender: "operation",
+        },
+      },
+    ]);
+    const tableEventColumn = ref([
+      {
+        title: "事件名称",
+        key: "eventName",
+        width: "15%",
+      },
+      {
+        title: "数量详情",
+        key: "numDetail",
+        slots: {
+          customRender: "numDetail",
+        },
+      },
+      {
+        title: "时间",
+        key: "eventTime",
+        slots: {
+          customRender: "eventTime",
+        },
+      },
+    ]);
+    const tableDailyColumn = ref([
+      {
+        title: "箱子/物资名称",
+        dataIndex: "goodsName",
+        key: "goodsName",
+      },
+      {
+        title: "所属箱子",
+        dataIndex: "boxName",
+        key: "boxName",
+      },
+      {
+        title: "借贷科室",
+        dataIndex: "departmentName",
+        key: "departmentName",
+      },
+      {
+        title: "借贷人",
+        dataIndex: "personnelName",
+        key: "personnelName",
+      },
+      {
+        title: "借贷人联系方式",
+        dataIndex: "personnelPhone",
+        key: "personnelPhone",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
+        slots: { customRender: "dailyStatus" },
+      },
+
+      {
+        title: "归还人",
+        dataIndex: "returnMan",
+        key: "returnMan",
+      },
+      {
+        title: "归还人联系方式",
+        dataIndex: "returnPhone",
+        key: "returnPhone",
+      },
+      {
+        dataIndex: "time",
+        key: "time",
+        slots: { title: "customTitle", customRender: "dailyTime" },
+      },
+      {
+        title: "归还时间",
+        dataIndex: "returnTime",
+        key: "returnTime",
+      },
+      {
+        title: "操作",
+        key: "operation",
+        slots: { customRender: "dailyOperation" },
+      },
+    ]);
     // 展开表格数据
     const expandTableColumn = ref([
       {
@@ -101,10 +233,13 @@ export default defineComponent({
       tableSelectObj.value = {}; // 清空搜索框
       setSearchColumn(activeKey);
       if (activeKey === "1" || activeKey === "2") {
+        tableColumn.value = tableMaintainColumn.value;
         getMaintainList({});
       } else if (activeKey === "event") {
+        tableColumn.value = tableEventColumn.value;
         getEventList({});
       } else if (activeKey === "daily") {
+        tableColumn.value = tableDailyColumn.value;
         getDailyList({});
       }
     };
@@ -116,16 +251,13 @@ export default defineComponent({
         })
         .then((response) => {
           tableData.value = response.tableData;
-          tableColumn.value = response.tableColumn;
         });
     };
     const getEventList = (search) => {
       store
         .dispatch("warehouseModule/recordModule/getEventList", search)
         .then((response) => {
-          console.log(response.tableData, "ddd");
           tableData.value = response.tableData;
-          tableColumn.value = response.tableColumn;
         });
     };
     const getDailyList = (search) => {
@@ -133,7 +265,6 @@ export default defineComponent({
         .dispatch("warehouseModule/recordModule/getDailyList", search)
         .then((response) => {
           tableData.value = response.tableData;
-          tableColumn.value = response.tableColumn;
         });
     };
     const setSearchColumn = (activeKey) => {
