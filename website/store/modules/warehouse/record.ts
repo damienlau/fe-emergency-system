@@ -143,7 +143,7 @@ const actions = {
                         departmentName: getDepartmentName(item.departmentType),
                         personnelName: item.personnelName,
                         personnelPhone: item.personnelPhone,
-                        status: item.status,
+                        status: val.status,
                         returnMan: val.returnMan || "--",
                         returnPhone: val.returnPhone || "--",
                         returnTime: val.returnTime || "--",

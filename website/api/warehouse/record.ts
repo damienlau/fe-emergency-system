@@ -4,7 +4,7 @@ import request from "website/utils/request";
 
 // 保养/维修记录列表
 export function findMaintenanceData(params) {
-  return request.get("/maintenance/list", {
+  return request.get("/maintenance/page/criteria", {
     params,
   });
 }
