@@ -2,6 +2,7 @@
 import { defineComponent, h, nextTick, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { Tabs, TableSelct } from "website/components";
+import config from "config/config";
 
 export default defineComponent({
   setup() {
@@ -28,138 +29,6 @@ export default defineComponent({
     // 表格数据
     const tableData = ref([]);
     const tableColumn = ref([]);
-    const tableMaintainColumn = ref([
-      {
-        title: "物资名称",
-        dataIndex: "materialName",
-        key: "materialName",
-      },
-      { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
-      {
-        title: "保养公司",
-        dataIndex: "personnelCompany",
-        key: "personnelCompany",
-      },
-      {
-        title: "保养人",
-        dataIndex: "personnelName",
-        key: "personnelName",
-      },
-      {
-        title: "保养人联系方式",
-        dataIndex: "personnelPhone",
-        key: "personnelPhone",
-      },
-      {
-        title: "状态",
-        key: "status",
-        dataIndex: "status",
-        slots: { customRender: "status" },
-      },
-      {
-        title: "是否出仓库",
-        dataIndex: "isOutWarehouseText",
-        key: "isOutWarehouseText",
-      },
-      {
-        title: "问题描述",
-        dataIndex: "description",
-        key: "description",
-      },
-      {
-        title: "保养开始时间",
-        dataIndex: "startTime",
-        key: "startTime",
-      },
-      { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
-      {
-        title: "操作",
-        key: "id",
-        slots: {
-          customRender: "operation",
-        },
-      },
-    ]);
-    const tableEventColumn = ref([
-      {
-        title: "事件名称",
-        key: "eventName",
-        width: "15%",
-      },
-      {
-        title: "数量详情",
-        key: "numDetail",
-        slots: {
-          customRender: "numDetail",
-        },
-      },
-      {
-        title: "时间",
-        key: "eventTime",
-        slots: {
-          customRender: "eventTime",
-        },
-      },
-    ]);
-    const tableDailyColumn = ref([
-      {
-        title: "箱子/物资名称",
-        dataIndex: "goodsName",
-        key: "goodsName",
-      },
-      {
-        title: "所属箱子",
-        dataIndex: "boxName",
-        key: "boxName",
-      },
-      {
-        title: "借贷科室",
-        dataIndex: "departmentName",
-        key: "departmentName",
-      },
-      {
-        title: "借贷人",
-        dataIndex: "personnelName",
-        key: "personnelName",
-      },
-      {
-        title: "借贷人联系方式",
-        dataIndex: "personnelPhone",
-        key: "personnelPhone",
-      },
-      {
-        title: "状态",
-        dataIndex: "status",
-        key: "status",
-        slots: { customRender: "dailyStatus" },
-      },
-
-      {
-        title: "归还人",
-        dataIndex: "returnMan",
-        key: "returnMan",
-      },
-      {
-        title: "归还人联系方式",
-        dataIndex: "returnPhone",
-        key: "returnPhone",
-      },
-      {
-        dataIndex: "time",
-        key: "time",
-        slots: { title: "customTitle", customRender: "dailyTime" },
-      },
-      {
-        title: "归还时间",
-        dataIndex: "returnTime",
-        key: "returnTime",
-      },
-      {
-        title: "操作",
-        key: "operation",
-        slots: { customRender: "dailyOperation" },
-      },
-    ]);
     // 展开表格数据
     const maintainExpandTableColumn = ref([
       {
@@ -233,13 +102,142 @@ export default defineComponent({
       tableSelectObj.value = {}; // 清空搜索框
       setSearchColumn(activeKey);
       if (activeKey === "1" || activeKey === "2") {
-        tableColumn.value = tableMaintainColumn.value;
+        tableColumn.value = [
+          {
+            title: "物资名称",
+            dataIndex: "materialName",
+            key: "materialName",
+          },
+          { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
+          {
+            title: "保养公司",
+            dataIndex: "personnelCompany",
+            key: "personnelCompany",
+          },
+          {
+            title: "保养人",
+            dataIndex: "personnelName",
+            key: "personnelName",
+          },
+          {
+            title: "保养人联系方式",
+            dataIndex: "personnelPhone",
+            key: "personnelPhone",
+          },
+          {
+            title: "状态",
+            key: "status",
+            dataIndex: "status",
+            slots: { customRender: "status" },
+          },
+          {
+            title: "是否出仓库",
+            dataIndex: "isOutWarehouseText",
+            key: "isOutWarehouseText",
+          },
+          {
+            title: "问题描述",
+            dataIndex: "description",
+            key: "description",
+          },
+          {
+            title: "保养开始时间",
+            dataIndex: "startTime",
+            key: "startTime",
+          },
+          { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
+          {
+            title: "操作",
+            key: "id",
+            slots: {
+              customRender: "operation",
+            },
+          },
+        ];
         getMaintainList({});
       } else if (activeKey === "event") {
-        tableColumn.value = tableEventColumn.value;
+        tableColumn.value = [
+          {
+            title: "事件名称",
+            key: "eventName",
+            width: "15%",
+          },
+          {
+            title: "数量详情",
+            key: "numDetail",
+            slots: {
+              customRender: "numDetail",
+            },
+          },
+          {
+            title: "时间",
+            key: "eventTime",
+            slots: {
+              customRender: "eventTime",
+            },
+          },
+        ];
         getEventList({});
       } else if (activeKey === "daily") {
-        tableColumn.value = tableDailyColumn.value;
+        tableColumn.value = [
+          {
+            title: "箱子/物资名称",
+            dataIndex: "goodsName",
+            key: "goodsName",
+          },
+          {
+            title: "所属箱子",
+            dataIndex: "boxName",
+            key: "boxName",
+          },
+          {
+            title: "借贷科室",
+            dataIndex: "departmentName",
+            key: "departmentName",
+          },
+          {
+            title: "借贷人",
+            dataIndex: "personnelName",
+            key: "personnelName",
+          },
+          {
+            title: "借贷人联系方式",
+            dataIndex: "personnelPhone",
+            key: "personnelPhone",
+          },
+          {
+            title: "状态",
+            dataIndex: "status",
+            key: "status",
+            slots: { customRender: "dailyStatus" },
+          },
+
+          {
+            title: "归还人",
+            dataIndex: "returnMan",
+            key: "returnMan",
+          },
+          {
+            title: "归还人联系方式",
+            dataIndex: "returnPhone",
+            key: "returnPhone",
+          },
+          {
+            dataIndex: "time",
+            key: "time",
+            slots: { title: "customTitle", customRender: "dailyTime" },
+          },
+          {
+            title: "归还时间",
+            dataIndex: "returnTime",
+            key: "returnTime",
+          },
+          {
+            title: "操作",
+            key: "operation",
+            slots: { customRender: "dailyOperation" },
+          },
+        ];
         getDailyList({});
       }
     };
@@ -271,26 +269,26 @@ export default defineComponent({
       if (activeKey === "1" || activeKey === "2") {
         tableSelctColum.value = [
           {
-            key: "test",
+            key: "personnelName",
             placeholder: "保养公司/保养人搜索",
           },
           {
-            key: "test2",
+            key: "materialName",
             placeholder: "物资搜索",
           },
           {
             type: "select",
-            key: "test3",
+            key: "isOutWarehouse",
             label: "是否出仓库",
             placeholder: "全部",
             options: [
               {
                 label: "是",
-                key: true,
+                key: "1",
               },
               {
                 label: "否",
-                key: false,
+                key: "0",
               },
             ],
           },
@@ -323,70 +321,7 @@ export default defineComponent({
             placeholder: "全部",
 
             // 1 急救/重症， 2 门诊， 3 后勤， 4 指挥， 5 重症， 6 超声， 7 清创， 8 留观， 9 药房， 10 耗材， 11 手术， 12 防疫/隔离， 13 消毒， 14 住院， 15 检验",
-            options: [
-              {
-                label: "急救/重症",
-                key: "1",
-              },
-              {
-                label: "门诊",
-                key: "2",
-              },
-              {
-                label: "后勤",
-                key: "3",
-              },
-
-              {
-                label: "指挥",
-                key: "4",
-              },
-              {
-                label: "重症",
-                key: "5",
-              },
-
-              {
-                label: "超声",
-                key: "6",
-              },
-              {
-                label: "清创",
-                key: "7",
-              },
-              {
-                label: "留观",
-                key: "8",
-              },
-              {
-                label: "药房",
-                key: "9",
-              },
-              {
-                label: "耗材",
-                key: "10",
-              },
-              {
-                label: "手术",
-                key: "11",
-              },
-              {
-                label: "防疫/隔离",
-                key: "12",
-              },
-              {
-                label: "消毒",
-                key: "13",
-              },
-              {
-                label: "住院",
-                key: "14",
-              },
-              {
-                label: "检验",
-                key: "15",
-              },
-            ],
+            options: config.departmentOptions,
           },
           {
             type: "select",
