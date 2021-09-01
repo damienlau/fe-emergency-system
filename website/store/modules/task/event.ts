@@ -1,4 +1,4 @@
-import { findTaskEventData } from "website/api/task/event";
+import { findTaskEventData } from "api/task/event";
 
 const state = () => ({
   events: {},

@@ -1,6 +1,6 @@
 // 「用户」
 
-import request from "website/utils/request";
+import request from "utils/request";
 
 // 登录
 export function getSpecifiedUserData(params) {

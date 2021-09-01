@@ -1,6 +1,6 @@
 import { message } from "ant-design-vue";
 import axios from "axios";
-import store from "website/store";
+import store from "../store";
 
 // 全局配置
 message.config({

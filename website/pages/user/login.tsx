@@ -2,7 +2,7 @@
 
 import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
-import { Form } from "website/components";
+import { Form } from "components";
 
 export default defineComponent({
   setup() {

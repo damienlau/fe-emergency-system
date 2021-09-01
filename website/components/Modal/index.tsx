@@ -1,7 +1,7 @@
 // 组件-模态框
 
 import { defineComponent, toRefs } from "vue";
-import { Icon } from "website/components";
+import { Icon } from "components";
 
 export default defineComponent({
   name: "Modal",

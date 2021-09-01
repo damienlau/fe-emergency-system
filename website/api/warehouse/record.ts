@@ -1,6 +1,6 @@
 // 「仓库」借还记录
 
-import request from "website/utils/request";
+import request from "utils/request";
 
 // 保养/维修记录列表
 export function findMaintenanceData(params) {

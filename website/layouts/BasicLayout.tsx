@@ -2,7 +2,7 @@ import { computed, defineComponent } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Spin } from "ant-design-vue";
-import { Menu } from "website/components";
+import { Menu } from "components";
 
 export default defineComponent({
   setup() {

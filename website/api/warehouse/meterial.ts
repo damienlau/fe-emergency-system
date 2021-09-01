@@ -1,6 +1,6 @@
 // 「仓库」物资与箱子
 
-import request from "website/utils/request";
+import request from "utils/request";
 
 // 新增指定数据
 export function addSpecifiedMeterialData(params) {

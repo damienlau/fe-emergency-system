@@ -1,7 +1,7 @@
 // 借还记录
 import { defineComponent, h, nextTick, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
-import { Tabs, TableSelct } from "website/components";
+import { Tabs, TableSelct } from "components";
 
 export default defineComponent({
   setup() {

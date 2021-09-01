@@ -1,5 +1,5 @@
 import { defineComponent, ref } from "vue";
-import { Icon } from "website/components";
+import { Icon } from "components";
 import Sidebar from "./sidebar";
 
 export default defineComponent({

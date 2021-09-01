@@ -1,4 +1,4 @@
-import { getSpecifiedUserData } from "website/api/user";
+import { getSpecifiedUserData } from "api/user";
 
 const state = () => ({
   name: "未登录用户",

@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { MenuItemProps } from "website/components/Menu";
+import { MenuItemProps } from "components/Menu";
 import { RouteLocationNormalizedLoaded, RouteRecordRaw } from "vue-router";
 import taskModule from "./modules/task";
 import warehouseModule from "./modules/warehouse";

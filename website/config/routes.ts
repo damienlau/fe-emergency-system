@@ -6,7 +6,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import("website/layouts/BasicLayout"),
+    component: () => import("layouts/BasicLayout"),
     children: [
       {
         path: "warehouse",
@@ -18,19 +18,19 @@ const routes = [
             path: "meterial",
             name: "Meterial",
             meta: { label: "仓库" },
-            component: () => import("website/pages/warehouse/meterial"),
+            component: () => import("pages/warehouse/meterial"),
           },
           {
             path: "record",
             name: "Record",
             meta: { label: "借还记录" },
-            component: () => import("website/pages/warehouse/record"),
+            component: () => import("pages/warehouse/record"),
           },
           {
             path: "shortcut",
             name: "Shortcut",
             meta: { label: "一键操作" },
-            component: () => import("website/pages/warehouse/shortcut"),
+            component: () => import("pages/warehouse/shortcut"),
           },
           {
             path: "scanner",
@@ -40,25 +40,25 @@ const routes = [
             children: [
               {
                 path: "",
-                component: () => import("website/pages/warehouse/scanner"),
+                component: () => import("pages/warehouse/scanner"),
               },
               {
                 path: "pending",
                 name: "Pending",
                 meta: { label: "出仓扫描" },
-                component: () => import("website/pages/warehouse/scanner/pending"),
+                component: () => import("pages/warehouse/scanner/pending"),
               },
               {
                 path: "belong",
                 name: "Belong",
                 meta: { label: "归仓扫描" },
-                component: () => import("website/pages/warehouse/scanner/belong"),
+                component: () => import("pages/warehouse/scanner/belong"),
               },
               {
                 path: "emergency",
                 name: "Emergency",
                 meta: { label: "紧急扫描" },
-                component: () => import("website/pages/warehouse/scanner/emergency"),
+                component: () => import("pages/warehouse/scanner/emergency"),
               },
             ]
            
@@ -82,7 +82,7 @@ const routes = [
       {
         path: "login",
         name: "Login",
-        component: () => import("website/pages/user/login"),
+        component: () => import("pages/user/login"),
       },
     ],
   },

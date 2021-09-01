@@ -1,6 +1,6 @@
 // 「任务」事件
 
-import request from "website/utils/request";
+import request from "utils/request";
 
 // 查询全部数据
 export function findTaskEventData() {

@@ -3,7 +3,7 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { Modal as AntModal } from "ant-design-vue";
-import { Card, Form, Icon, Modal, Tabs } from "website/components";
+import { Card, Form, Icon, Modal, Tabs } from "components";
 
 export default defineComponent({
   setup() {

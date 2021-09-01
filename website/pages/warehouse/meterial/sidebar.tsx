@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, ref } from "vue";
-import { Card, Tabs } from "website/components";
+import { Card, Tabs } from "components";
 
 export default defineComponent({
   name: "Sidebar",

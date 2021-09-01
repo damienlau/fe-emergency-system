@@ -3,7 +3,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { Form, Icon, Modal } from "website/components";
+import { Form, Icon, Modal } from "components";
 
 export default defineComponent({
   setup() {

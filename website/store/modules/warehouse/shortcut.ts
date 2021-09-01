@@ -1,9 +1,9 @@
 import {
   deleteSpecifiedShortcutData,
-  findShortcutData,
-  findShortcutTotalData,
-} from "website/api/warehouse/shortcut";
-import defaultConfig from "config/config";
+  findSpecifiedShortcutData,
+  findShortcutCountData,
+} from "api/warehouse/shortcut";
+import defaultConfig from "../../../../config/config";
 
 const { shelf } = defaultConfig;
 

@@ -2,7 +2,7 @@
 
 import { defineComponent } from "vue";
 import { createFromIconfontCN } from "@ant-design/icons-vue";
-import defaultConfig from "config/config";
+import defaultConfig from "../../../config/config";
 
 export default defineComponent({
   props: {
