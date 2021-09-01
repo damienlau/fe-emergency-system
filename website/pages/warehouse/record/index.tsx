@@ -3,6 +3,7 @@ import { defineComponent, h, nextTick, onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { Tabs, TableSelct } from "website/components";
 import config from "config/config";
+import record from "website/store/modules/warehouse/record";
 
 export default defineComponent({
   setup() {
@@ -161,6 +162,9 @@ export default defineComponent({
             title: "事件名称",
             key: "eventName",
             width: "15%",
+            slots: {
+              customRender: "eventName",
+            },
           },
           {
             title: "数量详情",
@@ -408,33 +412,36 @@ export default defineComponent({
         <div class="flex flex-row">
           <span class="text-white text-opacity-70 mr-4">总物资:</span>
           <span class="text-white  mr-40">
-            {record.numDetail.totalNumber || "0"}
+            {(record.numDetail && record.numDetail.totalNumber) || "0"}
           </span>
           <span class="text-white text-opacity-70 mr-4">未出仓:</span>
           <span class="text-white  mr-40">
-            {record.numDetail.notOutNumber || "0"}
+            {(record.numDetail && record.numDetail.notOutNumber) || "0"}
           </span>
           <span class="text-white text-opacity-70 mr-4">已归还:</span>
           <span class="text-white  mr-40">
-            {record.numDetail.returnNumber || "0"}
+            {(record.numDetail && record.numDetail.returnNumber) || "0"}
           </span>
           <span class="text-white text-opacity-70 mr-4">未归还:</span>
           <span class="text-white  mr-40">
-            {record.numDetail.noReturnNumber || "0"}
+            {(record.numDetail && record.numDetail.noReturnNumber) || "0"}
           </span>
         </div>
       );
+    };
+    const rendEventName = (record) => {
+      return <div>{record.eventName}</div>;
     };
     const rendEventTime = (record) => {
       return (
         <div class="flex flex-row items-center justify-end">
           <span class="text-white text-opacity-70 mr-4">开始时间:</span>
           <span class="text-white  mr-40">
-            {record.eventTime.startTime || "--"}
+            {(record.eventTime && record.eventTime.startTime) || "--"}
           </span>
           <span class="text-white text-opacity-70 mr-4">结束时间:</span>
           <span class="text-white  mr-40">
-            {record.eventTime.endTime || "--"}
+            {(record.eventTime && record.eventTime.endTime) || "--"}
           </span>
         </div>
       );
@@ -549,6 +556,7 @@ export default defineComponent({
                 status: ({ text }) => renderStatus(text),
                 operation: ({ record }) => handleClickFinish(record),
                 numDetail: ({ record }) => rendEventNumDetail(record),
+                eventName: ({ record }) => rendEventName(record),
                 eventTime: ({ record }) => rendEventTime(record),
                 customTitle: () => {
                   return (

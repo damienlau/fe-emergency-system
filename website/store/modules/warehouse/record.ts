@@ -91,7 +91,7 @@ const actions = {
           const maintainTableData = [];
           if (res && res.data && res.data.content.length > 0) {
             res.data.content.map((item) => {
-              item.detailList.map((val) => {
+              item.detailList.map((val, index) => {
                 maintainTableData.push({
                   materialName: val.materialInfo.materialName,
                   boxName: val.materialInfo.boxName,
@@ -106,6 +106,7 @@ const actions = {
                   id: val.id,
                   returnTime: val.returnTime || "--",
                   time: val.outTime || "--",
+                  key: "" + val.id + index,
                 });
               });
             });
@@ -123,12 +124,12 @@ const actions = {
       findEventData().then((res) => {
         const eventTableData = [];
         if (res && res.data.length > 0) {
-          res.data.map((item) => {
+          res.data.map((item, index) => {
             findEventExpandData({ eventId: item.id, ...search }).then((res) => {
               const eventExpandTableData = [];
-              res.data.map((item) => {
+              res.data.map((item, index) => {
                 if (item.outDetailSet.length > 0) {
-                  item.outDetailSet.map((val) => {
+                  item.outDetailSet.map((val, index) => {
                     eventExpandTableData.push({
                       goodsName:
                         val.resourceType == 1
@@ -147,12 +148,13 @@ const actions = {
                       returnTime: val.returnTime || "--",
                       time: val.outTime || "--",
                       id: val.id,
+                      key: "" + val.id + index,
                     });
                   });
                 }
               });
               eventTableData.push({
-                eventName: item.eventName || "--",
+                eventName: item.eventName,
                 numDetail: item,
                 eventTime: {
                   startTime: item.startTime,
@@ -160,6 +162,7 @@ const actions = {
                 },
                 id: item.id,
                 eventExpandTableData: eventExpandTableData,
+                key: item.eventName + item.id,
               });
               reslove({
                 tableData: eventTableData,
@@ -179,7 +182,7 @@ const actions = {
         if (res && res.data.length > 0) {
           res.data.map((item) => {
             if (item.outDetailSet.length > 0) {
-              item.outDetailSet.map((val) => {
+              item.outDetailSet.map((val, index) => {
                 dailyTableData.push({
                   goodsName:
                     val.resourceType == 1
@@ -195,6 +198,7 @@ const actions = {
                   returnPhone: val.returnPhone || "--",
                   returnTime: val.outTime || "--",
                   id: val.id,
+                  key: "" + val.id + index,
                 });
               });
             }
