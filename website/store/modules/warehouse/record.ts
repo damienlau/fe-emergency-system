@@ -124,51 +124,55 @@ const actions = {
       findEventData().then((res) => {
         const eventTableData = [];
         if (res && res.data.length > 0) {
-          res.data.map((item, index) => {
-            findEventExpandData({ eventId: item.id, ...search }).then((res) => {
-              const eventExpandTableData = [];
-              res.data.map((item, index) => {
-                if (item.outDetailSet.length > 0) {
-                  item.outDetailSet.map((val, index) => {
-                    eventExpandTableData.push({
-                      goodsName:
-                        val.resourceType == 1
-                          ? (val.materialInfo &&
-                              val.materialInfo.materialName) ||
-                            "--"
-                          : (val.materialInfo && val.materialInfo.boxName) ||
-                            "--",
-                      boxName: val.materialInfo && val.materialInfo.boxName,
-                      departmentName: getDepartmentName(item.departmentType),
-                      personnelName: item.personnelName,
-                      personnelPhone: item.personnelPhone,
-                      status: item.status,
-                      returnMan: val.returnMan || "--",
-                      returnPhone: val.returnPhone || "--",
-                      returnTime: val.returnTime || "--",
-                      time: val.outTime || "--",
-                      id: val.id,
-                      key: "" + val.id + index,
+          res.data.map((eventItem) => {
+            findEventExpandData({ eventId: eventItem.id, ...search }).then(
+              (res) => {
+                const eventExpandTableData = [];
+                res.data.map((item, index) => {
+                  if (item.outDetailSet.length > 0) {
+                    item.outDetailSet.map((val, index) => {
+                      eventExpandTableData.push({
+                        goodsName:
+                          val.resourceType == 1
+                            ? (val.materialInfo &&
+                                val.materialInfo.materialName) ||
+                              "--"
+                            : (val.materialInfo && val.materialInfo.boxName) ||
+                              "--",
+                        boxName: val.materialInfo && val.materialInfo.boxName,
+                        departmentName: getDepartmentName(item.departmentType),
+                        personnelName: item.personnelName,
+                        personnelPhone: item.personnelPhone,
+                        status: item.status,
+                        returnMan: val.returnMan || "--",
+                        returnPhone: val.returnPhone || "--",
+                        returnTime: val.returnTime || "--",
+                        time: val.outTime || "--",
+                        id: val.id,
+                        key: "" + val.id + index,
+                      });
                     });
-                  });
-                }
-              });
-              eventTableData.push({
-                eventName: item.eventName,
-                numDetail: item,
-                eventTime: {
-                  startTime: item.startTime,
-                  endTime: item.endTime,
-                },
-                id: item.id,
-                eventExpandTableData: eventExpandTableData,
-                key: item.eventName + item.id,
-              });
-              reslove({
-                tableData: eventTableData,
-              });
-            });
+                  }
+                });
+                eventTableData.push({
+                  eventName: eventItem.eventName,
+                  numDetail: eventItem,
+                  eventTime: {
+                    startTime: eventItem.startTime,
+                    endTime: eventItem.endTime,
+                  },
+                  id: eventItem.id,
+                  eventExpandTableData: eventExpandTableData,
+                  key: eventItem.id + eventItem.eventName,
+                });
+              }
+            );
           });
+          setTimeout(() => {
+            reslove({
+              tableData: eventTableData,
+            });
+          }, 500);
         }
       });
     });
