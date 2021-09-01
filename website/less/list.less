@@ -1,0 +1,13 @@
+@list-prefix-cls: ~"@{ant-prefix}-list";
+
+.@{list-prefix-cls} {
+  .@{spin-prefix-cls} {
+    &-nested-loading {
+      @apply h-full;
+
+      .@{list-prefix-cls}-empty-text {
+        @apply h-full flex flex-col items-center justify-center;
+      }
+    }
+  }
+}

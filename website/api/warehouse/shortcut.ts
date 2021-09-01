@@ -1,37 +1,56 @@
-// 「仓库」一键操作
+import request from "utils/request";
 
-import request from "website/utils/request";
+const shortcutRequestUrl = {
+  // 新增指定数据
+  add: "batchPending/add",
+  // 删除指定数据
+  delete: "batchPending/deleteBatch",
+  // 查询指定数据
+  find: "batchPending/list",
+  // 查询指定数据长度
+  findCount: "batchPending/count",
+  // 更新指定数据
+  update: "batchPending/update",
+};
 
-// 新增指定数据
-export function addSpecifiedShortcutData(params) {
-  return request.post("/batchPending/add", params);
-}
-
-// 删除指定数据
-export function deleteSpecifiedShortcutData(params) {
-  return request.post("/batchPending/deleteBatch", params);
-}
-
-// 查询全部数据
-export function findShortcutData(params) {
-  return request.get("/batchPending/all", {
-    params,
+export const addSpecifiedShortcutData = (parameter?: any) => {
+  return request.post(shortcutRequestUrl.add, parameter).then((response) => {
+    return new Promise((reslove) => {
+      reslove(response);
+    });
   });
-}
+};
 
-// 查询全部数据数量
-export function findShortcutTotalData() {
-  return request.get("/batchPending/count");
-}
-
-// 查询指定数据
-export function findSpecifiedShortcutData(params) {
-  return request.get("/batchPending/all", {
-    params,
+export const deleteSpecifiedShortcutData = (parameter?: any) => {
+  return request.post(shortcutRequestUrl.delete, parameter).then((response) => {
+    return new Promise((reslove) => {
+      reslove(response);
+    });
   });
-}
+};
 
-// 更新指定数据
-export function updateSpecifiedShortcutData(params) {
-  return request.post("/batchPending/update", params);
-}
+export const findSpecifiedShortcutData = (parameter?: any) => {
+  return request
+    .get(shortcutRequestUrl.find, { params: parameter })
+    .then((response) => {
+      return new Promise((reslove) => {
+        reslove(response);
+      });
+    });
+};
+
+export const findShortcutCountData = () => {
+  return request.get(shortcutRequestUrl.findCount).then((response) => {
+    return new Promise((reslove) => {
+      reslove(response);
+    });
+  });
+};
+
+export const updateSpecifiedShortcutData = (parameter?: any) => {
+  return request.post(shortcutRequestUrl.update, parameter).then((response) => {
+    return new Promise((reslove) => {
+      reslove(response);
+    });
+  });
+};

@@ -1,56 +1,50 @@
 import { computed, defineComponent } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
-import { Menu, PageHeader } from "website/components";
-import defaultConfig from "config/config";
-import "./style.less";
+import { Spin } from "ant-design-vue";
+import { Menu } from "website/components";
 
 export default defineComponent({
   setup() {
-    const { title } = defaultConfig;
-    const store = useStore();
     const route = useRoute();
+    const router = useRouter();
+    const store = useStore();
+    // 初始化加载状态
+    const spinning = computed(() => store.state.spinning);
+    // 初始化导航菜单
+    const menuColumns = computed(() => store.state.navigation);
 
-    // 菜单配置项
-    const menus = computed(() => {
-      // 获取路由动态配置序号
-      let index_ = route.matched.findIndex((item) => {
-        if (item.meta.navigator) {
-          return item;
-        }
-      });
-      // 获取路由动态配置
-      return route.matched[index_].children.map((routeItem) => {
-        return {
-          label: routeItem.meta.label,
-          key: routeItem.name,
-        };
-      });
-    });
+    // 点击菜单跳转路由
+    const handleChange = (menuActiveKey: string[]) => {
+      let routeName_ = menuActiveKey.find(
+        (routeLink) => route.name !== routeLink
+      );
 
-    // 监听选中菜单项事件
-    const handleSelectMenuItem = (item) => {
-      console.log(item);
+      routeName_ && router.push({ name: menuActiveKey.join() });
     };
+
+    // 根据当前路由设置导航菜单配置项值
+    store.dispatch("setGlobalNavigationMenu", route);
 
     return () => (
       <>
-        <header class="h-72 dark:bg-navy-3 px-32">
-          <PageHeader title={title}>
-            <Menu
-              routerLink
-              height={72}
-              bordered={false}
-              columns={menus.value}
-              onSelect={handleSelectMenuItem}
-            />
-          </PageHeader>
+        <header class="h-72 px-32 dark:bg-navy-3">
+          <Menu
+            center
+            class="h-72 leading-72"
+            columns={menuColumns.value}
+            onChange={handleChange}
+          ></Menu>
         </header>
-        <main class="flex-auto overflow-hidden p-16">
-          <a-spin spinning={store.state.loading} wrapperClassName="rs-spin">
-            <router-view />
-          </a-spin>
-        </main>
+        <Spin
+          delay={233}
+          wrapperClassName="flex-auto"
+          spinning={spinning.value}
+        >
+          <main class="h-full p-16">
+            <RouterView />
+          </main>
+        </Spin>
       </>
     );
   },

@@ -2,14 +2,20 @@
   "compilerOptions": {
     "baseUrl": "./",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "jsx": "preserve",
     "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "node",
     "paths": {
-      "assets/*": ["assets/*"],
-      "config/*": ["config/*"],
-      "website/*": ["website/*"]
+      "api/*": ["website/api/*"],
+      "assets/*": ["website/assets/*"],
+      "components/*": ["website/components/*"],
+      "config/*": ["website/config/*"],
+      "layouts/*": ["website/layouts/*"],
+      "pages/*": ["website/pages/*"],
+      "store/*": ["website/store/*"],
+      "utils/*": ["website/utils/*"]
     },
     "resolveJsonModule": true,
     "sourceMap": true,

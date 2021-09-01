@@ -1,11 +1,10 @@
 import { defineConfig } from "vite";
-import path from "path";
+import { resolve as resolved } from "path";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
 export default defineConfig({
   css: {
-    // modules: { localsConvention: "camelCase" },
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
@@ -15,13 +14,19 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
-      assets: path.resolve(__dirname, "assets"),
-      config: path.resolve(__dirname, "config"),
-      website: path.resolve(__dirname, "website"),
+      api: resolved(__dirname, "website/api"),
+      assets: resolved(__dirname, "website/assets"),
+      components: resolved(__dirname, "website/components"),
+      config: resolved(__dirname, "website/config"),
+      layouts: resolved(__dirname, "website/layouts"),
+      pages: resolved(__dirname, "website/pages"),
+      utils: resolved(__dirname, "website/utils"),
     },
   },
   server: {
     open: true,
+    host: "127.0.0.1",
+    port: 2333,
     proxy: {
       "/dev-api": {
         // target: "http://192.168.1.80/warehouse",

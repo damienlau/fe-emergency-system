@@ -13,19 +13,19 @@ export default defineComponent({
     const menus = ref([
       {
         label: "出仓扫描",
-        key: "export",
+        key: "Pending",
         icon: "export",
         badgeColor: "warning",
       },
       {
         label: "归仓扫描",
-        key: "import",
+        key: "Belong",
         icon: "import",
         badgeColor: "success",
       },
       {
         label: "紧急扫描",
-        key: "emergency",
+        key: "Emergency",
         icon: "emergency",
         badgeColor: "danger",
       },
@@ -57,9 +57,8 @@ export default defineComponent({
     };
 
     // 监听模态框表单提交事件
-    const handleSubmitForm = () => {
-      console.log(formData.value);
-      router.push({ name: "Pending" });
+    const handleSubmitForm = () => {      
+      router.push({ name: formData.value["key"] });
       visible.value = !visible.value;
     };
 
