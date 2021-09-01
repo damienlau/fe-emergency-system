@@ -381,6 +381,7 @@ export default defineComponent({
         <a-button
           ghost
           danger
+          size="small"
           onClick={() => {
             changeEventStatus(record);
           }}
@@ -453,7 +454,9 @@ export default defineComponent({
           columns={maintainExpandTableColumn.value}
           pagination={false}
           align={"left"}
+          size="small"
           class="text-white"
+          scroll={{ y: 500 }}
           rowKey={(record) => record.key}
         >
           {{
@@ -535,6 +538,7 @@ export default defineComponent({
               rowKey={(record, index) => record.key || record.id || index}
               dataSource={tableData.value}
               columns={tableColumn.value}
+              scroll={menuActiveKey.value === "daily" ? { y: 600 } : {}}
               pagination={
                 menuActiveKey.value === "event" ||
                 menuActiveKey.value === "daily"
