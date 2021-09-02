@@ -70,6 +70,7 @@ export default defineComponent({
     const handleClickDelete = () => {
       
     }
+    const bgcolor = ref('background-color:red')
     // 监听点击卡片移除事件
     const handleClickCardExtra = (activeKey) => {
       store
@@ -108,13 +109,14 @@ export default defineComponent({
       //获取待出仓物资
        store
          .dispatch("warehouseModule/pendingModule/getMaintainList")
-         .then((response) => {        
+         .then((response) => {
+           console.log(response)
            pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
              return {
                title: item.newFileName,
                page: item.id,
                url: item.fileUrl,
-               content: item.newFileName.split(""),
+               content: item.newFileName.split(""),               
              }
            });
            finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
@@ -123,6 +125,7 @@ export default defineComponent({
               page: item.id,
               url: item.fileUrl,
               content: item.newFileName.split(""),
+              status:item.status
             }
            })
          });
@@ -181,7 +184,7 @@ export default defineComponent({
             class="flex items-center justify-center"
             type="arrow-right-filling"
           />
-          {/* 出仓扫描-已出仓物资 */}
+          {/* 出仓归描-已归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
@@ -203,12 +206,12 @@ export default defineComponent({
                   {finishedDelivery.value.data.map((listItem) => {
                     return (
                       <>
-                      <div class="mb-16 mr-8  h-modal-lightmin border border-danger ghost bg-red-400 bg-opacity-10">
+                      <div class={listItem.status == 1 ? 'bg-red-400 border-danger border bg-opacity-10':'bg-navy-2'} class="mb-18 mr-8  h-modal-lightmin   ghost ">
                         <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
                           <div class="flex items-center justify-center">
                             <span class="text-20">{ listItem.title}</span>
                             <span class="text-success">{listItem.page}</span>
-                            <a-space size={8} class="absolute right-5">
+                            <a-space size={8} class={listItem.status == 1 ?'':"hidden"} class="absolute right-5">
                               <a-button ghost danger >
                                 <Icon type="delete" onClick="handleClickDelete"/>
                                 移除
@@ -220,28 +223,29 @@ export default defineComponent({
                           <div class="h-modal-lightermin w-modal-lightermin bg-white">
                             <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
                           </div>
-                          <div class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  flex items-center">
-                          {listItem.content.map((item,index) => {
+                          <div  class={listItem.status == 1 ?'flex items-center':""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                              {listItem.status == 1 ? (
+                              <div style="margin:0 auto;">
+                              <a-empty
+                                description="空空如也"
+                                image={`assets/icon_empty_data.png`}>                          
+                              </a-empty>
+                              </div>
+                          ): listItem.content.map((item,index) => {
                             return (
                               <>                                
-                                <div class="hidden h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
-                                  <span class="text-14 w-full overflow-hidden h-22">
-                                    {item}
-                                  </span> 
-                                </div>
-                                <div style="margin:0 auto;">
-                                <a-empty
-                                  description="空空如也"
-                                  image={`assets/icon_empty_data.png`}>                          
-                                </a-empty>
-                                </div>
-                                </>
+                                <div class="h-54 ml-16 mr-16 border-b border-navy-1 w-full items-center">
+                                    <span class="text-14 w-full overflow-hidden h-22">
+                                      {item}
+                                    </span> 
+                                </div>                                
+                              </>
                               )
                             })}
                             </div>
-                        </div>
+                          </div>
+                          <div class={listItem.status == 1 ?'':"hidden"} class="text-danger text-12 mb-16">该物资/箱子不属于本次借贷清单</div> 
                       </div>
-                      <span class="text-danger text-12 mb-16">该物资/箱子不属于本次借贷清单</span>
                       </>
                     )
                   })}
