@@ -34,16 +34,19 @@ export default defineComponent({
         label: "符合清单物资",
         key: "1",
         count: 5,
+        data:[]
       },
       {
         label: "未符合清单物资",
         key: "2",
         count: 10,
+        data:[]
       },
       {
         label: "未扫描到的物资",
         key: "3",
         count: 20,
+        data:[]
       },
     ]);
     // 菜单列表空状态
@@ -52,10 +55,34 @@ export default defineComponent({
     const menuActiveKey = ref(menus.value[0].key);
     // 卡片列表
     const cardData = ref([]);
-    // 监听模态框提交事件
+    // 监听模态框关闭
     const handleSubmit = () => {
       visible.value = !visible.value;
-    };    
+    };
+    //监听模态框出仓事件
+    const handlePendingSubmit = () => {
+      AntModal.confirm({
+        class: "bg-navy-3 rounded pb-0 border border-primary",
+        title: `确定出仓？`,
+        content: `出仓符合清单和未符合清单的全部物资`,
+        centered: true,
+        onOk: () => {
+          store
+            .dispatch(
+              "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
+              cardData.value.map((cardItem) => {
+                return {
+                  id: cardItem.key,
+                };
+              })
+            )
+            .then(() => {
+              visible.value = !visible.value;
+              handleClickTabPane();
+            });
+        }
+      })
+    }
     //菜单列表切换数据展示
     const handleClickTabPane = (activeKey = menuActiveKey.value) => {
       menuActiveKey.value = activeKey;
@@ -144,8 +171,15 @@ export default defineComponent({
 
               <a-layout-content class="ml-16 mr-16 h-full">
                 <div class="relative inline-block w-full h-full">
-                  <div class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
-                    {pengdingDelivery.value.data.map((listItem) => {
+                  <div  class={pengdingDelivery.value.data.length != 0 ?'flex items-center':""} class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
+                    {pengdingDelivery.value.data.length != 0 ?
+                    <div class="m-auto" >
+                    <a-empty
+                      description="当前出仓扫描，无'申请清单'"
+                      image={`assets/icon_empty_scanner.png`}>                          
+                    </a-empty>
+                    </div>
+                    : pengdingDelivery.value.data.map((listItem) => {
                       return (
                         <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
                           <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
@@ -223,9 +257,9 @@ export default defineComponent({
                           <div class="h-modal-lightermin w-modal-lightermin bg-white">
                             <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
                           </div>
-                          <div  class={listItem.status == 1 ?'flex items-center':""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                          <div class={listItem.status == 1 ?'flex items-center':""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
                               {listItem.status == 1 ? (
-                              <div style="margin:0 auto;">
+                              <div class="m-auto">
                               <a-empty
                                 description="空空如也"
                                 image={`assets/icon_empty_data.png`}>                          
@@ -234,11 +268,11 @@ export default defineComponent({
                           ): listItem.content.map((item,index) => {
                             return (
                               <>                                
-                                <div class="h-54 ml-16 mr-16 border-b border-navy-1 w-full items-center">
+                                <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                     <span class="text-14 w-full overflow-hidden h-22">
                                       {item}
                                     </span> 
-                                </div>                                
+                                  </div>                                
                               </>
                               )
                             })}
@@ -349,11 +383,11 @@ export default defineComponent({
               })}
             </section>
           </Tabs>
-          <div class="absolute bottom-0 w-full text-center">
+          <div class="absolute bottom-5 w-full text-center" style="left:-22px;">
             <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>
               返回扫描
             </a-button>
-            <a-button ghost html-type="submit" onClick={handleSubmit}>
+            <a-button ghost html-type="submit" onClick={handlePendingSubmit}>
               确定出仓
             </a-button>
           </div>

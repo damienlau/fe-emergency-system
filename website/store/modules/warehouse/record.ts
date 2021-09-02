@@ -6,7 +6,7 @@ import {
   findEventExpandData,
   findDailyData,
   deleteOutDetailData,
-} from "website/api/warehouse/record";
+} from "api/warehouse/record";
 const state = () => ({});
 const options = [
   {
