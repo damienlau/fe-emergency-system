@@ -77,9 +77,9 @@ export default defineComponent({
         key: "returnPhone",
       },
       {
-        dataIndex: "time",
-        key: "time",
-        slots: { title: "customTitle", customRender: "time" },
+        dataIndex: "outTime",
+        key: "outTime",
+        slots: { title: "customTitle", customRender: "outTime" },
       },
       {
         title: "归还时间",
@@ -113,6 +113,7 @@ export default defineComponent({
     };
 
     const handleClickCancel = (record) => {
+      if (record.status != 1) return;
       return (
         <a-button
           ghost
@@ -127,14 +128,12 @@ export default defineComponent({
       );
     };
     const deleteOutDetailData = (record) => {
-      const id = record.id;
-      if (!id) return;
       store
         .dispatch("warehouseModule/recordModule/deleteOutDetailData", {
           id: id,
         })
         .then(() => {
-          handSearch()
+          handSearch();
         });
     };
     const rendEventNumDetail = (record) => {
@@ -199,7 +198,7 @@ export default defineComponent({
             },
             status: ({ text }) => renderEventExpendStatus(text),
             operation: ({ record }) => handleClickCancel(record),
-            time: ({ record }) => rendEventExpendTime(record),
+            outTime: ({ record }) => rendEventExpendTime(record),
           }}
         </a-table>
       );
@@ -209,22 +208,21 @@ export default defineComponent({
         <p
           style={
             status == 1
-              ? "color:red"
+              ? "color:orange"
               : status == 2
-              ? "color:green"
-              : "color:orange"
+              ? "color:red "
+              : "color:green"
           }
         >
-          {status == 1 ? "已出仓" : status == 2 ? "已归还" : "待出仓"}
+          {status == 1 ? "待出仓" : status == 2 ? "已出仓" : status==3?'已归还':"--"}
         </p>
       );
     };
     const rendEventExpendTime = (record) => {
-      console.log(record, "record");
       return (
         <div class="flex flex-row items-center justify-end">
-          <span style={record.status == 3 ? "color:orange" : ""}>
-            {record.time}
+          <span style={record.status == 1 ? "color:orange" : ""}>
+            {record.outTime}
           </span>
         </div>
       );

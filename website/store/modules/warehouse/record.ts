@@ -147,7 +147,7 @@ const actions = {
                         returnMan: val.returnMan || "--",
                         returnPhone: val.returnPhone || "--",
                         returnTime: val.returnTime || "--",
-                        time: val.outTime || "--",
+                        outTime: val.outTime || "--",
                         id: val.id,
                         key: "" + val.id + index,
                       });
@@ -197,10 +197,11 @@ const actions = {
                   departmentName: getDepartmentName(item.departmentType),
                   personnelName: item.personnelName,
                   personnelPhone: item.personnelPhone,
-                  status: item.status,
+                  status: val.status,
                   returnMan: val.returnMan || "--",
                   returnPhone: val.returnPhone || "--",
-                  returnTime: val.outTime || "--",
+                  returnTime: val.returnTime || "--",
+                  outTime: val.outTime || "--",
                   id: val.id,
                   key: "" + val.id + index,
                 });
