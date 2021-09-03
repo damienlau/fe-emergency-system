@@ -135,7 +135,6 @@ export default defineComponent({
     };
     const changeEventStatus = (record) => {
       const id = record.id;
-      if (!id) return;
       store
         .dispatch("warehouseModule/recordModule/deleteOutDetailData", {
           id: id,
@@ -155,7 +154,13 @@ export default defineComponent({
               : "color:green"
           }
         >
-        {status == 1 ? "待出仓" : status == 2 ? "已出仓" : status==3?'已归还':"--"}
+          {status == 1
+            ? "待出仓"
+            : status == 2
+            ? "已出仓"
+            : status == 3
+            ? "已归还"
+            : "--"}
         </p>
       );
     };

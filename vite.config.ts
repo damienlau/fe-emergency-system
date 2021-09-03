@@ -25,7 +25,7 @@ export default defineConfig({
     proxy: {
       "/dev-api": {
         // target: "http://192.168.1.80/warehouse",
-        target: "http://192.168.2.7:8090/warehouse",
+        target: "http://192.168.1.7:8090/warehouse",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/dev-api/, ""),
       },
