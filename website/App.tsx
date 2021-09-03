@@ -1,14 +1,23 @@
+import { ConfigProvider, Empty } from "ant-design-vue";
 import { defineComponent } from "vue";
-import moment from "moment";
+import { RouterView } from "vue-router";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import "moment/dist/locale/zh-cn";
+import emptyImage from "assets/icon_empty_data.png";
 
 export default defineComponent({
   setup() {
+    const emptyRender = {
+      renderEmpty: () => (
+        <>
+          <Empty image={emptyImage} />
+        </>
+      ),
+    };
+
     return () => (
-      <a-config-provider locale={zhCN}>
-        <router-view />
-      </a-config-provider>
+      <ConfigProvider locale={zhCN} v-slots={emptyRender}>
+        <RouterView />
+      </ConfigProvider>
     );
   },
 });
