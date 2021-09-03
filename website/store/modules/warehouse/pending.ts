@@ -1,10 +1,10 @@
-import { findSpecifiedShortcutData } from "api/warehouse/shortcut";
+import { findSpecifiedShortcutData } from "api/warehouse/pending";
 
 const state = () => ({});
 const getters = {};
 const actions = {
   // 待出仓物资测试数据
-  getMaintainList: ({ dispatch }) => {
+  findSpecifiedShortcutList: ({ dispatch }) => {
     return new Promise((reslove) => {
       findSpecifiedShortcutData().then((res) => {
         reslove(res.data);

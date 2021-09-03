@@ -120,7 +120,7 @@ export default defineComponent({
         onOk: () => {
           store
             .dispatch(
-              "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
+              "warehouseModule/shortcutModule/findSpecifiedShortcutList",
               cardData.value.map((cardItem) => {
                 return {
                   id: cardItem.key,
@@ -135,10 +135,10 @@ export default defineComponent({
     }
     onMounted(() => {
       //获取待出仓物资
-      
-      console.log(router.currentRoute.value.params)
+      console.log('1')
+      //console.log(router.currentRoute.value.params)
        store
-         .dispatch("warehouseModule/pendingModule/getMaintainList")
+         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList")
          .then((response) => {
            console.log(response)
            pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
