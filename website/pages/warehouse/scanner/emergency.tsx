@@ -5,6 +5,7 @@ import { useStore } from "vuex";
 import { Modal as AntModal } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty, Card } from "components";
 
+
 export default defineComponent({
   setup() {
     const store = useStore();
@@ -13,30 +14,14 @@ export default defineComponent({
       label: "待出仓物资",
       type: "string",
       key: "pengding",
-      data: [
-        {
-          title: "测试标题",
-          page: "（5/20）",
-          url: "http://inews.gtimg.com/newsapp_bt/0/13924356038/641",
-          content: [
-            '单兵头盔1','单兵头盔2','单兵头盔3','单兵头盔4','单兵头盔5',
-          ],
-        }, 
-        {
-          title: "测试2",
-          page: "（8/20）",
-          url: "http://inews.gtimg.com/newsapp_bt/0/13924356038/641",
-          content: [
-            '头盔5','头盔6','头盔7','头盔8','头盔9','头盔1','头盔2','头盔3',
-          ],
-        }
-      ]
+      data: []
     });
     // 已出仓标题及数据展示
     const finishedDelivery = ref({
       label: "已出仓物资",
       type: "string",
       key: "finished",
+      data:[]
     });
     //扫描出仓模态框是否可见
     const visible = ref(false);
@@ -49,16 +34,19 @@ export default defineComponent({
         label: "符合清单物资",
         key: "1",
         count: 5,
+        data:[]
       },
       {
         label: "未符合清单物资",
         key: "2",
         count: 10,
+        data:[]
       },
       {
         label: "未扫描到的物资",
         key: "3",
         count: 20,
+        data:[]
       },
     ]);
     // 菜单列表空状态
@@ -85,6 +73,7 @@ export default defineComponent({
     const handleClickDelete = () => {
       
     }
+    const bgcolor = ref('background-color:red')
     // 监听点击卡片移除事件
     const handleClickCardExtra = (activeKey) => {
       store
@@ -120,20 +109,29 @@ export default defineComponent({
       })
     }
     onMounted(() => {
-      // 获取待出仓物资
-      //  store
-      //    .dispatch("")
-      //    .then((response) => {
-      //      pengdingDelivery.value[0].options = response.map((option) => {
-      //        return {
-      //          key: option.id,
-      // title: option.title,
-      // page: option.page,
-      //          url: option.url,
-      // content: option.content,
-      //        };
-      //      });
-      //    });
+      //获取待出仓物资
+       store
+         .dispatch("warehouseModule/pendingModule/getMaintainList")
+         .then((response) => {
+           console.log(response)
+           pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
+             return {
+               title: item.newFileName,
+               page: item.id,
+               url: item.fileUrl,
+               content: item.newFileName.split(""),               
+             }
+           });
+           finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
+            return {
+              title: item.newFileName,
+              page: item.id,
+              url: item.fileUrl,
+              content: item.newFileName.split(""),
+              status:item.status
+            }
+           })
+         });
     });
 
     return () => (
@@ -146,37 +144,40 @@ export default defineComponent({
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1">
                 <div>{pengdingDelivery.value.label}</div>
               </a-layout-header>
-              <a-layout-content class="ml-16 h-full overflow-y-auto">
-                <div class="mt-16">
-                  {pengdingDelivery.value.data.map((listItem) => {
-                    return (
-                      <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
-                        <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
-                          <div class="flex items-center justify-center">
-                            <span class="text-20">{ listItem.title}</span>
-                            <span class="text-success">{ listItem.page}</span>
-                          </div>
-                        </div>
-                        <div class="flex py-16 px-16">
-                          <div class="h-modal-lightermin w-modal-lightermin bg-white">
-                            <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
-                          </div>
-                          <div class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1">
-                          {listItem.content.map((item,index) => {
-                            return (
-                                <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
-                                  <span class="text-14 w-full overflow-hidden h-22">
-                                    {item}
-                                  </span> 
-                                </div>
-                              )
-                            })}
+
+              <a-layout-content class="ml-16 mr-16 h-full">
+                <div class="relative inline-block w-full h-full">
+                  <div class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
+                    {pengdingDelivery.value.data.map((listItem) => {
+                      return (
+                        <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
+                          <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
+                            <div class="flex items-center justify-center">
+                              <span class="text-20">{ listItem.title}</span>
+                              <span class="text-success">{ listItem.page}</span>
                             </div>
+                          </div>
+                          <div class="flex py-16 px-16">
+                            <div class="h-modal-lightermin w-modal-lightermin bg-white">
+                              <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
+                            </div>
+                            <div class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1">
+                            {listItem.content.map((item,index) => {
+                              return (
+                                  <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                    <span class="text-14 w-full overflow-hidden h-22">
+                                      {item}
+                                    </span> 
+                                  </div>
+                                )
+                              })}
+                              </div>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                      )
+                    })}
+                    </div>
+                  </div>
               </a-layout-content>
             </a-layout>
           </div>
@@ -186,7 +187,7 @@ export default defineComponent({
             class="flex items-center justify-center"
             type="arrow-right-filling"
           />
-          {/* 出仓扫描-已出仓物资 */}
+          {/* 出仓归描-已归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
@@ -201,37 +202,58 @@ export default defineComponent({
                     {/* 卡片容器 */}
                 </div>
               </a-layout-header>
-              <a-layout-content class="ml-16 h-full overflow-y-auto">
-                <div class="mt-16">
+              <a-layout-content class="ml-16 mr-16 h-full">
+                <div class="relative inline-block w-full h-full">
+                  <div class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
 
-                  <div class=" mr-8  h-modal-lightmin border border-danger ghost bg-red-400 bg-opacity-10">
-                    <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
-                      <div class="flex items-center justify-center">
-                        <span class="text-20">川-后勤-001</span>
-                        <a-space size={8} class="absolute right-5">
-                          <a-button ghost danger >
-                            <Icon type="delete" onClick="handleClickDelete"/>
-                            移除
-                          </a-button>                          
-                        </a-space>
-                      </div>
-                    </div>
-                    <div class="flex py-16 px-16">
-                      <div class=" h-modal-lightermin w-modal-lightermin bg-white">
-                        <img />
-                      </div>
-                      <div class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1 flex items-center">
-                          <div style="margin:0 auto;">
-                          <a-empty
-                            description="空空如也"
-                            image={`assets/icon_empty_data.png`}>                          
-                          </a-empty>
+                  {finishedDelivery.value.data.map((listItem) => {
+                    return (
+                      <>
+                      <div class={listItem.status == 1 ? 'bg-red-400 border-danger border bg-opacity-10':'bg-navy-2'} class="mb-18 mr-8  h-modal-lightmin   ghost ">
+                        <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
+                          <div class="flex items-center justify-center">
+                            <span class="text-20">{ listItem.title}</span>
+                            <span class="text-success">{listItem.page}</span>
+                            <a-space size={8} class={listItem.status == 1 ?'':"hidden"} class="absolute right-5">
+                              <a-button ghost danger >
+                                <Icon type="delete" onClick="handleClickDelete"/>
+                                移除
+                              </a-button>                          
+                            </a-space>
                           </div>
+                        </div>
+                        <div class="flex py-16 px-16">
+                          <div class="h-modal-lightermin w-modal-lightermin bg-white">
+                            <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
+                          </div>
+                          <div  class={listItem.status == 1 ?'flex items-center':""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                              {listItem.status == 1 ? (
+                              <div style="margin:0 auto;">
+                              <a-empty
+                                description="空空如也"
+                                image={`assets/icon_empty_data.png`}>                          
+                              </a-empty>
+                              </div>
+                          ): listItem.content.map((item,index) => {
+                            return (
+                              <>                                
+                                <div class="h-54 ml-16 mr-16 border-b border-navy-1 w-full items-center">
+                                    <span class="text-14 w-full overflow-hidden h-22">
+                                      {item}
+                                    </span> 
+                                </div>                                
+                              </>
+                              )
+                            })}
+                            </div>
+                          </div>
+                          <div class={listItem.status == 1 ?'':"hidden"} class="text-danger text-12 mb-16">该物资/箱子不属于本次借贷清单</div> 
                       </div>
-                    </div>
+                      </>
+                    )
+                  })}
+                    
                   </div>
-                  <span class="text-danger text-12 mb-16">该物资/箱子不属于本次借贷清单</span>
-                  
                 </div>
               </a-layout-content>
             </a-layout>
@@ -330,7 +352,7 @@ export default defineComponent({
               })}
             </section>
           </Tabs>
-          <div class="absolute bottom-0 w-full text-center">
+          <div class="absolute bottom-5 w-full text-center" style="left:-22px;">
             <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>
               返回扫描
             </a-button>

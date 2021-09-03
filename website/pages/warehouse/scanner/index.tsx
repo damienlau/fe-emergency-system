@@ -37,6 +37,12 @@ export default defineComponent({
         type: "select",
 
         key: "event",
+        options: [
+          {
+            key: '',
+            label:''
+          }
+        ]
         // option: store.dispatch(""),
       },
       {
@@ -57,8 +63,11 @@ export default defineComponent({
     };
 
     // 监听模态框表单提交事件
-    const handleSubmitForm = () => {      
-      router.push({ name: formData.value["key"] });
+    const handleSubmitForm = () => {
+      console.log('123')
+      console.log(formData.value["key"])
+      
+      //router.push({ name: formData.value["key"],params:{id:formData.value["key"]} });
       visible.value = !visible.value;
     };
 
@@ -73,7 +82,7 @@ export default defineComponent({
               label: option.eventName,
             };
           });
-        });
+        });      
     });
 
     return () => (
