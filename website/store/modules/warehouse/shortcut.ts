@@ -1,8 +1,7 @@
 import {
-  deleteSpecifiedShortcutData,
+  deleteShortcutData,
+  findShortcutData,
   findShortcutCountData,
-  findSpecifiedShortcutData,
-  ShortcutParameterProps,
 } from "api/warehouse/shortcut";
 import { Commit, Dispatch, Store } from "vuex";
 
@@ -16,7 +15,7 @@ const actions = {
   // 获取待操作清单数量
   getTotals: ({ commit }: Store<Commit>) => {
     return new Promise<void>((reslove) => {
-      findShortcutCountData().then((total: ShortcutParameterProps) => {
+      findShortcutCountData().then((total) => {
         commit("SET_TOTAL", {
           all: total.totalNum,
           maintain: total.baoYangNum,
@@ -32,7 +31,7 @@ const actions = {
   getLists: ({ dispatch }: Store<Dispatch>) => {
     return new Promise((reslove) => {
       dispatch("getTotals").then(() => {
-        findSpecifiedShortcutData().then((response: any) => {
+        findShortcutData().then((response: any) => {
           reslove({
             pagination: {
               current: response.currentPage,
@@ -70,11 +69,8 @@ const actions = {
   },
 
   // 批量删除待操作清单列表
-  removeLists: (
-    { dispatch }: Store<Dispatch>,
-    deleteLists: ShortcutParameterProps
-  ) => {
-    deleteSpecifiedShortcutData(deleteLists).then((response: any) => {
+  removeLists: ({ dispatch }: Store<Dispatch>, deleteLists) => {
+    deleteShortcutData(deleteLists).then((response: any) => {
       dispatch("getLists");
     });
   },
