@@ -15,7 +15,11 @@ export default defineComponent({
     const menuActiveKey = ref("event");
     return () => (
       <>
-        <a-tabs v-model={menuActiveKey.value} class="dark:bg-navy-4">
+        <a-tabs
+          v-model={menuActiveKey.value}
+          animated={false}
+          class="dark:bg-navy-4"
+        >
           <a-tab-pane key={"event"} tab="事件记录">
             <EventList></EventList>
           </a-tab-pane>
