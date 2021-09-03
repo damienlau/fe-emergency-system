@@ -25,8 +25,6 @@ export default defineConfig({
   },
   server: {
     open: true,
-    host: "127.0.0.1",
-    port: 2333,
     proxy: {
       "/dev-api": {
         // target: "http://192.168.1.80/warehouse",

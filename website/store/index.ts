@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 import { MenuItemProps } from "components/Menu";
 import { RouteLocationNormalizedLoaded, RouteRecordRaw } from "vue-router";
 import taskModule from "./modules/task";
-import warehouseModule from "./modules/warehouse";
+import warehouse from "./modules/warehouse";
 import userModule from "./modules/user";
 
 const state = () => ({
@@ -43,7 +43,7 @@ const mutations = {
   },
 };
 
-const modules = { taskModule, warehouseModule, userModule };
+const modules = { taskModule, warehouse, userModule };
 
 export interface State {
   spinning: boolean;

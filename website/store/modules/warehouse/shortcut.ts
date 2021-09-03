@@ -1,98 +1,104 @@
 import {
   deleteSpecifiedShortcutData,
-  findSpecifiedShortcutData,
   findShortcutCountData,
+  findSpecifiedShortcutData,
+  ShortcutParameterProps,
 } from "api/warehouse/shortcut";
-import defaultConfig from "../../../../config/config";
-
-const { shelf } = defaultConfig;
+import { Commit, Dispatch, Store } from "vuex";
 
 const state = () => ({
-  totals: {
-    borrowCount: 0,
-    repairCount: 0,
-    maintainCount: 0,
-  },
+  total: { all: 0, maintain: 0, repair: 0, lend: 0 },
 });
-const getters = {
-  // 计算总和
-  computeTotalSum: (state) =>
-    Object.values(state.totals).reduce((count, num) => count + num),
-};
+
+const getters = {};
+
 const actions = {
-  // 删除指定数据
-  deleteSpecifiedShortcutCard: ({ dispatch }, id) => {
-    return new Promise((reslove, reject) => {
-      deleteSpecifiedShortcutData(id).then((response) => {
-        reslove(response.data);
-      });
-    });
-  },
-
-  // 查询全部数据
-  findShortcutCards: ({ dispatch }, activeKey) => {
-    return dispatch("findShortcutTotalNum").then(() => {
-      return new Promise((resolve, reject) => {
-        findShortcutData({ operationType: activeKey }).then((response) => {
-          resolve(
-            response.data.map((item) => {
-              switch (item.resourceType) {
-                case 1:
-                  // 类型为物资
-                  return {
-                    key: item.id,
-                    label: item.warehouseMaterialInfo.materialName,
-                    position: `1号货架(${
-                      shelf.position[item.warehouseMaterialInfo.rackPosition]
-                    })`,
-                    // position: `${item.warehouseMaterialInfo.rackNumber}号货架(${
-                    //   shelf.position[item.warehouseMaterialInfo.rackPosition]
-                    // })`,
-                  };
-
-                default:
-                  // 类型为箱子
-                  return {
-                    key: item.id,
-                    label: item.warehouseBoxInfo.boxName,
-                    position: `2号货架(${
-                      shelf.position[item.warehouseMaterialInfo.rackPosition]
-                    })`,
-                    // position: `${item.warehouseMaterialInfo.rackNumber}号货架(${
-                    //   shelf.position[item.warehouseMaterialInfo.rackPosition]
-                    // })`,
-                    capacities: [
-                      item.warehouseBoxInfo.materialCount,
-                      item.warehouseBoxInfo.maximumCapacity,
-                    ],
-                  };
-              }
-            })
-          );
-        });
-      });
-    });
-  },
-
-  // 查询全部数据数量
-  findShortcutTotalNum: ({ commit }) => {
-    return new Promise((resolve, reject) => {
-      findShortcutTotalData().then((response) => {
+  // 获取待操作清单数量
+  getTotals: ({ commit }: Store<Commit>) => {
+    return new Promise<void>((reslove) => {
+      findShortcutCountData().then((total: ShortcutParameterProps) => {
         commit("SET_TOTAL", {
-          borrowCount: response.data.outNum,
-          repairCount: response.data.weiXiuNum,
-          maintainCount: response.data.baoYangNum,
+          all: total.totalNum,
+          maintain: total.baoYangNum,
+          repair: total.weiXiuNum,
+          lend: total.outNum,
         });
-        resolve();
+        reslove();
       });
     });
   },
-};
-const mutations = {
-  SET_TOTAL: (state, count) => {
-    state.totals = count;
+
+  // 获取待操作清单列表
+  getLists: ({ dispatch }: Store<Dispatch>) => {
+    return new Promise((reslove) => {
+      dispatch("getTotals").then(() => {
+        findSpecifiedShortcutData().then((response: any) => {
+          reslove({
+            pagination: {
+              current: response.currentPage,
+              total: response.totalNum,
+              pageSize: response.pageSize,
+            },
+            data: response.content.map((lists: any) => {
+              switch (lists.resourceType) {
+                case MaterialType.box:
+                  return {
+                    id: lists.id,
+                    label: lists.warehouseBoxInfo.boxName || "暂无数据",
+                    thumbnail: lists.warehouseBoxInfo.boxImages,
+                    quantity: {
+                      remain: lists.warehouseBoxInfo.materialRemainNumber,
+                      total: lists.warehouseBoxInfo.materialTotalNumber,
+                    },
+                  };
+                  break;
+
+                case MaterialType.goods:
+                  return {
+                    id: lists.id,
+                    label:
+                      lists.warehouseMaterialInfo.materialName || "暂无数据",
+                    thumbnail: lists.warehouseMaterialInfo.materialImages,
+                  };
+                  break;
+              }
+            }),
+          });
+        });
+      });
+    });
+  },
+
+  // 批量删除待操作清单列表
+  removeLists: (
+    { dispatch }: Store<Dispatch>,
+    deleteLists: ShortcutParameterProps
+  ) => {
+    deleteSpecifiedShortcutData(deleteLists).then((response: any) => {
+      dispatch("getLists");
+    });
   },
 };
+
+const mutations = {
+  SET_TOTAL: (state: Store<State>, totals: State) => {
+    state.total = totals;
+  },
+};
+
+export enum MaterialType {
+  goods = 1,
+  box,
+}
+
+export interface State {
+  total: {
+    all?: number;
+    maintain: number;
+    repair: number;
+    lend: number;
+  };
+}
 
 export default {
   namespaced: true,

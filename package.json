@@ -9,9 +9,10 @@
   "license": "MIT",
   "main": "",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:staging": "vite build --mode staging",
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.0.1",

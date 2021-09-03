@@ -1,252 +1,183 @@
-// 一键操作
-
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import {
+  Button,
+  Image,
+  ImagePreviewGroup,
+  Modal as AModal,
+  Popconfirm,
+  Space,
+} from "ant-design-vue";
 import { useStore } from "vuex";
-import { Modal as AntModal } from "ant-design-vue";
-import { Card, Form, Icon, Modal, Tabs } from "components";
+import Icon from "components/Icon";
+import List from "components/List";
+import Modal from "components/Modal";
+import Tabs, { TabPaneProps } from "components/Tabs";
+
+export interface Data {
+  pagination?: {
+    current?: number;
+    pageSize?: number;
+    total?: number;
+  };
+  data?: {
+    [propertyName: string]: any;
+  };
+}
 
 export default defineComponent({
   setup() {
     const store = useStore();
-    // 菜单配置项
-    const menus = ref([
+    const tabColumns = ref([
       {
         label: "借货清单",
-        count: computed(
-          () => store.state.warehouseModule.shortcutModule.totals.borrowCount
-        ),
         key: "1",
+        alias: "借出",
+        count: computed(() => store.state.warehouse.shortcut.total.lend),
       },
       {
         label: "维修清单",
-        count: computed(
-          () => store.state.warehouseModule.shortcutModule.totals.repairCount
-        ),
         key: "2",
+        alias: "维修",
+        count: computed(() => store.state.warehouse.shortcut.total.repair),
       },
       {
         label: "保养清单",
-        count: computed(
-          () => store.state.warehouseModule.shortcutModule.totals.maintainCount
-        ),
         key: "3",
+        alias: "保养",
+        count: computed(() => store.state.warehouse.shortcut.total.maintain),
       },
     ]);
-    // 菜单列表空状态
-    const menuEmpty = ref(true);
-    // 菜单当前激活值
-    const menuActiveKey = ref(menus.value[0].key);
-    // 卡片列表
-    const cardData = ref([]);
-    // 模态框表单配置项
-    const formColumn = ref([
-      {
-        label: "事件",
-        key: "event",
-        type: "select",
-        required: true,
-      },
-      {
-        label: "借货人",
-        key: "name",
-        required: true,
-      },
-      {
-        label: "借货人工号",
-        key: "number",
-        required: true,
-      },
-      {
-        label: "联系电话",
-        key: "phone",
-        required: true,
-      },
-      {
-        label: "借货科室",
-        key: "department",
-        type: "select",
-        required: true,
-      },
-    ]);
-    // 模态框表单数据
-    const formData = ref({});
-    // 模态框是否可见
-    const visible = ref(false);
+    const tabExtraOptions = ref<TabPaneProps>({});
+    const cardListsData = ref<Data>({});
+    const modalVisible = ref(false);
 
-    // 监听点击标签页菜单按钮事件
-    const handleClickTabExtra = () => {
-      AntModal.confirm({
-        class: "bg-navy-3 rounded pb-0 border border-primary",
-        title: `确定要清空借货清单吗？`,
-        content: `清空借货清单后，该清单内的物资将全部移出`,
+    const handleClickTabPane = ({ item }) => {
+      tabExtraOptions.value = item;
+      store.dispatch("warehouse/shortcut/getLists").then((response) => {
+        cardListsData.value = response;
+      });
+    };
+
+    const handleConfirmOpertaion = () => {
+      AModal.confirm({
         centered: true,
+        icon: <Icon type="shanjian" />,
+        title: `确定要清空${tabExtraOptions.value.label}吗？`,
+        content: `点击清空${tabExtraOptions.value.label}后，该清单内的物资将全部移出`,
+        cancelText: "取消",
+        okText: `清空${tabExtraOptions.value.label}`,
         onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
-              cardData.value.map((cardItem) => {
-                return {
-                  id: cardItem.key,
-                };
-              })
-            )
-            .then(() => {
-              handleClickTabPane();
-            });
+          handleDelete();
         },
       });
     };
 
-    // 监听点击标签页菜单事件
-    const handleClickTabPane = (activeKey = menuActiveKey.value) => {
-      menuActiveKey.value = activeKey;
-      store
-        .dispatch("warehouseModule/shortcutModule/findShortcutCards", activeKey)
-        .then((response) => {
-          cardData.value = response;
-          menuEmpty.value = !response.length;
-        });
+    const handleVisibleDialog = () => {
+      modalVisible.value = !modalVisible.value;
     };
 
-    // 监听点击卡片删除按钮事件
-    const handleClickCardExtra = (activeKey) => {
-      store
-        .dispatch(
-          "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
-          [{ id: activeKey }]
-        )
-        .then(() => {
-          handleClickTabPane();
-        });
+    const handleDelete = (selected = cardListsData.value?.data) => {
+      !Array.isArray(selected) && (selected = Array.of(selected));
+      store.dispatch("warehouse/shortcut/removeLists", selected);
     };
-
-    // 监听模态框表单提交事件
-    const handleSubmitForm = () => {
-      console.log(formData.value);
-      visible.value = !visible.value;
-    };
-
-    onMounted(() => {
-      handleClickTabPane();
-    });
 
     return () => (
       <>
         <Tabs
-          v-model={[menuActiveKey.value, "activeKey"]}
-          block
-          columns={menus.value}
-          empty={menuEmpty.value}
+          class="dark:bg-navy-4"
+          columns={tabColumns.value}
           onClick={handleClickTabPane}
-          v-slots={{
-            // 菜单附加操作区
-            extra: () => (
-              <a-space size={8}>
-                <a-button ghost danger onClick={handleClickTabExtra}>
-                  清空清单数据
-                </a-button>
-                <a-button
-                  type="primary"
-                  onClick={() => (visible.value = !visible.value)}
-                >
-                  一键操作
-                </a-button>
-              </a-space>
+        >
+          {{
+            extra: () => {
+              return (
+                <Space>
+                  <Button danger ghost onClick={handleConfirmOpertaion}>
+                    清空{tabExtraOptions.value.label}
+                  </Button>
+                  <Button type="primary" onClick={handleVisibleDialog}>
+                    全部{tabExtraOptions.value.alias}
+                  </Button>
+                </Space>
+              );
+            },
+            default: () => (
+              <List grid={5} class="h-full" dataSource={cardListsData.value}>
+                {{
+                  card: ({ item, index }) => (
+                    <>
+                      <section class="dark:bg-navy-2 dark:hover:bg-navy-3 rounded">
+                        {/* Card Header Start */}
+                        <div class="flex flex-row items-center justify-between py-8 border-b border-navy-1">
+                          {/* title */}
+                          <h3 class="flex flex-row text-16 pl-16 overflow-auto">
+                            <span class="truncate">{item.label}</span>
+                            {item.quantity && (
+                              <span
+                                class={
+                                  item.quantity.total == item.quantity.remain
+                                    ? "text-success"
+                                    : "text-danger"
+                                }
+                              >
+                                ({item.quantity.remain}/{item.quantity.total})
+                              </span>
+                            )}
+                          </h3>
+                          {/* extra */}
+                          <Popconfirm
+                            title={`移出${item.label}?`}
+                            placement="bottomRight"
+                            onConfirm={() => handleDelete(item)}
+                          >
+                            {{
+                              icon: () => <Icon type="shanjian" />,
+                              default: () => (
+                                <Button danger type="text">
+                                  <Icon class="align-baseline" type="delete" />
+                                  移出
+                                </Button>
+                              ),
+                            }}
+                          </Popconfirm>
+                        </div>
+                        {/* Card Header End */}
+
+                        {/* Card Body Start */}
+                        <section class="flex flex-row p-16">
+                          {/* thumbnail */}
+                          <div>
+                            <ImagePreviewGroup>
+                              {item.thumbnail.map((image, key) => {
+                                return (
+                                  <div v-show={!key}>
+                                    <Image
+                                      class="w-full h-full object-cover rounded"
+                                      src={image.fileUrl}
+                                      fallback="/icon_empty_search.png"
+                                      width={108}
+                                      height={108}
+                                    ></Image>
+                                  </div>
+                                );
+                              })}
+                            </ImagePreviewGroup>
+                          </div>
+                          {/* descriptions */}
+                        </section>
+                        {/* Card Body End */}
+                      </section>
+                    </>
+                  ),
+                }}
+              </List>
             ),
           }}
-        >
-          {/* 卡片容器 */}
-          <section class="overflow-y-auto grid grid-cols-5 gap-16">
-            {cardData.value.map((listItem) => {
-              return (
-                <Card title={listItem.label}>
-                  {{
-                    // 卡片自定义标题
-                    title: () => (
-                      <p class="text-16 font-medium">
-                        <span>{listItem.label}</span>
-                        {listItem.capacities && (
-                          <span>
-                            ({listItem.capacities[0]}/{listItem.capacities[1]})
-                          </span>
-                        )}
-                      </p>
-                    ),
-                    // 卡片自定义附加操作区
-                    extra: () => (
-                      <a-popconfirm
-                        title={`确认删除吗？`}
-                        ok-text="删除"
-                        cancel-text="取消"
-                        placement="bottomRight"
-                        onConfirm={() => handleClickCardExtra(listItem.key)}
-                      >
-                        <a-button
-                          class="flex flex-row items-center p-0"
-                          type="text"
-                          danger
-                          v-slots={{
-                            icon: () => <Icon type="delete" />,
-                          }}
-                        >
-                          移出
-                        </a-button>
-                      </a-popconfirm>
-                    ),
-                    default: () => (
-                      <div class="flex flex-row">
-                        <div class="flex-shrink-0 mr-16">
-                          <a-image width={108} height={108}></a-image>
-                        </div>
-                        <div>
-                          <p>
-                            <span class="text-white text-opacity-70">
-                              货架位置
-                            </span>
-                            <span class="text-16">{listItem.position}</span>
-                          </p>
-                          <p>
-                            <span class="text-white text-opacity-70">类型</span>
-                          </p>
-                          <p>
-                            <span class="text-white text-opacity-70">尺寸</span>
-                          </p>
-                          <p>
-                            <span class="text-white text-opacity-70">
-                              箱子编码
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    ),
-                  }}
-                </Card>
-              );
-            })}
-          </section>
         </Tabs>
-        {/* 模态框 */}
         <Modal
-          v-model={[visible.value, "visible"]}
-          size="heavy"
-          title="请填写借货人信息"
-        >
-          {/* 模态框表单 */}
-          <Form
-            v-model={[formData.value, "model"]}
-            columns={formColumn.value}
-            onSubmit={handleSubmitForm}
-          >
-            {{
-              button: () => (
-                <a-button ghost html-type="submit">
-                  <Icon class="align-baseline" type="save" />
-                  保存
-                </a-button>
-              ),
-            }}
-          </Form>
-        </Modal>
+          v-model={[modalVisible.value, "visible"]}
+          title={`${tabExtraOptions.value.alias}信息`}
+        ></Modal>
       </>
     );
   },

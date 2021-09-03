@@ -17,7 +17,7 @@ const instance = axios.create({
 // 拦截请求
 instance.interceptors.request.use(
   (config) => {
-    store.commit("SET_LOADING");
+    store.commit("SET_SPINNING");
     if (!store.state.userModule.token) {
       store.commit("userModule/GET_TOKEN");
     }
@@ -28,7 +28,7 @@ instance.interceptors.request.use(
   },
   () => {
     message.error(`请求失败，请稍后重试`, () => {
-      store.commit("SET_LOADING");
+      store.commit("SET_SPINNING");
     });
   }
 );
@@ -36,7 +36,7 @@ instance.interceptors.request.use(
 // 拦截响应
 instance.interceptors.response.use(
   (response) => {
-    store.commit("SET_LOADING");
+    store.commit("SET_SPINNING");
     if (typeof response.headers.authorization !== "undefined") {
       store.commit("userModule/SET_TOKEN", response.headers.authorization);
     }
@@ -56,7 +56,7 @@ instance.interceptors.response.use(
   },
   () => {
     message.error(`网络错误，请稍后重试`, () => {
-      store.commit("SET_LOADING");
+      store.commit("SET_SPINNING");
     });
   }
 );
