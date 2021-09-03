@@ -121,16 +121,18 @@ export default defineComponent({
     const handleClickCancel = (record) => {
       if (record.status != 1) return;
       return (
-        <a-button
-          ghost
-          danger
-          size="small"
-          onClick={() => {
+        <a-popconfirm
+          title={"确认取消出仓？"}
+          okText="确认"
+          cancelText="取消"
+          onConfirm={() => {
             changeEventStatus(record);
           }}
         >
-          取消出仓
-        </a-button>
+          <a-button ghost danger size="small">
+            取消出仓
+          </a-button>
+        </a-popconfirm>
       );
     };
     const changeEventStatus = (record) => {
