@@ -37,11 +37,7 @@ export default defineComponent({
         type: "select",
 
         key: "event",
-        options: [
-          {
-            key: '',
-            label:''
-          }
+        options: [          
         ]
         // option: store.dispatch(""),
       },
@@ -64,15 +60,19 @@ export default defineComponent({
 
     // 监听模态框表单提交事件
     const handleSubmitForm = () => {
-      console.log('123')
-      console.log(formData.value["key"])
-      
-      //router.push({ name: formData.value["key"],params:{id:formData.value["key"]} });
+      router.push({
+        name: formData.value["key"],
+        params: {
+          id: formData.value["event"],
+          number: formData.value["number"]
+        }
+      });
       visible.value = !visible.value;
     };
 
     onMounted(() => {
       // 获取表单选择框选项
+      
       store
         .dispatch("taskModule/eventModule/findTaskEvents")
         .then((response) => {
@@ -80,9 +80,9 @@ export default defineComponent({
             return {
               key: option.id,
               label: option.eventName,
-            };
+            };            
           });
-        });      
+        });
     });
 
     return () => (
