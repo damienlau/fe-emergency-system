@@ -142,7 +142,7 @@ export default defineComponent({
       );
     };
     const handSearch = () => {
-      const activeKey = menuActiveKey.value;
+      const activeKey = props.menuActiveKey;
       const search = tableSelectObj.value;
       if (activeKey === "1" || activeKey === "2") {
         getMaintainList(search);

@@ -54,8 +54,8 @@ export default defineComponent({
         key: "returnPhone",
       },
       {
-        dataIndex: "time",
-        key: "time",
+        dataIndex: "outTime",
+        key: "outTime",
         slots: { title: "customTitle", customRender: "dailyTime" },
       },
       {
@@ -119,22 +119,24 @@ export default defineComponent({
         });
     };
     const handleClickCancel = (record) => {
+      if (record.status != 1) return;
       return (
-        <a-button
-          ghost
-          danger
-          size="small"
-          onClick={() => {
+        <a-popconfirm
+          title={"确认取消出仓？"}
+          okText="确认"
+          cancelText="取消"
+          onConfirm={() => {
             changeEventStatus(record);
           }}
         >
-          取消出仓
-        </a-button>
+          <a-button ghost danger size="small">
+            取消出仓
+          </a-button>
+        </a-popconfirm>
       );
     };
     const changeEventStatus = (record) => {
       const id = record.id;
-      if (!id) return;
       store
         .dispatch("warehouseModule/recordModule/deleteOutDetailData", {
           id: id,
@@ -148,22 +150,27 @@ export default defineComponent({
         <p
           style={
             status == 1
-              ? "color:red"
+              ? "color:orange"
               : status == 2
-              ? "color:green"
-              : "color:orange"
+              ? "color:red"
+              : "color:green"
           }
         >
-          {status == 1 ? "已出仓" : status == 2 ? "已归还" : "待出仓"}
+          {status == 1
+            ? "待出仓"
+            : status == 2
+            ? "已出仓"
+            : status == 3
+            ? "已归还"
+            : "--"}
         </p>
       );
     };
     const rendDailyTime = (record) => {
-      console.log(record, "record");
       return (
         <div class="flex flex-row items-center justify-end">
-          <span style={record.status == 3 ? "color:orange" : ""}>
-            {record.time}
+          <span style={record.status == 1 ? "color:orange" : ""}>
+            {record.outTime}
           </span>
         </div>
       );
