@@ -1,8 +1,8 @@
 // 借还记录 -日常记录
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { TableSelct } from "website/components";
-import config from "config/config";
+import { TableSelct } from "components";
+import config from "../../../../config/config";
 
 export default defineComponent({
   setup() {
@@ -140,7 +140,7 @@ export default defineComponent({
           id: id,
         })
         .then(() => {
-          handSearch()
+          handSearch();
         });
     };
     const renderDailyStatus = (status) => {

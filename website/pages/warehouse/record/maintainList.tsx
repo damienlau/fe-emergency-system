@@ -1,7 +1,7 @@
 // 借还记录 - 维修/保养记录
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { TableSelct } from "website/components";
+import { TableSelct } from "components";
 
 export default defineComponent({
   props: {

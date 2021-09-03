@@ -1,6 +1,6 @@
 // 借还记录
 import { defineComponent, onMounted, ref } from "vue";
-import { Tabs } from "website/components";
+import { Tabs } from "components";
 
 import EventList from "./eventList";
 import DailyList from "./dailyList";
@@ -33,38 +33,21 @@ export default defineComponent({
       },
     ]);
     const componentsName = ref("");
-    // 菜单列表空状态
-    const menuEmpty = ref(false);
-    // 菜单当前激活值
-    const menuActiveKey = ref(menus.value[0].key); //监听点击标签页菜单事件
     // 监听点击标签页菜单事件
-    const handleClickTabPane = (activeKey = menuActiveKey.value) => {
-      if (activeKey === "1" || activeKey === "2") {
-        componentsName.value = "MaintainList";
-      } else if (activeKey === "event") {
-        componentsName.value = "EventList";
-      } else if (activeKey === "daily") {
-        componentsName.value = "DailyList";
-      }
+    const handleClickTabPane = ({ activeKey, item }) => {
+      console.log(activeKey, item);
     };
-    onMounted(() => {
-      handleClickTabPane();
-    });
 
     return () => (
       <>
         <Tabs
           class="dark:bg-navy-4"
-          v-model={[menuActiveKey.value, "activeKey"]}
           columns={menus.value}
-          empty={menuEmpty.value}
           onClick={handleClickTabPane}
-          rowKey={(index) => index}
-          size="small"
         >
-          <section class="overflow-y-auto">
-            <component is={componentsName.value}></component>
-          </section>
+          <div class="flex flex-col">
+            <EventList />
+          </div>
         </Tabs>
       </>
     );

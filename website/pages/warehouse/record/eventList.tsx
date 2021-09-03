@@ -1,7 +1,7 @@
 // 借还记录 -事件记录
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { TableSelct } from "website/components";
+import { TableSelct } from "components";
 
 export default defineComponent({
   setup() {
@@ -134,7 +134,7 @@ export default defineComponent({
           id: id,
         })
         .then(() => {
-          handSearch()
+          handSearch();
         });
     };
     const rendEventNumDetail = (record) => {
