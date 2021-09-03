@@ -94,15 +94,15 @@ const actions = {
               item.detailList.map((val, index) => {
                 maintainTableData.push({
                   materialName: val.materialInfo.materialName,
-                  boxName: val.materialInfo.boxName,
+                  boxName: val.materialInfo.boxName || "--",
                   personnelCompany: item.personnelCompany,
                   personnelName: item.personnelName,
                   personnelPhone: item.personnelPhone,
                   status: val.status,
                   isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
                   description: item.description,
-                  startTime: val.startTime,
-                  endTime: val.endTime,
+                  startTime: val.startTime || "--",
+                  endTime: val.endTime || "--",
                   id: val.id,
                   returnTime: val.returnTime || "--",
                   time: val.outTime || "--",
