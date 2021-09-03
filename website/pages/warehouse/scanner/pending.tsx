@@ -171,8 +171,8 @@ export default defineComponent({
 
               <a-layout-content class="ml-16 mr-16 h-full">
                 <div class="relative inline-block w-full h-full">
-                  <div  class={pengdingDelivery.value.data.length != 0 ?'flex items-center':""} class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
-                    {pengdingDelivery.value.data.length != 0 ?
+                  <div  class={pengdingDelivery.value.data.length == 0 ?'flex items-center':""} class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
+                    {pengdingDelivery.value.data.length == 0 ?
                     <div class="m-auto" >
                     <a-empty
                       description="当前出仓扫描，无'申请清单'"
