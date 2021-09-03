@@ -53,7 +53,7 @@ export default defineComponent({
 
     const handleClickTabPane = ({ item }) => {
       tabExtraOptions.value = item;
-      store.dispatch("warehouse/shortcut/getLists").then((response) => {
+      store.dispatch("warehouseModule/shortcut/getLists").then((response) => {
         cardListsData.value = response;
       });
     };
@@ -78,7 +78,7 @@ export default defineComponent({
 
     const handleDelete = (selected = cardListsData.value?.data) => {
       !Array.isArray(selected) && (selected = Array.of(selected));
-      store.dispatch("warehouse/shortcut/removeLists", selected);
+      store.dispatch("warehouseModule/shortcut/removeLists", selected);
     };
 
     return () => (

@@ -4,9 +4,9 @@ const state = () => ({});
 const getters = {};
 const actions = {
   // 待出仓物资测试数据
-  findSpecifiedShortcutList: ({ dispatch }) => {
+  findSpecifiedShortcutList: ({ dispatch },params) => {
     return new Promise((reslove) => {
-      findSpecifiedShortcutData().then((res) => {
+      findSpecifiedShortcutData(params).then((res) => {
         reslove(res.data);
       });
     });

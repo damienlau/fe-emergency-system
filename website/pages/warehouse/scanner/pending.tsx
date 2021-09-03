@@ -138,26 +138,26 @@ export default defineComponent({
       console.log('1')
       //console.log(router.currentRoute.value.params)
        store
-         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList")
+         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",{})
          .then((response) => {
            console.log(response)
-           pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
-             return {
-               title: item.newFileName,
-               page: item.id,
-               url: item.fileUrl,
-               content: item.newFileName.split(""),               
-             }
-           });
-           finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
-            return {
-              title: item.newFileName,
-              page: item.id,
-              url: item.fileUrl,
-              content: item.newFileName.split(""),
-              status:item.status
-            }
-           })
+          //  pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
+          //    return {
+          //      title: item.newFileName,
+          //      page: item.id,
+          //      url: item.fileUrl,
+          //      content: item.newFileName.split(""),               
+          //    }
+          //  });
+          //  finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
+          //   return {
+          //     title: item.newFileName,
+          //     page: item.id,
+          //     url: item.fileUrl,
+          //     content: item.newFileName.split(""),
+          //     status:item.status
+          //   }
+          //  })
          });
     });
 
