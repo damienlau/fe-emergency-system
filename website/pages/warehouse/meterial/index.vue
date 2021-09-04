@@ -37,7 +37,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { Icon } from "components";
-import Sidebar from "../meterial/siderBar.vue";
+import Sidebar from "./siderBar/index.vue";
 export default defineComponent({
   name: "SiderBar",
   components: { Icon, Sidebar },
