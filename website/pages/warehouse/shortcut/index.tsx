@@ -66,12 +66,6 @@ export default defineComponent({
             options: [],
             required: true,
           },
-          {
-            label: "图片上传",
-            key: "demo",
-            type: "upload",
-            required: true,
-          },
         ],
       },
       {
@@ -192,7 +186,11 @@ export default defineComponent({
     };
 
     const handleSubmit = (formData: any) => {
-      store.dispatch("warehouseModule/shortcutModule/setLists", formData);
+      store
+        .dispatch("warehouseModule/shortcutModule/setLists", formData)
+        .then((response) => {
+          handleVisibleDialog();
+        });
     };
 
     return () => (
