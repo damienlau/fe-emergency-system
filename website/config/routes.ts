@@ -18,7 +18,7 @@ const routes = [
             path: "meterial",
             name: "Meterial",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse/meterial"),
+            component: () => import("../pages/warehouse/meterial/index.vue"),
           },
           {
             path: "record",
@@ -60,10 +60,8 @@ const routes = [
                 meta: { label: "紧急扫描" },
                 component: () => import("pages/warehouse/scanner/emergency"),
               },
-            ]
-           
+            ],
           },
-			
         ],
       },
       {
