@@ -64,6 +64,12 @@ export default defineComponent({
             options: [],
             required: true,
           },
+          {
+            label: "图片上传",
+            key: "demo",
+            type: "upload",
+            required: true,
+          },
         ],
       },
       {
@@ -74,11 +80,11 @@ export default defineComponent({
         form: [
           {
             label: "是否出仓",
-            key: "a",
+            key: "operationType",
             type: "select",
             options: [
-              { label: "在库", key: 0 },
-              { label: "出库", key: 1 },
+              { label: "在库", key: "0" },
+              { label: "出库", key: "1" },
             ],
             required: true,
           },
@@ -112,11 +118,11 @@ export default defineComponent({
         form: [
           {
             label: "是否出仓",
-            key: "a",
+            key: "operationType",
             type: "select",
             options: [
-              { label: "在库", key: 0 },
-              { label: "出库", key: 1 },
+              { label: "在库", key: "0" },
+              { label: "出库", key: "1" },
             ],
             required: true,
           },
@@ -148,8 +154,6 @@ export default defineComponent({
     const modalVisible = ref(false);
 
     const handleClickTabPane = ({ item }) => {
-      console.log(item);
-
       tabExtraOptions.value = item;
       store.dispatch("warehouse/shortcut/getLists").then((response) => {
         cardListsData.value = response;
@@ -179,10 +183,8 @@ export default defineComponent({
       store.dispatch("warehouse/shortcut/removeLists", selected);
     };
 
-    const handleSubmit = (formData) => {
-      console.log(formData);
-
-      // store.dispatch("warehouse/shortcut/removeLists", formData);
+    const handleSubmit = (formData: any) => {
+      store.dispatch("warehouse/shortcut/setLists", formData);
     };
 
     return () => (

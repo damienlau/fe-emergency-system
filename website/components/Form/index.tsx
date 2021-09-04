@@ -1,4 +1,12 @@
-import { Form, FormItem, Input, Select, SelectOption } from "ant-design-vue";
+import {
+  Form,
+  FormItem,
+  Input,
+  Select,
+  SelectOption,
+  Upload,
+} from "ant-design-vue";
+import Icon from "components/Icon";
 import { defineComponent, ref } from "vue";
 
 interface selectOptionProps {
@@ -11,7 +19,7 @@ interface formItemGridProps {
   offset?: number;
 }
 
-interface formItemProps extends selectOptionProps {
+export interface formItemProps extends selectOptionProps {
   layouts?: formItemGridProps[];
   type?: string;
   options?: selectOptionProps[];
@@ -45,7 +53,7 @@ export default defineComponent({
               allowClear
               placeholder={`请选择${render.label}`}
             >
-              {render.options.map((selectOption) => {
+              {render.options?.map((selectOption) => {
                 return (
                   <SelectOption value={selectOption.key}>
                     {selectOption.label}
@@ -53,6 +61,19 @@ export default defineComponent({
                 );
               })}
             </Select>
+          );
+
+        case "upload":
+          return (
+            <Upload
+              fileList={formData.value[render.key]}
+              listType="picture-card"
+            >
+              <div class="flex flex-col items-center justify-center">
+                <Icon class="text-24" type="add" />
+                <span>上传图片</span>
+              </div>
+            </Upload>
           );
 
         default:
@@ -85,7 +106,7 @@ export default defineComponent({
                   {
                     required: true,
                     message: `${formItem.label}为必填项`,
-                    trigger: "blur",
+                    trigger: "change",
                   },
                 ]
               }

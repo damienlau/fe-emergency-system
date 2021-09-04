@@ -1,3 +1,4 @@
+import { addMaintainListsData, maintainRequestProps } from "api/lists/maintain";
 import {
   deleteShortcutData,
   findShortcutData,
@@ -15,12 +16,12 @@ const actions = {
   // 获取待操作清单数量
   getTotals: ({ commit }: Store<Commit>) => {
     return new Promise<void>((reslove) => {
-      findShortcutCountData().then((total) => {
+      findShortcutCountData().then((total: any) => {
         commit("SET_TOTAL", {
-          all: total.totalNum,
-          maintain: total.baoYangNum,
-          repair: total.weiXiuNum,
-          lend: total.outNum,
+          all: total?.totalNum,
+          maintain: total?.baoYangNum,
+          repair: total?.weiXiuNum,
+          lend: total?.outNum,
         });
         reslove();
       });
@@ -34,11 +35,11 @@ const actions = {
         findShortcutData().then((response: any) => {
           reslove({
             pagination: {
-              current: response.currentPage,
-              total: response.totalNum,
-              pageSize: response.pageSize,
+              current: response?.currentPage,
+              total: response?.totalNum,
+              pageSize: response?.pageSize,
             },
-            data: response.content.map((lists: any) => {
+            data: response?.content.map((lists: any) => {
               switch (lists.resourceType) {
                 case MaterialType.box:
                   return {
@@ -68,8 +69,17 @@ const actions = {
     });
   },
 
+  // 添加清单列表
+  setLists: ({ dispatch }: Store<Dispatch>, formData: maintainRequestProps) => {
+    if (formData.operationType) {
+      addMaintainListsData(formData).then((response: any) => {
+        // dispatch("getLists");
+      });
+    }
+  },
+
   // 批量删除待操作清单列表
-  removeLists: ({ dispatch }: Store<Dispatch>, deleteLists) => {
+  removeLists: ({ dispatch }: Store<Dispatch>, deleteLists: any) => {
     deleteShortcutData(deleteLists).then((response: any) => {
       dispatch("getLists");
     });
@@ -77,7 +87,7 @@ const actions = {
 };
 
 const mutations = {
-  SET_TOTAL: (state: Store<State>, totals: State) => {
+  SET_TOTAL: (state: State, totals: State) => {
     state.total = totals;
   },
 };
@@ -88,12 +98,7 @@ export enum MaterialType {
 }
 
 export interface State {
-  total: {
-    all?: number;
-    maintain: number;
-    repair: number;
-    lend: number;
-  };
+  total: object;
 }
 
 export default {

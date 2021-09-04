@@ -62,7 +62,7 @@ export default defineComponent({
           </div>
           {/* Modal Header End */}
 
-          <div class="flex-1 overflow-hidden">
+          <div class="flex-1 overflow-y-auto">
             {slots.default && slots.default()}
           </div>
         </div>
