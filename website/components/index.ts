@@ -8,14 +8,4 @@ import PageHeader from "./PageHeader";
 import Tabs from "./Tabs";
 import TableSelct from "./TableSelct";
 
-export {
-  Card,
-  Empty,
-  Form,
-  Icon,
-  Menu,
-  Modal,
-  PageHeader,
-  Tabs,
-  TableSelct,
-};
+export { Card, Empty, Form, Icon, Menu, Modal, PageHeader, Tabs, TableSelct };

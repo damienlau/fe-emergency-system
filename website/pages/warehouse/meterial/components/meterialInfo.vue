@@ -1,11 +1,15 @@
 <template>
   <a-card hoverable style="width: 100%">
     <div class="top flex flex-row w-fll pb-3">
-      <a-image class="pt-3" :width="100" :height="100" :src="'www.baidu.com'" />
+      <a-image
+        class="pt-3"
+        :width="100"
+        :height="100"
+        :src="info.materialImages && info.materialImages[0].fileUrl"
+      />
       <div class="right ml-20">
         <div class="row">
-          <span class="title mr-3 mb-3">{{ info.boxName }}</span>
-          <span class="number mr-3">(17/20)</span>
+          <span class="title mr-3 mb-3">{{ info.materialName }}</span>
           <a-tag
             size="mini"
             :color="info.status && returnStatus(info.status).color"
@@ -26,12 +30,12 @@
           }}</span>
         </div>
         <div class="row">
-          <span class="label">尺寸:</span>
-          <span class="value">{{ info.size && sizeType[info.size] }}</span>
+          <span class="label">箱号:</span>
+          <span class="value">{{ info.boxCode }}</span>
         </div>
         <div class="row">
           <span class="label">物资编码:</span>
-          <span class="value">{{ info.boxCode }}</span>
+          <span class="value">{{ info.materialCode }}</span>
         </div>
       </div>
     </div>
@@ -52,6 +56,23 @@
           >取消借贷</a-button
         >
       </div>
+      <div class="right" v-if="info.status === 1">
+        <a-button
+          type="primary"
+          ghost
+          class="mr-3"
+          :disabled="isMaintain"
+          @click="changeMaintain"
+          >维修</a-button
+        >
+        <a-button
+          type="primary"
+          ghost
+          :disabled="isRepair"
+          @click="changeRepair"
+          >保养</a-button
+        >
+      </div>
     </div>
   </a-card>
 </template>
@@ -59,20 +80,16 @@
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
 import { addBatchPendingData } from "api/warehouse/meterial";
 export default defineComponent({
-  name: "BoxInfo",
+  name: "MeterialInfo",
   props: {
-    boxInfo: Object,
+    meterialInfo: Object,
   },
   setup(props) {
     const state = reactive({
       info: {},
+      isMaintain: false,
+      isRepair: false,
       isDebit: true,
-    });
-    const sizeType = ref({
-      1: "一箱一桌(800 x 600 x 600)",
-      2: "一箱两柜(1200 x 800 x 800)",
-      3: "一箱一柜(1200 x 800 x 400)",
-      4: "其他箱子",
     });
     const positionInfo = ref({
       0: "未知",
@@ -99,8 +116,44 @@ export default defineComponent({
       15: "检验",
     });
     onMounted(() => {
-      state.info = props.boxInfo;
+      state.info = props.meterialInfo;
     });
+    const changeMaintain = () => {
+      const params = {
+        operationType: 2,
+        resourceType: 1,
+        materialId: props.meterialInfo.id,
+      };
+      addBatchPendingData(params).then((res) => {
+        if (res) {
+          state.isMaintain = true;
+        }
+      });
+    };
+    const changeRepair = () => {
+      const params = {
+        operationType: 3,
+        resourceType: 1,
+        materialId: props.meterialInfo.id,
+      };
+      addBatchPendingData(params).then((res) => {
+        if (res) {
+          state.isRepair = false;
+        }
+      });
+    };
+    const changeDebit = () => {
+      const params = {
+        operationType: 1,
+        resourceType: 1,
+        materialId: props.meterialInfo.id,
+      };
+      addBatchPendingData(params).then((res) => {
+        if (res) {
+          state.isDebit = !state.isDebit;
+        }
+      });
+    };
     const returnStatus = (status) => {
       let state = {};
       switch (status) {
@@ -149,25 +202,14 @@ export default defineComponent({
       }
       return state;
     };
-    const changeDebit = () => {
-      console.log(props.boxInfo, "boxInfo");
-      const params = {
-        operationType: 1,
-        resourceType: 2,
-        materialId: props.boxInfo.id,
-      };
-      addBatchPendingData(params).then((res) => {
-        if (res) {
-          state.isDebit = !state.isDebit;
-        }
-      });
-    };
+
     return {
       ...toRefs(state),
       positionInfo,
       department,
-      sizeType,
       returnStatus,
+      changeMaintain,
+      changeRepair,
       changeDebit,
     };
   },

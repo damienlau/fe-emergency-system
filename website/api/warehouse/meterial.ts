@@ -30,3 +30,28 @@ export function findSpecifiedMeterialData(params) {
 export function updateSpecifiedMeterialData(params) {
   return request.post("/material/info/update", params);
 }
+
+// 全部仓库物资信息-分页-复杂条件
+export function findCriteriaPageData(params) {
+  return request.get("/material/info/page/criteria", {
+    params,
+  });
+}
+// 全部仓库箱子信息-分页-复杂条件
+export function findBoxPageData(params) {
+  return request.get("/box/info/page/criteria", {
+    params,
+  });
+}
+// 新增仓库批量待处理清单
+export function addBatchPendingData(params) {
+  return request.post("/batchPending/add", {
+    ...params,
+  });
+}
+// 仓库新增箱子
+export function addBoxData(params) {
+  return request.post("/box/info/add", {
+    ...params,
+  });
+}
