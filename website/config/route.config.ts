@@ -34,7 +34,20 @@ const routesConfig = [
             name: "Scanner",
             path: "scanner",
             meta: { label: "出/归仓扫描" },
-            component: () => import("pages/warehouse/scanner"),
+            component: RouterView,
+            children: [
+              {
+                name: '',
+                path:'',
+                component: () => import("pages/warehouse/scanner"),
+              },
+              {
+                name: "Pending",
+                path: "pending",
+                meta: { label: "出仓扫描" },
+                component: () => import("pages/warehouse/scanner/pending"),
+              }
+            ]            
           },
         ],
       },
@@ -44,7 +57,7 @@ const routesConfig = [
     name: "User",
     path: "/user",
     meta: { label: "个人中心" },
-    component: () => import("layouts/UserLayout"),
+    component: () => import("layouts/BasicLayout"),
     children: [
       {
         name: "Login",
