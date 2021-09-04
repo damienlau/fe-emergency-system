@@ -1,114 +1,106 @@
-// 组件-表单
+import { Form, FormItem, Input, Select, SelectOption } from "ant-design-vue";
+import { defineComponent, ref } from "vue";
 
-import { defineComponent, toRefs } from "vue";
+interface selectOptionProps {
+  label: string;
+  key: string;
+}
+
+interface formItemGridProps {
+  span?: number;
+  offset?: number;
+}
+
+interface formItemProps extends selectOptionProps {
+  layouts?: formItemGridProps[];
+  type?: string;
+  options?: selectOptionProps[];
+}
 
 export default defineComponent({
-  name: "Form",
   props: {
-    // 表单数据域的配置描述
     columns: {
-      type: Object,
-      required: true,
-    },
-    // 表单数据对象
-    model: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },
-  emits: ["update:model", "submit"],
+  emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { columns, model } = toRefs(props);
+    const formData = ref({});
 
-    // 监听表单提交事件
-    const handleSubmit = () =>
-      emit("submit", emit("update:model", model.value));
+    const handleInputChange = () => {
+      console.log(formData.value);
+    };
+
+    const handleSubmit = () => {
+      emit("submit", formData.value);
+    };
+
+    const formItemRenderNode = (render: formItemProps) => {
+      switch (render.type) {
+        case "select":
+          return (
+            <Select
+              v-model={[formData.value[`${render.key}`], "value"]}
+              allowClear
+              placeholder={`请选择${render.label}`}
+            >
+              {render.options.map((selectOption) => {
+                return (
+                  <SelectOption value={selectOption.key}>
+                    {selectOption.label}
+                  </SelectOption>
+                );
+              })}
+            </Select>
+          );
+
+        default:
+          return (
+            <Input
+              v-model={[formData.value[render.key], "value"]}
+              allowClear
+              placeholder={`请输入${render.label}`}
+            ></Input>
+          );
+      }
+    };
 
     return () => (
-      <a-form
-        model={model.value}
-        labelCol={{ span: 7 }}
-        wrapperCol={{ span: 12 }}
-        hideRequiredMark={true}
+      <Form
+        model={formData.value}
+        colon={false}
+        hideRequiredMark
         onFinish={handleSubmit}
       >
-        {/* 表单输入控件 */}
-        {columns.value.map((formItem) => {
+        {props.columns.map((formItem: any) => {
           return (
-            <a-form-item
-              colon={formItem.colon || false}
+            <FormItem
               name={formItem.key}
-              required={formItem.required}
-              rules={[
-                {
-                  required: formItem.required,
-                  message: `${formItem.label || formItem.placeholder}为必填项`,
-                  trigger: "blur",
-                },
-              ]}
+              labelAlign="right"
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 12 }}
+              rules={
+                formItem.required && [
+                  {
+                    required: true,
+                    message: `${formItem.label}为必填项`,
+                    trigger: "blur",
+                  },
+                ]
+              }
             >
               {{
                 label: () => <span class="text-16">{formItem.label}</span>,
-                default: () => {
-                  let customElement_;
-
-                  switch (formItem.type) {
-                    case "select":
-                      customElement_ = (
-                        <a-select
-                          v-model={[model.value[`${formItem.key}`], "value"]}
-                          allowClear
-                          size="large"
-                          placeholder={`请选择${formItem.label}`}
-                        >
-                          {formItem.options &&
-                            formItem.options.map((option) => {
-                              return (
-                                <a-select-option value={option.key}>
-                                  {option.label}
-                                </a-select-option>
-                              );
-                            })}
-                        </a-select>
-                      );
-                      break;
-
-                    case "password":
-                      customElement_ = (
-                        <a-input-password
-                          v-model={[model.value[`${formItem.key}`], "value"]}
-                          allowClear
-                          size="large"
-                          placeholder={`请输入${formItem.label}`}
-                        ></a-input-password>
-                      );
-                      break;
-
-                    default:
-                      customElement_ = (
-                        <a-input
-                          v-model={[model.value[`${formItem.key}`], "value"]}
-                          allowClear
-                          size="large"
-                          placeholder={`请输入${formItem.label}`}
-                        ></a-input>
-                      );
-                      break;
-                  }
-
-                  return customElement_;
-                },
+                default: () => formItemRenderNode(formItem),
               }}
-            </a-form-item>
+            </FormItem>
           );
         })}
-        {/* 表单提交按钮 */}
-        <a-form-item wrapperCol={{ span: 24 }}>
-          <div class="w-full flex flex-row items-center justify-center">
-            {slots.button && slots.button()}
-          </div>
-        </a-form-item>
-      </a-form>
+        <FormItem>
+          <div class="flex items-center justify-center">{slots.button?.()}</div>
+        </FormItem>
+      </Form>
     );
   },
 });
