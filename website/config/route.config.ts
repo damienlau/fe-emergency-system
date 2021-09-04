@@ -16,7 +16,7 @@ const routesConfig = [
             name: "Material",
             path: "material",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse/material"),
+            component: () => import("pages/warehouse/meterial"),
           },
           {
             name: "Record",
