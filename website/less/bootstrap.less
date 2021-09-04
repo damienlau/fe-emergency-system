@@ -11,16 +11,15 @@
 
 @text-color: fade(@white, 90%);
 @text-color-secondary: fade(@white, 70%);
-@heading-color: @text-color;
+@heading-color: @text-color-secondary;
 // less-docs-end color-variables
 
 // Background
 
 // less-docs-start background-variables
 @popover-background: @navy-colors[1];
-@popover-customize-border-color: #3a3a3a;
 @body-background: @navy-colors[5];
-@component-background: @navy-colors[1];
+@component-background: @navy-colors[5];
 // less-docs-end background-variables
 
 // Border
@@ -31,11 +30,25 @@
 @border-color-split: #303030;
 // less-docs-end border-variables
 
+// Input
+
+// less-docs-start input-variables
+@input-bg: @component-background;
+@input-border-color: @navy-colors[1];
+// less-docs-end input-variables
+
 // Modal
 
 // less-docs-start modal-variables
 @modal-mask-bg: fade(@black, 70%);
 // less-docs-end modal-variables
+
+// Select
+
+// less-docs-start select-variables
+@select-background: @input-bg;
+@select-border-color: @input-border-color;
+// less-docs-end select-variables
 
 // Tabs
 
