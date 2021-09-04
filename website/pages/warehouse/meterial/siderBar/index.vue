@@ -32,7 +32,7 @@
               placeholder="箱子搜索"
               @search="getBoxData"
             ></a-input-search>
-            <a-button type="primary" class="ml-20" @click="handleAdd"
+            <a-button type="primary" class="ml-20" @click="visible = true"
               >新增箱子</a-button
             >
           </div>
@@ -50,11 +50,15 @@
       </div>
     </a-tab-pane>
   </a-tabs>
+  <Modal v-model:visible="visible" title="新增箱子">
+    
+     </Modal>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
+import { Modal, Tabs, Form } from "components";
 import {
   findCriteriaPageData,
   findBoxPageData,
@@ -62,14 +66,14 @@ import {
 } from "api/warehouse/meterial";
 export default defineComponent({
   name: "SiderBar",
-  components: { BoxInfo, MeterialInfo },
+  components: { BoxInfo, MeterialInfo, Modal, Tabs },
 
   setup() {
     const meterialSearchValue = ref("");
     const boxSearchValue = ref("");
-
     const state = reactive({
       activeKey: "materials",
+      visible: false,
       boxInfo: {
         name: "测试",
       },
