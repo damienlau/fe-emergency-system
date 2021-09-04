@@ -8,6 +8,7 @@ import {
   Space,
 } from "ant-design-vue";
 import { useStore } from "vuex";
+import Form from "components/Form";
 import Icon from "components/Icon";
 import List from "components/List";
 import Modal from "components/Modal";
@@ -32,19 +33,126 @@ export default defineComponent({
         label: "借货清单",
         key: "1",
         alias: "借出",
-        count: computed(() => store.state.warehouse.shortcut.total.lend),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.lend
+        ),
+        form: [
+          {
+            label: "事件",
+            key: "eventId",
+            type: "select",
+            options: [],
+            required: true,
+          },
+          {
+            label: "借货人",
+            key: "personnelName",
+            required: true,
+          },
+          {
+            label: "借货人工号",
+            key: "personnelJobNo",
+            required: true,
+          },
+          {
+            label: "联系电话",
+            key: "personnelPhone",
+            required: true,
+          },
+          {
+            label: "借货科室",
+            key: "departmentType",
+            type: "select",
+            options: [],
+            required: true,
+          },
+          {
+            label: "图片上传",
+            key: "demo",
+            type: "upload",
+            required: true,
+          },
+        ],
       },
       {
         label: "维修清单",
         key: "2",
         alias: "维修",
-        count: computed(() => store.state.warehouse.shortcut.total.repair),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.repair
+        ),
+        form: [
+          {
+            label: "是否出仓",
+            key: "operationType",
+            type: "select",
+            options: [
+              { label: "在库", key: "0" },
+              { label: "出库", key: "1" },
+            ],
+            required: true,
+          },
+          {
+            label: "维修公司",
+            key: "personnelCompany",
+            required: true,
+          },
+          {
+            label: "维修人",
+            key: "personnelName",
+            required: true,
+          },
+          {
+            label: "联系电话",
+            key: "personnelPhone",
+            required: true,
+          },
+          {
+            label: "维修事由",
+            key: "description",
+            required: true,
+          },
+        ],
       },
       {
         label: "保养清单",
         key: "3",
         alias: "保养",
-        count: computed(() => store.state.warehouse.shortcut.total.maintain),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.maintain
+        ),
+        form: [
+          {
+            label: "是否出仓",
+            key: "operationType",
+            type: "select",
+            options: [
+              { label: "在库", key: "0" },
+              { label: "出库", key: "1" },
+            ],
+            required: true,
+          },
+          {
+            label: "保养公司",
+            key: "personnelCompany",
+            required: true,
+          },
+          {
+            label: "保养人",
+            key: "personnelName",
+            required: true,
+          },
+          {
+            label: "联系电话",
+            key: "personnelPhone",
+            required: true,
+          },
+          {
+            label: "保养事由",
+            key: "description",
+            required: true,
+          },
+        ],
       },
     ]);
     const tabExtraOptions = ref<TabPaneProps>({});
@@ -53,9 +161,11 @@ export default defineComponent({
 
     const handleClickTabPane = ({ item }) => {
       tabExtraOptions.value = item;
-      store.dispatch("warehouseModule/shortcut/getLists").then((response) => {
-        cardListsData.value = response;
-      });
+      store
+        .dispatch("warehouseModule/shortcutModule/getLists")
+        .then((response) => {
+          cardListsData.value = response;
+        });
     };
 
     const handleConfirmOpertaion = () => {
@@ -78,7 +188,11 @@ export default defineComponent({
 
     const handleDelete = (selected = cardListsData.value?.data) => {
       !Array.isArray(selected) && (selected = Array.of(selected));
-      store.dispatch("warehouseModule/shortcut/removeLists", selected);
+      store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
+    };
+
+    const handleSubmit = (formData: any) => {
+      store.dispatch("warehouseModule/shortcutModule/setLists", formData);
     };
 
     return () => (
@@ -177,7 +291,17 @@ export default defineComponent({
         <Modal
           v-model={[modalVisible.value, "visible"]}
           title={`${tabExtraOptions.value.alias}信息`}
-        ></Modal>
+        >
+          <Form columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
+            {{
+              button: () => (
+                <Button type="primary" htmlType="submit">
+                  保存
+                </Button>
+              ),
+            }}
+          </Form>
+        </Modal>
       </>
     );
   },

@@ -1,63 +1,66 @@
-import { message } from "ant-design-vue";
+import { message as Message } from "ant-design-vue";
 import axios from "axios";
 import store from "../store";
 
-// 全局配置
-message.config({
-  top: `72px`,
+enum messageStatus {
+  "error",
+  "success",
+}
+
+enum responseCode {
+  Success,
+  ParametrError = 400,
+  LimitError = 401,
+  TokenTimeout = 402,
+  NoAuth = 403,
+  NotFound = 404,
+  DownGrade = 406,
+  ServerError = 500,
+}
+
+Message.config({
+  top: `var(--size-88)`,
   maxCount: 1,
 });
 
-// 创建请求实例
 const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_REQUEST_URL,
-  timeout: 23333,
 });
 
-// 拦截请求
+const handleUse = (msg?: string, status?: responseCode) => {
+  store.commit("SET_SPINNING");
+
+  if (msg) {
+    if (status === responseCode.Success) {
+      Message.success(msg);
+    } else {
+      Message.error(msg);
+    }
+  }
+};
+
 instance.interceptors.request.use(
   (config) => {
-    store.commit("SET_SPINNING");
-    if (!store.state.userModule.token) {
-      store.commit("userModule/GET_TOKEN");
-    }
-
-    config.headers["authorization"] = store.state.userModule.token;
-
+    handleUse();
+    config.headers["authorization"] = localStorage.getItem("token");
     return config;
   },
-  () => {
-    message.error(`请求失败，请稍后重试`, () => {
-      store.commit("SET_SPINNING");
-    });
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
-// 拦截响应
 instance.interceptors.response.use(
   (response) => {
-    store.commit("SET_SPINNING");
     if (typeof response.headers.authorization !== "undefined") {
-      store.commit("userModule/SET_TOKEN", response.headers.authorization);
+      store.commit("user/SET_TOKEN", response.headers.authorization);
     }
+    handleUse(response.data.message, response.data.code);
 
-    switch (response.data.code) {
-      case 400:
-      case 402:
-      case 500:
-        message.error(response.data.message).then((a) => {
-          console.log(a, 123);
-        });
-        break;
-      default:
-        message.success(response.data.message);
-        return response.data;
-    }
+    return response.data.data;
   },
-  () => {
-    message.error(`网络错误，请稍后重试`, () => {
-      store.commit("SET_SPINNING");
-    });
+  (error) => {
+    return Promise.reject(error);
   }
 );
 

@@ -1,22 +1,23 @@
-// 组件-图标
-
-import { defineComponent } from "vue";
+import { defineComponent, h } from "vue";
 import { createFromIconfontCN } from "@ant-design/icons-vue";
-import defaultConfig from "../../../config/config";
+import defaultSettings from "config/defaultSettings";
 
 export default defineComponent({
+  name: "Icon",
   props: {
     type: {
       type: String,
       required: true,
     },
   },
-  setup(props) {
-    const { iconUrl } = defaultConfig;
+  render() {
+    const { iconfontUrl } = defaultSettings;
     const Icon = createFromIconfontCN({
-      scriptUrl: iconUrl,
+      scriptUrl: iconfontUrl,
     });
 
-    return () => <Icon type={`rs-icon-${props.type}`} />;
+    return h(Icon, {
+      type: `rs-icon-${this.type}`,
+    });
   },
 });

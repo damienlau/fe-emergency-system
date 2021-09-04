@@ -60,13 +60,15 @@ export default defineComponent({
 
     // 监听模态框表单提交事件
     const handleSubmitForm = () => {
+      console.log(formData.value)
       router.push({
         name: formData.value["key"],
         params: {
           id: formData.value["event"],
-          number: formData.value["number"]
+          personnelJobNo: formData.value["number"]
         }
       });
+      //4254529082 id:2
       visible.value = !visible.value;
     };
 
