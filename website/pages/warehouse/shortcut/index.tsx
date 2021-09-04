@@ -33,7 +33,9 @@ export default defineComponent({
         label: "借货清单",
         key: "1",
         alias: "借出",
-        count: computed(() => store.state.warehouse.shortcut.total.lend),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.lend
+        ),
         form: [
           {
             label: "事件",
@@ -76,7 +78,9 @@ export default defineComponent({
         label: "维修清单",
         key: "2",
         alias: "维修",
-        count: computed(() => store.state.warehouse.shortcut.total.repair),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.repair
+        ),
         form: [
           {
             label: "是否出仓",
@@ -114,7 +118,9 @@ export default defineComponent({
         label: "保养清单",
         key: "3",
         alias: "保养",
-        count: computed(() => store.state.warehouse.shortcut.total.maintain),
+        count: computed(
+          () => store.state.warehouseModule.shortcutModule.total.maintain
+        ),
         form: [
           {
             label: "是否出仓",
@@ -155,9 +161,11 @@ export default defineComponent({
 
     const handleClickTabPane = ({ item }) => {
       tabExtraOptions.value = item;
-      store.dispatch("warehouse/shortcut/getLists").then((response) => {
-        cardListsData.value = response;
-      });
+      store
+        .dispatch("warehouseModule/shortcutModule/getLists")
+        .then((response) => {
+          cardListsData.value = response;
+        });
     };
 
     const handleConfirmOpertaion = () => {
@@ -180,11 +188,11 @@ export default defineComponent({
 
     const handleDelete = (selected = cardListsData.value?.data) => {
       !Array.isArray(selected) && (selected = Array.of(selected));
-      store.dispatch("warehouse/shortcut/removeLists", selected);
+      store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
     };
 
     const handleSubmit = (formData: any) => {
-      store.dispatch("warehouse/shortcut/setLists", formData);
+      store.dispatch("warehouseModule/shortcutModule/setLists", formData);
     };
 
     return () => (
