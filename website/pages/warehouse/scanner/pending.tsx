@@ -135,7 +135,6 @@ export default defineComponent({
     }
     onMounted(() => {
       //获取待出仓物资
-      console.log('1')
       //console.log(router.currentRoute.value.params)
        store
          .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
