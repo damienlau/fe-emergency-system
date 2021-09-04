@@ -16,7 +16,7 @@ const routesConfig = [
             name: "Material",
             path: "material",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse/meterial"),
+            component: () => import("pages/warehouse"),
           },
           {
             name: "Record",
@@ -34,7 +34,19 @@ const routesConfig = [
             name: "Scanner",
             path: "scanner",
             meta: { label: "出/归仓扫描" },
-            component: () => import("pages/warehouse/scanner"),
+            component: RouterView,
+            children: [
+              {
+                name: '',
+                component: () => import("pages/warehouse/scanner"),
+              },
+              {
+                name: "Pending",
+                path: "pending",
+                meta: { label: "出仓扫描" },
+                component: () => import("pages/warehouse/scanner/pending"),
+              }
+            ]            
           },
         ],
       },
