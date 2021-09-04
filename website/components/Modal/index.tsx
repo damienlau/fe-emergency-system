@@ -14,19 +14,14 @@ export default defineComponent({
       type: String,
       required: false,
       default: "light",
-      // validator(size) {
-      //   return ["ultralight", "lighter", "light", "heavy", "bold"].includes(
-      //     size
-      //   );
-      // },
+      validator(size: string) {
+        return ["ultralight", "lighter", "light", "heavy", "bold"].includes(
+          size
+        );
+      },
     },
   },
   emits: ["update:visible"],
-  // render() {
-  //   return h(Modal, {
-
-  //   });
-  // },
   setup(props, { emit, slots }) {
     const { visible } = toRefs(props);
     const modalClasses = computed(() => {

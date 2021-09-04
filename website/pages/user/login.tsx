@@ -21,19 +21,16 @@ export default defineComponent({
         required: true,
       },
     ]);
-    // 登录表单数据
-    const formData = ref({});
 
     // 监听登录表单提交事件
-    const handleSubmitForm = () => {
-      store.dispatch("userModule/userLogin", formData.value);
+    const handleSubmitForm = (formData) => {
+      store.dispatch("userModule/userLogin", formData);
     };
 
     return () => (
       <div class="h-full flex items-center justify-center">
         <Form
           class="w-1/3"
-          v-model={[formData.value, "model"]}
           columns={formColumn.value}
           onSubmit={handleSubmitForm}
         >
