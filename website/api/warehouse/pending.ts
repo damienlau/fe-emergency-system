@@ -7,8 +7,8 @@ const shortcutRequestUrls = {
 };
 
 // 出仓待出仓列表
-export const findSpecifiedShortcutData = (parameter) => {
-  return request.get(shortcutRequestUrls.find, parameter).then((response) => {
+export const findSpecifiedShortcutData = (params) => {
+  return request.get(shortcutRequestUrls.find,{params} ).then((response) => {
     return response;
   });
 };

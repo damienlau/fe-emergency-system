@@ -138,7 +138,7 @@ export default defineComponent({
       console.log('1')
       //console.log(router.currentRoute.value.params)
        store
-         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",{})
+         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
          .then((response) => {
            console.log(response)
           //  pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
