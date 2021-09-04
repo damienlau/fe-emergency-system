@@ -2,7 +2,7 @@
 
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Modal as AntModal } from "ant-design-vue";
+import { Modal as AntModal,message } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty, Card } from "components";
 import { useRouter } from "vue-router";
 
@@ -15,14 +15,101 @@ export default defineComponent({
       label: "待出仓物资",
       type: "string",
       key: "pengding",
-      data: []
+      data: [
+        {
+          id:1,
+          title: "测试数据标题",
+          page: "（20/20）",
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+            "物资名称1",
+            "物资名称2",
+            "物资名称3",
+            "物资名称4",
+            "物资名称5",
+            "物资名称6",
+            "物资名称7",
+            "物资名称8"
+          ],
+        },
+        {
+          id:2,
+          title: "测试数据标题单个物资",
+          page: "",
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id:3,
+          title: "测试数据标题移入右侧",
+          page: "（20/20）",
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+            "物资名称1",
+            "物资名称2",
+            "物资名称3",
+            "物资名称4",
+            "物资名称5",
+            "物资名称6",
+            "物资名称7",
+            "物资名称8"
+          ],
+        } 
+      ]
     });
     // 已出仓标题及数据展示
     const finishedDelivery = ref({
       label: "已出仓物资",
       type: "string",
       key: "finished",
-      data:[]
+      data: [
+        {
+          id:4,
+          title: "测试数据标题",
+          page: "（20/20）",
+          status:0,
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+            "物资名称1",
+            "物资名称2",
+            "物资名称3",
+            "物资名称4",
+            "物资名称5",
+            "物资名称6",
+            "物资名称7",
+            "物资名称8"
+          ],
+        },
+        {
+          id:5,
+          title: "测试数据标题单个物资",
+          page: "",
+          status:1,
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id:6,
+          title: "测试数据标题",
+          page: "（20/20）",
+          status:1,
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+            "物资名称1",
+            "物资名称2",
+            "物资名称3",
+            "物资名称4",
+            "物资名称5",
+            "物资名称6",
+            "物资名称7",
+            "物资名称8"
+          ],
+        }
+      ]
     });
     //扫描出仓模态框是否可见
     const visible = ref(false);
@@ -35,7 +122,8 @@ export default defineComponent({
         label: "符合清单物资",
         key: "1",
         count: 5,
-        data:[]
+        data: [                
+        ]
       },
       {
         label: "未符合清单物资",
@@ -54,6 +142,8 @@ export default defineComponent({
     const menuEmpty = ref(true);
     // 菜单列表当前激活值
     const menuActiveKey = ref(menus.value[0].key);
+    //物资编码，用于查找需要移动的物资
+    const rackNumber = ref(1);
     // 卡片列表
     const cardData = ref([]);
     // 监听模态框关闭
@@ -95,10 +185,29 @@ export default defineComponent({
         });
     }
     //已出仓物资移除事件
-    const handleClickDelete = () => {
-      
+    const handleClickDelete = (id) => {
+      finishedDelivery.value.data.forEach((value,index,array) => {
+        if (array[index].id == id) {
+          finishedDelivery.value.data.splice(index,1)
+        }
+      })
     }
-    const bgcolor = ref('background-color:red')
+    //扫描移动事件测试
+    const handleMovePending = () => {
+      if (rackNumber.value > 3) {
+        message.error('无物资待出仓')
+        return;
+      }
+      pengdingDelivery.value.data.forEach((value, index, array) => {
+        if (array[index].id == rackNumber.value) {
+          let addDeliveryData;
+          addDeliveryData = array[index];
+          pengdingDelivery.value.data.splice(index, 1)
+          finishedDelivery.value.data.unshift(addDeliveryData)
+        }
+      })
+      rackNumber.value++;
+    }
     // 监听点击卡片移除事件
     const handleClickCardExtra = (activeKey) => {
       store
@@ -136,28 +245,28 @@ export default defineComponent({
     onMounted(() => {
       //获取待出仓物资
       //console.log(router.currentRoute.value.params)
-       store
-         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
-         .then((response) => {
-           console.log(response)
-          //  pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
-          //    return {
-          //      title: item.newFileName,
-          //      page: item.id,
-          //      url: item.fileUrl,
-          //      content: item.newFileName.split(""),               
-          //    }
-          //  });
-          //  finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
-          //   return {
-          //     title: item.newFileName,
-          //     page: item.id,
-          //     url: item.fileUrl,
-          //     content: item.newFileName.split(""),
-          //     status:item.status
-          //   }
-          //  })
-         });
+      //  store
+      //    .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
+      //    .then((response) => {
+      //      console.log(response)
+      //      pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
+      //        return {
+      //          title: item.newFileName,
+      //          page: item.id,
+      //          url: item.fileUrl,
+      //          content: item.newFileName.split(""),               
+      //        }
+      //      });
+      //      finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
+      //       return {
+      //         title: item.newFileName,
+      //         page: item.id,
+      //         url: item.fileUrl,
+      //         content: item.newFileName.split(""),
+      //         status:item.status
+      //       }
+      //      })
+      //    });
     });
 
     return () => (
@@ -176,12 +285,12 @@ export default defineComponent({
                   <div  class={pengdingDelivery.value.data.length == 0 ?'flex items-center':""} class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
                     
                     {pengdingDelivery.value.data.length == 0 ?
-                    <div class="m-auto" >
-                    <a-empty
-                      description="当前待出仓扫描，无'申请清单'"
-                      image={`/website/assets/icon_empty_scanner.png`}>                          
-                    </a-empty>
-                    </div>
+                      <div class="m-auto" >
+                        <a-empty
+                          description="当前待出仓扫描，无'申请清单'"
+                          image={`/website/assets/icon_empty_scanner.png`}>                          
+                        </a-empty>
+                      </div>
                     : pengdingDelivery.value.data.map((listItem) => {
                       return (
                         <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
@@ -194,18 +303,27 @@ export default defineComponent({
                           <div class="flex py-16 px-16">
                             <div class="h-modal-lightermin w-modal-lightermin bg-white">
                               <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
-                            </div>
-                            <div class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1">
-                            {listItem.content.map((item,index) => {
-                              return (
-                                  <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
-                                    <span class="text-14 w-full overflow-hidden h-22">
-                                      {item}
-                                    </span> 
+                            </div>                            
+                            <div class={listItem.content.length == 0 ? 'flex items-center' : ""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                                {listItem.content.length == 0 ? (
+                                  <div class="m-auto">
+                                    <a-empty
+                                      description="空空如也"
+                                      image={`/website/assets/icon_empty_data.png`}>
+                                    </a-empty>
                                   </div>
-                                )
-                              })}
-                              </div>
+                                ) : listItem.content.map((item, index) => {
+                                  return (
+                                    <>
+                                      <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                        <span class="text-14 w-full overflow-hidden h-22">
+                                          {item}
+                                        </span>
+                                      </div>
+                                    </>
+                                  )
+                                })}
+                            </div>
                           </div>
                         </div>
                       )
@@ -228,6 +346,12 @@ export default defineComponent({
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
                 <div>{finishedDelivery.value.label}</div>
                 <div class="absolute right-5">
+                    <a-button
+                      type="primary"
+                      onClick={() => handleMovePending()}
+                    >
+                      扫描操作
+                    </a-button>
                     <a-button
                       type="primary"
                       onClick={() => handleClickPendingItem()}
@@ -257,8 +381,8 @@ export default defineComponent({
                                     <span class="text-20">{listItem.title}</span>
                                     <span class="text-success">{listItem.page}</span>
                                     <a-space size={8} class={listItem.status == 1 ? '' : "hidden"} class="absolute right-5">
-                                      <a-button ghost danger >
-                                        <Icon type="delete" onClick="handleClickDelete" />
+                                      <a-button ghost danger  onClick={()=> handleClickDelete(listItem.id)}>
+                                        <Icon type="delete" />
                                         移除
                                       </a-button>
                                     </a-space>
@@ -268,12 +392,12 @@ export default defineComponent({
                                   <div class="h-modal-lightermin w-modal-lightermin bg-white">
                                     <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url} />
                                   </div>
-                                  <div class={listItem.status == 1 ? 'flex items-center' : ""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
-                                    {listItem.status == 1 ? (
+                                  <div class={listItem.content.length == 0 ? 'flex items-center' : ""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                                    {listItem.content.length == 0 ? (
                                       <div class="m-auto">
                                         <a-empty
                                           description="空空如也"
-                                          image={`assets/icon_empty_data.png`}>
+                                          image={`/website/assets/icon_empty_data.png`}>
                                         </a-empty>
                                       </div>
                                     ) : listItem.content.map((item, index) => {
@@ -293,10 +417,8 @@ export default defineComponent({
                               </div>
                             </>
                           )
-                        })
-                      
-                    }
-                    
+                        })                      
+                    }                    
                   </div>
                 </div>
               </a-layout-content>
