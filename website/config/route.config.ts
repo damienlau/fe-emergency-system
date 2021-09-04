@@ -16,7 +16,7 @@ const routesConfig = [
             name: "Material",
             path: "material",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse"),
+            component: () => import("pages/warehouse/meterial"),
           },
           {
             name: "Record",
@@ -38,6 +38,7 @@ const routesConfig = [
             children: [
               {
                 name: '',
+                path:'',
                 component: () => import("pages/warehouse/scanner"),
               },
               {
@@ -56,7 +57,7 @@ const routesConfig = [
     name: "User",
     path: "/user",
     meta: { label: "个人中心" },
-    component: () => import("layouts/UserLayout"),
+    component: () => import("layouts/BasicLayout"),
     children: [
       {
         name: "Login",

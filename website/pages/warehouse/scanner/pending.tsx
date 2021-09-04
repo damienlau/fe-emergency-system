@@ -114,7 +114,7 @@ export default defineComponent({
     //扫描出仓模态框是否可见
     const visible = ref(false);
     //扫描出仓模态框控制
-    const handleClickPendingItem = (activedItemkey) => {
+    const handleClickPendingItem = () => {
       visible.value = !visible.value;
     };
     const menus = ref([
@@ -160,7 +160,7 @@ export default defineComponent({
         onOk: () => {
           store
             .dispatch(
-              "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
+              "warehouseModule/pendingModule/findSpecifiedShortcutList",
               cardData.value.map((cardItem) => {
                 return {
                   id: cardItem.key,
@@ -177,12 +177,24 @@ export default defineComponent({
     //菜单列表切换数据展示
     const handleClickTabPane = (activeKey = menuActiveKey.value) => {
       menuActiveKey.value = activeKey;
-      store
-        .dispatch("warehouseModule/shortcutModule/findShortcutCards", activeKey)
-        .then((response) => {
-          cardData.value = response;
-          menuEmpty.value = !response.length;
-        });
+      // store
+      //   .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", activeKey)
+      //   .then((response) => {
+      //     cardData.value = response;
+      //     menuEmpty.value = !response.length;
+      //   });
+      switch(activeKey){
+        case "1":
+          cardData.value.push(finishedDelivery.value.data)
+          menuEmpty.value = !finishedDelivery.value.data.length;
+          break;
+        case "2":
+          break;
+        case "3":
+          break;
+        default:
+          break
+      }
     }
     //已出仓物资移除事件
     const handleClickDelete = (id) => {
@@ -212,7 +224,7 @@ export default defineComponent({
     const handleClickCardExtra = (activeKey) => {
       store
         .dispatch(
-          "warehouseModule/shortcutModule/deleteSpecifiedShortcutCard",
+          "warehouseModule/pendingModule/findSpecifiedShortcutList",
           [{ id: activeKey }]
         )
         .then(() => {
@@ -229,7 +241,7 @@ export default defineComponent({
         onOk: () => {
           store
             .dispatch(
-              "warehouseModule/shortcutModule/findSpecifiedShortcutList",
+              "warehouseModule/pendingModule/findSpecifiedShortcutList",
               cardData.value.map((cardItem) => {
                 return {
                   id: cardItem.key,
