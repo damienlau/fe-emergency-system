@@ -55,3 +55,9 @@ export function addBoxData(params) {
     ...params,
   });
 }
+// 删除仓库批量待处理清单
+export function deleteByFindData(params) {
+  return request.get("/batchPending/deleteByFind", {
+    params,
+  });
+}

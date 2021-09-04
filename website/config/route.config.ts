@@ -16,7 +16,7 @@ const routesConfig = [
             name: "Material",
             path: "material",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse/material"),
+            component: () => import("pages/warehouse/meterial/index.vue"),
           },
           {
             name: "Record",
@@ -44,7 +44,7 @@ const routesConfig = [
     name: "User",
     path: "/user",
     meta: { label: "个人中心" },
-    component: () => import("layouts/UserLayout"),
+    component: RouterView,
     children: [
       {
         name: "Login",

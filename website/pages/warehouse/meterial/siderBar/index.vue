@@ -50,9 +50,7 @@
       </div>
     </a-tab-pane>
   </a-tabs>
-  <Modal v-model:visible="visible" title="新增箱子">
-    
-     </Modal>
+  <Modal v-model:visible="visible" title="新增箱子"> </Modal>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
@@ -87,14 +85,14 @@ export default defineComponent({
       state.materialsList = [];
       const search = meterialSearchValue.value;
       findCriteriaPageData({ materialName: search }).then((res) => {
-        state.materialsList = res.data.content;
+        state.materialsList = res.content;
       });
     };
     const getBoxData = () => {
       state.boxList = [];
       const search = boxSearchValue.value;
       findBoxPageData({ boxName: search }).then((res) => {
-        state.boxList = res.data.content;
+        state.boxList = res.content;
       });
     };
     const tabClick = (tabs) => {

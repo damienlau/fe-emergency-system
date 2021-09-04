@@ -52,7 +52,7 @@
         <a-button
           danger
           v-if="info.status === 1 && !isDebit"
-          @click="changeDebit"
+          @click="handCansel"
           >取消借贷</a-button
         >
       </div>
@@ -78,7 +78,7 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData } from "api/warehouse/meterial";
+import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
 export default defineComponent({
   name: "MeterialInfo",
   props: {
@@ -125,9 +125,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        if (res) {
-          state.isMaintain = true;
-        }
+        state.isMaintain = true;
       });
     };
     const changeRepair = () => {
@@ -137,9 +135,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        if (res) {
-          state.isRepair = false;
-        }
+        state.isRepair = false;
       });
     };
     const changeDebit = () => {
@@ -149,9 +145,17 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        if (res) {
-          state.isDebit = !state.isDebit;
-        }
+        state.isDebit = false;
+      });
+    };
+    const handCansel = () => {
+      const params = {
+        operationType: 1,
+        resourceType: 1,
+        materialId: props.meterialInfo.id,
+      };
+      deleteByFindData(params).then((res) => {
+        state.isDebit = true;
       });
     };
     const returnStatus = (status) => {
@@ -211,6 +215,7 @@ export default defineComponent({
       changeMaintain,
       changeRepair,
       changeDebit,
+      handCansel,
     };
   },
 });

@@ -48,7 +48,7 @@
         <a-button
           danger
           v-if="info.status === 1 && !isDebit"
-          @click="changeDebit"
+          @click="handCansel"
           >取消借贷</a-button
         >
       </div>
@@ -57,7 +57,7 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData } from "api/warehouse/meterial";
+import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
 export default defineComponent({
   name: "BoxInfo",
   props: {
@@ -150,16 +150,23 @@ export default defineComponent({
       return state;
     };
     const changeDebit = () => {
-      console.log(props.boxInfo, "boxInfo");
       const params = {
         operationType: 1,
         resourceType: 2,
-        materialId: props.boxInfo.id,
+        boxId: props.boxInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        if (res) {
-          state.isDebit = !state.isDebit;
-        }
+        state.isDebit = false;
+      });
+    };
+    const handCansel = () => {
+      const params = {
+        operationType: 1,
+        resourceType: 2,
+        boxId: props.boxInfo.id,
+      };
+      deleteByFindData(params).then((res) => {
+        state.isDebit = true;
       });
     };
     return {
@@ -169,6 +176,7 @@ export default defineComponent({
       sizeType,
       returnStatus,
       changeDebit,
+      handCansel,
     };
   },
 });
