@@ -1,7 +1,12 @@
 <template>
   <a-tabs v-model:activeKey="activeKey" :animated="false">
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
-      <Form :columns="baseForm" @submit="handleSubmitBase">
+      <Form
+        :dataSource="dataSource"
+        :columns="baseForm"
+        :edit="isEdit"
+        @submit="handleSubmitBase"
+      >
         <template #button>
           <a-button
             type="primary"
@@ -23,7 +28,12 @@
       </Form>
     </a-tab-pane>
     <a-tab-pane :key="'other'" tab="其他信息" class="overflow-y-auto">
-      <Form :columns="otherForm" @submit="handleSubmitOther">
+      <Form
+        :dataSource="dataSource"
+        :columns="otherForm"
+        :edit="isEdit"
+        @submit="handleSubmitOther"
+      >
         <template #button>
           <a-button
             type="primary"
@@ -66,8 +76,9 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       activeKey: "base",
-      isEdit: true,
+      isEdit: false,
       tabelData: [],
+      dataSource: {},
     });
     const tableColumns = ref([
       {
@@ -262,6 +273,9 @@ export default defineComponent({
       state.isEdit = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
         console.log(res, "reser");
+        if (res) {
+          state.dataSource = res;
+        }
       });
     };
     return {
