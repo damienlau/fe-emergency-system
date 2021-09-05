@@ -59,7 +59,7 @@ export default defineComponent({
             <Select
               v-model={[formData.value[`${render.key}`], "value"]}
               allowClear
-              disabled={props.edit}
+              disabled={!props.edit}
               placeholder={`请选择${render.label}`}
             >
               {render.options?.map((selectOption) => {
@@ -76,8 +76,17 @@ export default defineComponent({
           return (
             <Upload
               customRequest={({ file }) => {
-                uploadData({ files: Array.of(file) });
+                uploadData(file).then((response: any) => {
+                  if (typeof formData.value[render.key] === "undefined") {
+                    formData.value[render.key] = [{ fileUrl: response.join() }];
+                  } else {
+                    formData.value[render.key].push({
+                      fileUrl: response.join(),
+                    });
+                  }
+                });
               }}
+              multiple
               fileList={formData.value[render.key]}
               listType="picture-card"
             >
@@ -93,7 +102,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[render.key], "value"]}
               allowClear
-              disabled={props.edit}
+              disabled={!props.edit}
               placeholder={`请输入${render.label}`}
             ></Input>
           );

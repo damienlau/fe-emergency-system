@@ -5,9 +5,12 @@ const utilRequestUrls = {
   upload: "/file/upload",
 };
 
-export const uploadData = (parameter: File[]) => {
+export const uploadData = (parameter: File) => {
+  let data = new FormData();
+
+  data.append("files", parameter);
   return request
-    .post(utilRequestUrls.upload, parameter, {
+    .post(utilRequestUrls.upload, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
