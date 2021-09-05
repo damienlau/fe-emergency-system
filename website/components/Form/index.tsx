@@ -59,6 +59,7 @@ export default defineComponent({
             <Select
               v-model={[formData.value[`${render.key}`], "value"]}
               allowClear
+              disabled={props.edit}
               placeholder={`请选择${render.label}`}
             >
               {render.options?.map((selectOption) => {
@@ -92,6 +93,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[render.key], "value"]}
               allowClear
+              disabled={props.edit}
               placeholder={`请输入${render.label}`}
             ></Input>
           );
