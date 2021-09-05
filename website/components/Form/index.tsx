@@ -132,13 +132,15 @@ export default defineComponent({
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 12 }}
               rules={
-                formItem.required && [
-                  {
-                    required: true,
-                    message: `${formItem.label}为必填项`,
-                    trigger: "change",
-                  },
-                ]
+                formItem.required
+                  ? [
+                      {
+                        required: true,
+                        message: `${formItem.label}为必填项`,
+                        trigger: "change",
+                      },
+                    ]
+                  : []
               }
             >
               {{

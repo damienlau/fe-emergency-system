@@ -2,9 +2,10 @@
   <a-tabs v-model:activeKey="activeKey" :animated="false">
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form
-        :dataSource="dataSource"
+        v-if="loading"
         :columns="baseForm"
-        :edit="isEdit"
+        :dataSource="dataSource"
+        :edit="!isEditBase"
         @submit="handleSubmitBase"
       >
         <template #button>
@@ -12,8 +13,8 @@
             type="primary"
             ghost
             class="mr-3"
-            v-show="isEdit"
-            @click="isEdit = false"
+            v-show="isEditBase"
+            @click="isEditBase = false"
             >编辑</a-button
           >
           <a-button
@@ -21,7 +22,7 @@
             ghost
             class="mr-3"
             htmlType="submit"
-            v-show="!isEdit"
+            v-show="!isEditBase"
             >保存</a-button
           >
         </template>
@@ -29,9 +30,10 @@
     </a-tab-pane>
     <a-tab-pane :key="'other'" tab="其他信息" class="overflow-y-auto">
       <Form
-        :dataSource="dataSource"
+        v-if="loading"
         :columns="otherForm"
-        :edit="isEdit"
+        :dataSource="dataSource"
+        :edit="!isEditOther"
         @submit="handleSubmitOther"
       >
         <template #button>
@@ -39,8 +41,8 @@
             type="primary"
             ghost
             class="mr-3"
-            v-show="isEdit"
-            @click="isEdit = false"
+            v-show="isEditOther"
+            @click="isEditOther = false"
             >编辑</a-button
           >
           <a-button
@@ -48,7 +50,7 @@
             ghost
             class="mr-3"
             htmlType="submit"
-            v-show="!isEdit"
+            v-show="!isEditOther"
             >保存</a-button
           >
         </template>
@@ -71,14 +73,16 @@ export default defineComponent({
   name: "SiderBar",
   components: { Form },
   props: {
-    id: String,
+    id: Number,
   },
   setup(props) {
     const state = reactive({
       activeKey: "base",
-      isEdit: true,
+      isEditBase: true,
+      isEditOther: true,
       tabelData: [],
       dataSource: {},
+      loading: true,
     });
     const tableColumns = ref([
       {
@@ -92,7 +96,7 @@ export default defineComponent({
         key: "age",
       },
       {
-        title: "借贷人",
+        title: "借货人",
         dataIndex: "age",
         key: "age",
       },
@@ -261,19 +265,24 @@ export default defineComponent({
     });
     const handleSubmitBase = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
+        this.isEditBase = true;
         initData();
       });
     };
     const handleSubmitOther = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
+        this.isEditOther = true;
         initData();
       });
     };
     const initData = () => {
+      state.loading = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
-        state.dataSource = res;
+        state.dataSource = JSON.parse(JSON.stringify(res));
+        state.loading = true;
       });
     };
+
     return {
       ...toRefs(state),
       baseForm,

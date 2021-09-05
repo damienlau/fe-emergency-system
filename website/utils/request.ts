@@ -56,7 +56,6 @@ instance.interceptors.response.use(
       store.commit("userModule/SET_TOKEN", response.headers.authorization);
     }
     handleUse(response.data.message, response.data.code);
-
     return response.data.data;
   },
   (error) => {
