@@ -79,7 +79,10 @@
       :title="meterialDetailDialogTitle"
       key="box"
     >
-      <MeterialDetailDialog :id="meterialId"></MeterialDetailDialog>
+      <MeterialDetailDialog
+        :id="meterialId"
+        @close="closeMeterialDetailDialog"
+      ></MeterialDetailDialog>
     </Modal>
   </div>
 </template>
@@ -153,6 +156,10 @@ export default defineComponent({
       state.meterialDetailVisible = true;
       state.meterialDetailDialogTitle = item.materialName;
     };
+    const closeMeterialDetailDialog = () => {
+      state.meterialDetailVisible = false;
+      getMaterialsData();
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -162,6 +169,7 @@ export default defineComponent({
       tabClick,
       showMetarialDilog,
       showMeterialDetailDialog,
+      closeMeterialDetailDialog,
     };
   },
 });

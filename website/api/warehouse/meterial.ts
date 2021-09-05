@@ -7,11 +7,15 @@ export function addSpecifiedMeterialData(params) {
   return request.post("/material/info/add", params);
 }
 
-// 删除指定数据
+// 删除指定数据-批量
 export function deleteSpecifiedMeterialData(params) {
   return request.post("/material/info/deleteBatch", params);
 }
 
+// 删除指定数据-单独
+export function deleteMeterialInfoData(params) {
+  return request.get("/material/info/delete", params);
+}
 // 查询全部数据
 export function findMeterialData(params) {
   return request.get("/box/info/page/criteria", {

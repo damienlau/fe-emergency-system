@@ -9,6 +9,22 @@
         @submit="handleSubmitBase"
       >
         <template #button>
+          <a-popconfirm
+            title="确认删除吗?"
+            ok-text="确认"
+            cancel-text="取消"
+            @confirm="handDelete(dataSource)"
+          >
+            <a-button
+              type="primary"
+              ghost
+              class="flex flex-row items-center p-0 mr-3"
+              danger
+            >
+              删除
+            </a-button>
+          </a-popconfirm>
+
           <a-button
             type="primary"
             ghost
@@ -20,7 +36,7 @@
           <a-button
             type="primary"
             ghost
-            class="mr-3"
+            class="flex flex-row items-center p-0 mr-3"
             htmlType="submit"
             v-show="!isEditBase"
             >保存</a-button
@@ -37,6 +53,21 @@
         @submit="handleSubmitOther"
       >
         <template #button>
+          <a-popconfirm
+            title="确认删除吗?"
+            ok-text="确认"
+            cancel-text="取消"
+            @confirm="handDelete(dataSource)"
+          >
+            <a-button
+              type="primary"
+              ghost
+              class="flex flex-row items-center p-0 mr-3"
+              danger
+            >
+              删除
+            </a-button>
+          </a-popconfirm>
           <a-button
             type="primary"
             ghost
@@ -56,9 +87,9 @@
         </template>
       </Form>
     </a-tab-pane>
-    <a-tab-pane :key="'history'" tab="历史记录" class="overflow-y-auto">
+    <!-- <a-tab-pane :key="'history'" tab="历史记录" class="overflow-y-auto">
       <a-table :dataSource="tabelData" :columns="tableColumns" size="small" />
-    </a-tab-pane>
+    </a-tab-pane> -->
   </a-tabs>
 </template>
 <script>
@@ -67,6 +98,7 @@ import { Form } from "components";
 import {
   findSpecifiedMeterialData,
   updateSpecifiedMeterialData,
+  deleteMeterialInfoData,
 } from "api/warehouse/meterial";
 
 export default defineComponent({
@@ -75,7 +107,7 @@ export default defineComponent({
   props: {
     id: Number,
   },
-  setup(props) {
+  setup(props, ctx) {
     const state = reactive({
       activeKey: "base",
       isEditBase: true,
@@ -282,7 +314,14 @@ export default defineComponent({
         state.loading = true;
       });
     };
-
+    const handDelete = (data) => {
+      const params = {
+        id: data.id,
+      };
+      deleteMeterialInfoData(params).then((res) => {
+        ctx.emit("close");
+      });
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -291,6 +330,7 @@ export default defineComponent({
       handleSubmitBase,
       handleSubmitOther,
       initData,
+      handDelete,
     };
   },
 });
