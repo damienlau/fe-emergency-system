@@ -1,16 +1,20 @@
 <template>
   <a-tabs v-model:activeKey="activeKey" @tabClick="tabClick" :animated="false">
-    <a-tab-pane :key="'base'" tab="基本信息">
+    <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form :columns="baseForm" @submit="handleSubmitBase">
         <template #button>
-          <a-button type="primary" ghost class="mr-3">保存</a-button>
+          <a-button type="primary" ghost class="mr-3" htmlType="submit"
+            >保存</a-button
+          >
         </template>
       </Form>
     </a-tab-pane>
     <a-tab-pane :key="'other'" tab="其他信息">
       <Form :columns="otherForm" @submit="handleSubmitOther">
         <template #button>
-          <a-button type="primary" ghost class="mr-3">保存</a-button>
+          <a-button type="primary" ghost class="mr-3" htmlType="submit"
+            >保存</a-button
+          >
         </template>
       </Form>
     </a-tab-pane>
@@ -19,7 +23,7 @@
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
-
+import { addBoxData } from "api/warehouse/meterial";
 import { Form } from "components";
 export default defineComponent({
   name: "SiderBar",
@@ -67,17 +71,17 @@ export default defineComponent({
     const otherForm = ref([
       {
         label: "华西资产编码",
-        key: "personnelName",
+        key: "assetCode",
         required: true,
       },
       {
         label: "重量",
-        key: "personnelName",
+        key: "weight",
         required: false,
       },
       {
         label: "备注",
-        key: "personnelName",
+        key: "remark",
         type: "textArea",
         required: false,
       },
@@ -97,8 +101,8 @@ export default defineComponent({
     const handleSubmitBase = () => {
       console.log("ddddd");
     };
-    const handleSubmitOther = () => {
-      console.log("ddddd");
+    const handleSubmitOther = (data) => {
+      addBoxData(data);
     };
 
     const handleSubmitInit = () => {
