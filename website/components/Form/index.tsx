@@ -76,8 +76,17 @@ export default defineComponent({
           return (
             <Upload
               customRequest={({ file }) => {
-                uploadData({ files: Array.of(file) });
+                uploadData(file).then((response: any) => {
+                  if (typeof formData.value[render.key] === "undefined") {
+                    formData.value[render.key] = [{ fileUrl: response.join() }];
+                  } else {
+                    formData.value[render.key].push({
+                      fileUrl: response.join(),
+                    });
+                  }
+                });
               }}
+              multiple
               fileList={formData.value[render.key]}
               listType="picture-card"
             >
