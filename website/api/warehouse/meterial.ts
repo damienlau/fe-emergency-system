@@ -55,6 +55,13 @@ export function addBoxData(params) {
     ...params,
   });
 }
+
+// 仓库新增物资
+export function addMeterialData(params) {
+  return request.post("/material/info/add", {
+    ...params,
+  });
+}
 // 删除仓库批量待处理清单
 export function deleteByFindData(params) {
   return request.get("/batchPending/deleteByFind", {

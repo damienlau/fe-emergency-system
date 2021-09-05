@@ -1,86 +1,125 @@
 <template>
-  <a-tabs v-model:activeKey="activeKey" @tabClick="tabClick" :animated="false">
-    <a-tab-pane :key="'materials'" tab="物资">
-      <a-form layout="inline">
-        <a-form-item>
-          <a-input-search
-            v-model:value="meterialSearchValue"
-            placeholder="物资搜索"
-            allowClear
-            @search="getMaterialsData"
-          ></a-input-search>
-        </a-form-item>
-      </a-form>
-      <div class="box">
-        <MeterialInfo
-          ref="MeterialInfo"
-          v-for="(item, index) in materialsList"
-          :key="index"
-          :meterialInfo="item"
-          class="BoxInfo mt-3"
-        ></MeterialInfo>
-        <a-button type="link"> 点击加载更多~</a-button>
-      </div>
-    </a-tab-pane>
-    <a-tab-pane :key="'box'" tab="箱子">
-      <a-form layout="inline">
-        <a-form-item>
-          <div class="flex flex-row">
-            <a-input-search
-              v-model:value="boxSearchValue"
-              allowClear
-              placeholder="箱子搜索"
-              @search="getBoxData"
-            ></a-input-search>
-            <a-button type="primary" class="ml-20" @click="visible = true"
-              >新增箱子</a-button
-            >
-          </div>
-        </a-form-item>
-      </a-form>
-      <div class="box">
-        <BoxInfo
-          ref="BoxInfo"
-          v-for="(item, index) in boxList"
-          :key="index"
-          :boxInfo="item"
-          class="BoxInfo mt-3"
-        ></BoxInfo>
-        <a-button type="link"> 点击加载更多~</a-button>
-      </div>
-    </a-tab-pane>
-  </a-tabs>
-  <Modal v-model:visible="visible" title="新增箱子">
-    <AddBoxDialog></AddBoxDialog>
-  </Modal>
+  <div>
+    <a-tabs
+      v-model:activeKey="activeKey"
+      @tabClick="tabClick"
+      :animated="false"
+    >
+      <a-tab-pane :key="'materials'" tab="物资">
+        <a-form layout="inline">
+          <a-form-item>
+            <div class="flex flex-row">
+              <a-input-search
+                v-model:value="meterialSearchValue"
+                placeholder="物资搜索"
+                allowClear
+                @search="getMaterialsData"
+              ></a-input-search>
+              <a-button type="primary" class="ml-20" @click="showMetarialDilog"
+                >物资入库</a-button
+              >
+            </div>
+          </a-form-item>
+        </a-form>
+        <div class="box">
+          <MeterialInfo
+            ref="MeterialInfo"
+            v-for="(item, index) in materialsList"
+            :key="index"
+            :meterialInfo="item"
+            class="BoxInfo mt-3"
+            @click="showMeterialDetailDialog(item)"
+          ></MeterialInfo>
+          <a-button type="link"> 点击加载更多~</a-button>
+        </div>
+        <Modal
+          v-model:visible="meterialAddVisible"
+          title="物资入库"
+          key="materials"
+        >
+          <AddMeterialDialog></AddMeterialDialog>
+        </Modal>
+      </a-tab-pane>
+      <a-tab-pane :key="'box'" tab="箱子">
+        <a-form layout="inline">
+          <a-form-item>
+            <div class="flex flex-row">
+              <a-input-search
+                v-model:value="boxSearchValue"
+                allowClear
+                placeholder="箱子搜索"
+                @search="getBoxData"
+              ></a-input-search>
+              <a-button
+                type="primary"
+                class="ml-20"
+                @click="boxAddVisible = true"
+                >新增箱子</a-button
+              >
+            </div>
+          </a-form-item>
+        </a-form>
+        <div class="box">
+          <BoxInfo
+            ref="BoxInfo"
+            v-for="(item, index) in boxList"
+            :key="index"
+            :boxInfo="item"
+            class="BoxInfo mt-3"
+          ></BoxInfo>
+          <a-button type="link"> 点击加载更多~</a-button>
+        </div>
+        <Modal v-model:visible="boxAddVisible" title="新增箱子" key="box">
+          <AddBoxDialog></AddBoxDialog>
+        </Modal>
+      </a-tab-pane>
+    </a-tabs>
+    <Modal
+      v-model:visible="meterialDetailVisible"
+      :title="meterialDetailDialogTitle"
+      key="box"
+    >
+      <MeterialDetailDialog :id="meterialId"></MeterialDetailDialog>
+    </Modal>
+  </div>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
-
+import AddMeterialDialog from "../components/addMeterialDialog.vue";
+import MeterialDetailDialog from "../components/meterialDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
 import { Modal, Tabs } from "components";
-import {
-  findCriteriaPageData,
-  findBoxPageData,
-  addBoxData,
-} from "api/warehouse/meterial";
+import { findCriteriaPageData, findBoxPageData } from "api/warehouse/meterial";
 export default defineComponent({
   name: "SiderBar",
-  components: { BoxInfo, MeterialInfo, Modal, Tabs, AddBoxDialog },
+  components: {
+    BoxInfo,
+    MeterialInfo,
+    Modal,
+    Tabs,
+    AddBoxDialog,
+    AddMeterialDialog,
+    MeterialDetailDialog,
+  },
 
   setup() {
     const meterialSearchValue = ref("");
     const boxSearchValue = ref("");
     const state = reactive({
       activeKey: "materials",
-      visible: false,
+      meterialAddVisible: false, //新增物资
+      boxAddVisible: false, // 新增箱子
+      meterialDetailVisible: false, // 物资详情
       boxInfo: {
         name: "测试",
       },
       boxList: [],
       materialsList: [],
+      meterialId: "",
+      boxId: "",
+      meterialDetailDialogTitle: "",
     });
     onMounted(() => {
       getMaterialsData();
@@ -106,6 +145,14 @@ export default defineComponent({
         getMaterialsData();
       }
     };
+    const showMetarialDilog = () => {
+      state.meterialAddVisible = true;
+    };
+    const showMeterialDetailDialog = (item) => {
+      state.meterialId = item.id;
+      state.meterialDetailVisible = true;
+      state.meterialDetailDialogTitle = item.materialName;
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -113,6 +160,8 @@ export default defineComponent({
       getMaterialsData,
       getBoxData,
       tabClick,
+      showMetarialDilog,
+      showMeterialDetailDialog,
     };
   },
 });

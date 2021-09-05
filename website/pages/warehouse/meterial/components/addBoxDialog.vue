@@ -1,5 +1,5 @@
 <template>
-  <a-tabs v-model:activeKey="activeKey" @tabClick="tabClick" :animated="false">
+  <a-tabs v-model:activeKey="activeKey" :animated="false">
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form :columns="baseForm" @submit="handleSubmitBase">
         <template #button>
@@ -95,9 +95,6 @@ export default defineComponent({
     ]);
     onMounted(() => {});
 
-    const tabClick = (tabs) => {
-      console.log(tabs, "dad");
-    };
     const handleSubmitBase = () => {
       console.log("ddddd");
     };
@@ -113,7 +110,6 @@ export default defineComponent({
       baseForm,
       otherForm,
       initForm,
-      tabClick,
       handleSubmitBase,
       handleSubmitOther,
       handleSubmitInit,

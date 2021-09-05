@@ -83,7 +83,14 @@ export default defineComponent({
               rows="4"
             />
           );
-
+        case "date":
+          return (
+            <a-date-picker
+              v-model={[formData.value[render.key], "value"]}
+              format={"YYYY/MM/DD"}
+              valueFormat={"YYYY-MM-DD 00:00:00"}
+            />
+          );
         default:
           return (
             <Input
