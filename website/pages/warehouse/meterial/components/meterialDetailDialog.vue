@@ -29,7 +29,7 @@
             type="primary"
             ghost
             class="mr-3"
-            v-show="isEditBase"
+            v-if="isEditBase"
             @click="isEditBase = false"
             >编辑</a-button
           >
@@ -38,7 +38,7 @@
             ghost
             class="flex flex-row items-center p-0 mr-3"
             htmlType="submit"
-            v-show="!isEditBase"
+            v-if="!isEditBase"
             >保存</a-button
           >
         </template>
@@ -72,7 +72,7 @@
             type="primary"
             ghost
             class="mr-3"
-            v-show="isEditOther"
+            v-if="isEditOther"
             @click="isEditOther = false"
             >编辑</a-button
           >
@@ -81,7 +81,7 @@
             ghost
             class="mr-3"
             htmlType="submit"
-            v-show="!isEditOther"
+            v-if="!isEditOther"
             >保存</a-button
           >
         </template>
