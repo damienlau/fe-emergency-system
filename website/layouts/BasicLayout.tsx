@@ -2,7 +2,7 @@ import { computed, defineComponent } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Spin } from "ant-design-vue";
-import { Menu } from "components";
+import Menu from "components/Menu";
 
 export default defineComponent({
   setup() {
@@ -38,7 +38,7 @@ export default defineComponent({
         </header>
         <Spin
           delay={233}
-          wrapperClassName="flex-auto"
+          wrapperClassName="flex-auto overflow-hidden"
           spinning={spinning.value}
         >
           <main class="h-full p-16">
