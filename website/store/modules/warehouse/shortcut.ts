@@ -1,3 +1,4 @@
+import { addLendListsData, lendRequestProps } from "api/lists/lend";
 import { addMaintainListsData, maintainRequestProps } from "api/lists/maintain";
 import {
   deleteShortcutData,
@@ -70,12 +71,25 @@ const actions = {
   },
 
   // 添加清单列表
-  setLists: ({ dispatch }: Store<Dispatch>, formData: maintainRequestProps) => {
-    if (formData.operationType) {
-      addMaintainListsData(formData).then((response: any) => {
-        // dispatch("getLists");
-      });
-    }
+  setLists: (
+    { dispatch }: Store<Dispatch>,
+    formData: lendRequestProps & maintainRequestProps
+  ) => {
+    return new Promise((reslove) => {
+      if (formData.operationType) {
+        addMaintainListsData(formData).then((response: any) => {
+          dispatch("getLists").then(() => {
+            reslove(response);
+          });
+        });
+      } else {
+        addLendListsData(formData).then((response: any) => {
+          dispatch("getLists").then(() => {
+            reslove(response);
+          });
+        });
+      }
+    });
   },
 
   // 批量删除待操作清单列表
