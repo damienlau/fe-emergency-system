@@ -8,6 +8,7 @@ import {
   Space,
 } from "ant-design-vue";
 import { useStore } from "vuex";
+import defaultConfig from "config/defaultSettings";
 import Form from "components/Form";
 import Icon from "components/Icon";
 import List from "components/List";
@@ -27,6 +28,7 @@ export interface Data {
 
 export default defineComponent({
   setup() {
+    const { departments } = defaultConfig;
     const store = useStore();
     const tabColumns = ref([
       {
@@ -63,13 +65,7 @@ export default defineComponent({
             label: "借货科室",
             key: "departmentType",
             type: "select",
-            options: [],
-            required: true,
-          },
-          {
-            label: "图片上传",
-            key: "demo",
-            type: "upload",
+            options: departments,
             required: true,
           },
         ],
@@ -192,7 +188,11 @@ export default defineComponent({
     };
 
     const handleSubmit = (formData: any) => {
-      store.dispatch("warehouseModule/shortcutModule/setLists", formData);
+      store
+        .dispatch("warehouseModule/shortcutModule/setLists", formData)
+        .then((response) => {
+          handleVisibleDialog();
+        });
     };
 
     return () => (
@@ -292,7 +292,7 @@ export default defineComponent({
           v-model={[modalVisible.value, "visible"]}
           title={`${tabExtraOptions.value.alias}信息`}
         >
-          <Form columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
+          <Form dataSource={} columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
             {{
               button: () => (
                 <Button type="primary" htmlType="submit">

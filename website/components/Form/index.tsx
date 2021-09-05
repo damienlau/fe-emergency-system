@@ -6,8 +6,9 @@ import {
   SelectOption,
   Upload,
 } from "ant-design-vue";
+import { uploadData } from "api/utils";
 import Icon from "components/Icon";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, toRefs } from "vue";
 
 interface selectOptionProps {
   label: string;
@@ -31,14 +32,21 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    dataSource: {
+      type: Object,
+      required: false,
+    },
+    edit: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const formData = ref({});
+    const { dataSource } = toRefs<any>(props);
 
-    const handleInputChange = () => {
-      console.log(formData.value);
-    };
+    const formData = ref(dataSource.value || {});
 
     const handleSubmit = () => {
       emit("submit", formData.value);
@@ -51,6 +59,7 @@ export default defineComponent({
             <Select
               v-model={[formData.value[`${render.key}`], "value"]}
               allowClear
+              disabled={!props.edit}
               placeholder={`请选择${render.label}`}
             >
               {render.options?.map((selectOption) => {
@@ -66,6 +75,18 @@ export default defineComponent({
         case "upload":
           return (
             <Upload
+              customRequest={({ file }) => {
+                uploadData(file).then((response: any) => {
+                  if (typeof formData.value[render.key] === "undefined") {
+                    formData.value[render.key] = [{ fileUrl: response.join() }];
+                  } else {
+                    formData.value[render.key].push({
+                      fileUrl: response.join(),
+                    });
+                  }
+                });
+              }}
+              multiple
               fileList={formData.value[render.key]}
               listType="picture-card"
             >
@@ -81,6 +102,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[render.key], "value"]}
               allowClear
+              disabled={!props.edit}
               placeholder={`请输入${render.label}`}
             ></Input>
           );

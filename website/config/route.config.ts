@@ -56,7 +56,7 @@ const routesConfig = [
     name: "User",
     path: "/user",
     meta: { label: "个人中心" },
-    component: () => import("layouts/BasicLayout"),
+    component: () => import("layouts/UserLayout"),
     children: [
       {
         name: "Login",

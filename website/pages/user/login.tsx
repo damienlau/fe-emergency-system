@@ -24,7 +24,7 @@ export default defineComponent({
 
     // 监听登录表单提交事件
     const handleSubmitForm = (formData) => {
-      store.dispatch("userModule/userLogin", formData);
+      store.dispatch("userModule/setUserOnline", formData);
     };
 
     return () => (

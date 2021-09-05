@@ -53,7 +53,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     if (typeof response.headers.authorization !== "undefined") {
-      store.commit("user/SET_TOKEN", response.headers.authorization);
+      store.commit("userModule/SET_TOKEN", response.headers.authorization);
     }
     handleUse(response.data.message, response.data.code);
 
