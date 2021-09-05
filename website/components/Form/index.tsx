@@ -59,7 +59,7 @@ export default defineComponent({
             <Select
               v-model={[formData.value[`${render.key}`], "value"]}
               allowClear
-              disabled={props.edit}
+              disabled={!props.edit}
               placeholder={`请选择${render.label}`}
             >
               {render.options?.map((selectOption) => {
@@ -93,6 +93,7 @@ export default defineComponent({
               v-model={[formData.value[render.key], "value"]}
               placeholder={`请输入${render.label}`}
               rows="4"
+              disabled={!props.edit}
             />
           );
         case "date":
@@ -101,6 +102,7 @@ export default defineComponent({
               v-model={[formData.value[render.key], "value"]}
               format={"YYYY/MM/DD"}
               valueFormat={"YYYY-MM-DD 00:00:00"}
+              disabled={!props.edit}
             />
           );
         default:
@@ -108,7 +110,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[render.key], "value"]}
               allowClear
-              disabled={props.edit}
+              disabled={!props.edit}
               placeholder={`请输入${render.label}`}
             ></Input>
           );

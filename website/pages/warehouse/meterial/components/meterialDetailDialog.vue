@@ -55,7 +55,7 @@
       </Form>
     </a-tab-pane>
     <a-tab-pane :key="'history'" tab="历史记录" class="overflow-y-auto">
-      <a-table :dataSource="tabelData" :columns="tableColumns" />
+      <a-table :dataSource="tabelData" :columns="tableColumns" size="small" />
     </a-tab-pane>
   </a-tabs>
 </template>
@@ -76,7 +76,7 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       activeKey: "base",
-      isEdit: false,
+      isEdit: true,
       tabelData: [],
       dataSource: {},
     });
@@ -270,12 +270,8 @@ export default defineComponent({
       });
     };
     const initData = () => {
-      state.isEdit = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
-        console.log(res, "reser");
-        if (res) {
-          state.dataSource = res;
-        }
+        state.dataSource = res;
       });
     };
     return {
