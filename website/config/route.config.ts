@@ -37,7 +37,6 @@ const routesConfig = [
             component: RouterView,
             children: [
               {
-                name: '',
                 path:'',
                 component: () => import("pages/warehouse/scanner"),
               },
@@ -47,7 +46,7 @@ const routesConfig = [
                 meta: { label: "出仓扫描" },
                 component: () => import("pages/warehouse/scanner/pending"),
               }
-            ]            
+            ]             
           },
         ],
       },
