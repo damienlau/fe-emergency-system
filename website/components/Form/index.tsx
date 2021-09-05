@@ -6,8 +6,9 @@ import {
   SelectOption,
   Upload,
 } from "ant-design-vue";
+import { uploadData } from "api/utils";
 import Icon from "components/Icon";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, toRefs } from "vue";
 
 interface selectOptionProps {
   label: string;
@@ -31,14 +32,21 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    dataSource: {
+      type: Object,
+      required: false,
+    },
+    edit: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const formData = ref({});
+    const { dataSource } = toRefs<any>(props);
 
-    const handleInputChange = () => {
-      console.log(formData.value);
-    };
+    const formData = ref(dataSource.value || {});
 
     const handleSubmit = () => {
       emit("submit", formData.value);
@@ -66,6 +74,9 @@ export default defineComponent({
         case "upload":
           return (
             <Upload
+              customRequest={({ file }) => {
+                uploadData({ files: Array.of(file) });
+              }}
               fileList={formData.value[render.key]}
               listType="picture-card"
             >
