@@ -50,13 +50,17 @@
       </div>
     </a-tab-pane>
   </a-tabs>
-  <Modal v-model:visible="visible" title="新增箱子"> </Modal>
+  <Modal v-model:visible="visible" title="新增箱子">
+    <AddBoxDialog></AddBoxDialog>
+  </Modal>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
+import AddBoxDialog from "../components/addBoxDialog.vue";
+
 import MeterialInfo from "../components/meterialInfo.vue";
-import { Modal, Tabs, Form } from "components";
+import { Modal, Tabs } from "components";
 import {
   findCriteriaPageData,
   findBoxPageData,
@@ -64,7 +68,7 @@ import {
 } from "api/warehouse/meterial";
 export default defineComponent({
   name: "SiderBar",
-  components: { BoxInfo, MeterialInfo, Modal, Tabs },
+  components: { BoxInfo, MeterialInfo, Modal, Tabs, AddBoxDialog },
 
   setup() {
     const meterialSearchValue = ref("");

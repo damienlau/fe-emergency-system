@@ -75,6 +75,14 @@ export default defineComponent({
               </div>
             </Upload>
           );
+        case "textArea":
+          return (
+            <a-textarea
+              v-model={[formData.value[render.key], "value"]}
+              placeholder={`请输入${render.label}`}
+              rows="4"
+            />
+          );
 
         default:
           return (
