@@ -92,7 +92,11 @@
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
-import { updateBoxData, findSpecifiedBoxData } from "api/warehouse/meterial";
+import {
+  updateBoxData,
+  findSpecifiedBoxData,
+  deleteBoxInfoData,
+} from "api/warehouse/meterial";
 import { Form } from "components";
 export default defineComponent({
   name: "SiderBar",
@@ -100,7 +104,7 @@ export default defineComponent({
   props: {
     id: Number,
   },
-  setup(props) {
+  setup(props, ctx) {
     const state = reactive({
       activeKey: "base",
       isEditBase: true,
@@ -305,6 +309,15 @@ export default defineComponent({
         state.loading = true;
       });
     };
+    const handDelete = (data) => {
+      console.log(data, "ddd");
+      const params = {
+        id: data.id,
+      };
+      deleteBoxInfoData(params).then((res) => {
+        ctx.emit("close");
+      });
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -314,6 +327,7 @@ export default defineComponent({
       handleSubmitOther,
       handleSubmitInit,
       initData,
+      handDelete,
     };
   },
 });

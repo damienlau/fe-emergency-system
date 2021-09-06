@@ -172,9 +172,12 @@ export default defineComponent({
       state.meterialDetailDialogTitle = item.materialName;
     };
     const showBoxDetailDialog = (item) => {
+      const num =
+        "(" + item.materialRemainNumber + "/" + item.materialTotalNumber + ")";
+
       state.boxId = item.id;
       state.boxDetailVisible = true;
-      state.boxDetailDialogTitle = item.boxName;
+      state.boxDetailDialogTitle = item.boxName + num;
     };
     const closeMeterialDetailDialog = () => {
       state.meterialDetailVisible = false;

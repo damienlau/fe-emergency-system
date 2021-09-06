@@ -12,9 +12,14 @@ export function deleteSpecifiedMeterialData(params) {
   return request.post("/material/info/deleteBatch", params);
 }
 
-// 删除指定数据-单独
+// 删除指定数据- 物资 单独
 export function deleteMeterialInfoData(params) {
   return request.get("/material/info/delete", params);
+}
+
+// 删除指定数据- 箱子 单独
+export function deleteBoxInfoData(params) {
+  return request.get("/box/info/delete", params);
 }
 // 查询全部数据
 export function findMeterialData(params) {

@@ -5,7 +5,13 @@
       <div class="right ml-20">
         <div class="row">
           <span class="title mr-3 mb-3">{{ info.boxName }}</span>
-          <span class="number mr-3">(17/20)</span>
+          <span class="number mr-3">{{
+            "(" +
+            info.materialRemainNumber +
+            "/" +
+            info.materialTotalNumber +
+            ")"
+          }}</span>
           <a-tag
             size="mini"
             :color="info.status && returnStatus(info.status).color"
