@@ -570,7 +570,8 @@ export default defineComponent({
               }}
             >
             {/* 卡片容器 */}
-            <section class="overflow-y-auto grid grid-cols-3 gap-16">
+            <div class="flex flex-col overflow-auto h-full ">
+            <section class="overflow-y-auto grid grid-cols-3 gap-16 pr-10">
               {cardData.value.map((listItem) => {
                 return (
                   <Card>
@@ -650,6 +651,7 @@ export default defineComponent({
                 );
               })}
             </section>
+            </div>
           </Tabs>
           <div class="absolute bottom-3 w-full text-center" style="left:-22px;">
             <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>

@@ -10,22 +10,6 @@ import { uploadData } from "api/utils";
 import Icon from "components/Icon";
 import { defineComponent, ref, toRefs } from "vue";
 
-interface selectOptionProps {
-  label: string;
-  key: string;
-}
-
-interface formItemGridProps {
-  span?: number;
-  offset?: number;
-}
-
-export interface formItemProps extends selectOptionProps {
-  layouts?: formItemGridProps[];
-  type?: string;
-  options?: selectOptionProps[];
-}
-
 export default defineComponent({
   props: {
     columns: {
@@ -44,7 +28,7 @@ export default defineComponent({
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { dataSource } = toRefs<any>(props);
+    const { dataSource } = toRefs(props);
 
     const formData = ref(dataSource.value || {});
 
@@ -52,7 +36,7 @@ export default defineComponent({
       emit("submit", formData.value);
     };
 
-    const formItemRenderNode = (render: formItemProps) => {
+    const formItemRenderNode = (render) => {
       switch (render.type) {
         case "select":
           return (
@@ -62,7 +46,7 @@ export default defineComponent({
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
             >
-              {render.options?.map((selectOption) => {
+              {render.options.map((selectOption) => {
                 return (
                   <SelectOption value={selectOption.key}>
                     {selectOption.label}
@@ -76,7 +60,7 @@ export default defineComponent({
           return (
             <Upload
               customRequest={({ file }) => {
-                uploadData(file).then((response: any) => {
+                uploadData(file).then((response) => {
                   if (typeof formData.value[render.key] === "undefined") {
                     formData.value[render.key] = [{ fileUrl: response.join() }];
                   } else {
@@ -133,7 +117,7 @@ export default defineComponent({
         hideRequiredMark
         onFinish={handleSubmit}
       >
-        {props.columns.map((formItem: any) => {
+        {props.columns.map((formItem) => {
           return (
             <FormItem
               name={formItem.key}

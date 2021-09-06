@@ -1,13 +1,6 @@
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { Badge, TabPane, Tabs } from "ant-design-vue";
 
-export interface TabPaneProps {
-  label?: string;
-  key?: string;
-  count?: number;
-  [propertyName: string]: any;
-}
-
 export default defineComponent({
   name: "Tabs",
   props: {
@@ -16,7 +9,7 @@ export default defineComponent({
   },
   emits: ["click"],
   setup(props, { slots, emit }) {
-    const tabActiveKey = ref<string | number>(props.columns[0].key);
+    const tabActiveKey = ref(props.columns[0].key);
     const tabNavbarCenterClasses = computed(() => {
       return {
         "ant-tabs-nav-center h-full rounded": props.center,
@@ -24,11 +17,9 @@ export default defineComponent({
     });
 
     const handleClick = (activeKey = tabActiveKey.value) => {
-      let selectedTabPane: TabPaneProps = props.columns.find(
-        (row: TabPaneProps) => {
-          return row.key === activeKey;
-        }
-      );
+      let selectedTabPane = props.columns.find((row) => {
+        return row.key === activeKey;
+      });
 
       emit("click", { activeKey, item: selectedTabPane });
     };
@@ -46,7 +37,7 @@ export default defineComponent({
       >
         {{
           default: () => {
-            return props.columns.map((row: TabPaneProps) => {
+            return props.columns.map((row) => {
               return (
                 <TabPane key={row.key}>
                   {{

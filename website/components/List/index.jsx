@@ -1,5 +1,5 @@
 import { defineComponent, ref, toRefs, watch } from "vue";
-import { Button, List, ListItem, PaginationProps } from "ant-design-vue";
+import { List, ListItem } from "ant-design-vue";
 
 export default defineComponent({
   name: "CardList",
@@ -21,7 +21,7 @@ export default defineComponent({
       gutter: 16,
       column: props.grid,
     });
-    const cardListPagination = ref<PaginationProps>({});
+    const cardListPagination = ref({});
 
     watch(dataSource, (lists) => {
       cardListsData.value = lists.data;

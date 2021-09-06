@@ -1,11 +1,10 @@
-import axios from "axios";
 import request from "utils/request";
 
 const utilRequestUrls = {
   upload: "/file/upload",
 };
 
-export const uploadData = (parameter: File) => {
+export const uploadData = (parameter) => {
   let data = new FormData();
 
   data.append("files", parameter);
