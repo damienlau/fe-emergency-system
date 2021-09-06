@@ -132,9 +132,11 @@ export default defineComponent({
           id: 10,
           title: "测试数据标题",
           page: "（20/20）",
-          capacities: [20, 20],
-          status: 0,
-          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          capacities: [
+            20,20
+          ],
+          status:0,//符合
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
             "物资名称1",
             "物资名称2",
@@ -150,10 +152,12 @@ export default defineComponent({
           id: 11,
           title: "测试数据标题单个物资",
           page: "",
-
-          status: 1,
-          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
-          content: [],
+         
+          status:1,//未符合
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
         },
         {
           id: 12,
@@ -198,11 +202,11 @@ export default defineComponent({
         data: [],
       },
     ]);
-    //扫描出仓模态框控制
-    const handleClickPendingItem = () => {
-      menus.value[0].data = [];
-      menus.value[1].data = [];
-      menus.value[2].data = [];
+    //扫描出仓模态框数据初始化
+    const initPendingData = () => {
+      menus.value[0].data = []
+      menus.value[1].data = []
+      menus.value[2].data = []      
       finishedDelivery.value.data.forEach((index, item, arr) => {
         if (arr[item].status == 0) {
           menus.value[0].data.push(index);
@@ -215,8 +219,11 @@ export default defineComponent({
       });
       menus.value[0].count = menus.value[0].data.length;
       menus.value[1].count = menus.value[1].data.length;
-      menus.value[2].count = menus.value[2].data.length;
-      console.log(menus.value[2].data);
+      menus.value[2].count = menus.value[2].data.length; 
+    }
+    //扫描出仓模态框控制
+    const handleClickPendingItem = () => {
+      initPendingData();
       visible.value = !visible.value;
     };
     // 菜单列表空状态
@@ -233,28 +240,33 @@ export default defineComponent({
     };
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
+      var savependingall = menus.value[0].data.concat(menus.value[1].data);
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
         content: `出仓符合清单和未符合清单的全部物资`,
         centered: true,
         onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/findSpecifiedShortcutList",
-              cardData.value.map((cardItem) => {
-                return {
-                  id: cardItem.key,
-                };
-              })
-            )
-            .then(() => {
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });
-        },
-      });
-    };
+          // store
+          //   .dispatch(
+          //     "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+          //     // cardData.value.map((cardItem) => {
+          //     //   return {
+          //     //     id: cardItem.key,
+          //     //   };
+          //     // }
+          //     // )
+          //     savependingall
+          //   )
+          //   .then(() => {
+          //     visible.value = !visible.value;
+          //     //handleClickTabPane();
+          //   });
+          finishedDelivery.value.data =[]      
+          visible.value = !visible.value;
+        }
+      })
+    }
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
       menuActiveKey.value = activeKey;
@@ -308,37 +320,80 @@ export default defineComponent({
     };
     // 监听点击卡片移除事件
     const handleClickCardExtra = (activeKey) => {
-      store
-        .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", [
-          { id: activeKey },
-        ])
-        .then(() => {
-          //handleClickTabPane();
-        });
+      finishedDelivery.value.data.forEach((value, index, array) => {
+        if (array[index].id == activeKey) {
+          finishedDelivery.value.data.splice(index,1)
+        }
+      })
+      initPendingData();      
+      cardData.value = menus.value[1].data;
+      // store
+      //   .dispatch(
+      //     "warehouseModule/pendingModule/findSpecifiedShortcutList",
+      //     [{ id: activeKey }]
+      //   )
+      //   .then(() => {
+      //     //handleClickTabPane();
+      //   });
     };
     //监听模态框全部移除事件
     const handleClickTabExtra = () => {
       AntModal.confirm({
+        icon: <Icon type="shanjian" />,
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定要全部移除吗？`,
         content: `移除未符合清单的全部物资`,
         centered: true,
         onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/findSpecifiedShortcutList",
-              cardData.value.map((cardItem) => {
-                return {
-                  id: cardItem.key,
-                };
-              })
-            )
-            .then(() => {
-              //handleClickTabPane();
-            });
-        },
-      });
+          // store
+          //   .dispatch(
+          //     "warehouseModule/pendingModule/findSpecifiedShortcutList",
+          //     cardData.value.map((cardItem) => {
+          //       return {
+          //         id: cardItem.key,
+          //       };
+          //     })
+          //   )
+          //   .then(() => {
+          //     //handleClickTabPane();
+          //   });
+          finishedDelivery.value.data = finishedDelivery.value.data.filter((item) => {                        
+            return item.status == 0;
+          })
+          initPendingData();      
+          cardData.value = menus.value[1].data;
+        }
+      })
+    }
+
+    // 确定归仓模态框
+    const visiblesecond = ref(false);
+    // 确定归仓配置项
+    const formColumn = ref([
+      {
+        label: "归还人",
+        key: "name",
+      },
+      {
+        label: "归还人工号",
+        key: "number",
+      },
+      {
+        label: "联系电话",
+        key: "telephone",
+      }
+    ]);
+    // 确定归仓模态框表单数据
+    const formData = ref({});
+    // 确定归仓表单卡片
+    const handleClickMenuItem = () => {
+      visiblesecond.value = !visiblesecond.value;
     };
+    // 监听模态框表单提交事件
+    const handleSubmitForm = () => {      
+      visiblesecond.value = !visiblesecond.value;
+    };
+    
     onMounted(() => {
       //获取待出仓物资
       //console.log(router.currentRoute.value.params)
@@ -589,51 +644,55 @@ export default defineComponent({
           size="heavy"
           title="出仓扫描清单"
         >
-          <Tabs
-            v-model={[menuActiveKey.value, "activeKey"]}
-            block
-            columns={menus.value}
-            empty={menuEmpty.value}
-            onClick={handleClickTabPane}
-            v-slots={{
-              // 菜单附加操作区
-              extra: () => (
-                <a-space size={8}>
-                  <a-button ghost danger onClick={handleClickTabExtra}>
-                    全部移除
-                  </a-button>
-                </a-space>
-              ),
-            }}
-          >
+            <Tabs
+              v-model={[menuActiveKey.value, "activeKey"]}
+              block
+              columns={menus.value}
+              onClick={handleClickTabPane}
+              v-slots={{
+                // 菜单附加操作区
+                extra: () => (
+                  <a-space size={8} class={menuActiveKey.value == '2'?'':'hidden'}>
+                    <a-button ghost danger onClick={handleClickTabExtra}>
+                      全部移除
+                    </a-button>
+                  </a-space>
+                ),
+              }}
+            >
             {/* 卡片容器 */}
-            <div class="flex flex-col overflow-auto h-full ">
-              <section class="overflow-y-auto grid grid-cols-3 gap-16 pr-10">
-                {cardData.value.map((listItem) => {
-                  return (
-                    <Card>
-                      {{
-                        // 卡片自定义标题
-                        title: () => (
-                          <p class="text-16 font-medium">
-                            <span>{listItem.title}</span>
-                            {listItem.capacities && (
-                              <span>
-                                ({listItem.capacities[0]}/
-                                {listItem.capacities[1]})
-                              </span>
-                            )}
-                          </p>
-                        ),
-                        // 卡片自定义附加操作区
-                        extra: () => (
-                          <a-popconfirm
-                            title={`确认删除吗？`}
-                            ok-text="删除"
-                            cancel-text="取消"
-                            placement="bottomRight"
-                            onConfirm={() => handleClickCardExtra(listItem.key)}
-                          >
+            <div class="flex flex-col overflow-auto h-full relative">
+            <section class="overflow-y-auto grid grid-cols-3 gap-16 pr-10">
+              <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
+                  <a-empty                   
+                    description="空空如也"
+                    image={`/website/assets/icon_empty_data.png`}>
+                  </a-empty>
+                </div>
+              {cardData.value.map((listItem) => {
+                return (
+                  <Card>
+                    {{
+                      // 卡片自定义标题
+                      title: () => (
+                        <p class="text-16 font-medium">
+                          <span>{listItem.title}</span>
+                          {listItem.capacities && (
+                            <span>
+                              ({listItem.capacities[0]}/{listItem.capacities[1]})
+                            </span>
+                          )}
+                        </p>
+                      ),
+                      // 卡片自定义附加操作区
+                      extra: () => (
+                        <a-popconfirm
+                          title={`确认删除吗？`}
+                          ok-text="删除"
+                          cancel-text="取消"
+                          placement="bottomRight"
+                          onConfirm={() => handleClickCardExtra(listItem.id)}
+                        >
                             <a-button
                               class="flex flex-row items-center p-0"
                               type="text"
@@ -656,10 +715,7 @@ export default defineComponent({
                                   height={88}
                                 ></Image>
                               </ImagePreviewGroup>
-                            </div>
-                            {/* <div class="flex-shrink-0 mr-16">
-                            <a-image width={108} height={108}></a-image>
-                          </div> */}
+                            </div>                   
                             <div class="flex-auto ml-6 size-12 overflow-hidden">
                               <p class="flex">
                                 <div class="text-white text-opacity-70 ">
@@ -715,20 +771,40 @@ export default defineComponent({
               </section>
             </div>
           </Tabs>
-          <div class="absolute bottom-3 w-full text-center" style="left:-22px;">
-            <a-button
-              class="mr-10"
-              ghost
-              html-type="submit"
-              onClick={handleSubmit}
-            >
+          <div class="absolute bottom-3 w-full text-center" style="left:0px;">
+            <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>
               返回扫描
             </a-button>
             <a-button ghost html-type="submit" onClick={handlePendingSubmit}>
               确定出仓
             </a-button>
+            <a-button onClick={handleClickMenuItem}>
+              测试
+            </a-button>
           </div>
         </Modal>
+        
+        <Modal
+          v-model={[visiblesecond.value, "visible"]}
+          size="ultralight"
+          title="归还人信息"
+        >
+          {/* 扫描菜单-模态框表单 */}
+          <Form
+            v-model={[formData.value, "model"]}
+            columns={formColumn.value}
+            onSubmit={handleSubmitForm}
+          >
+            {{
+              button: () => (
+                <a-button ghost html-type="submit">
+                  <Icon class="align-baseline" type="determine" />
+                  确定
+                </a-button>
+              ),
+            }}
+          </Form>
+        </Modal>  
       </>
     );
   },
