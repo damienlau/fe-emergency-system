@@ -1,10 +1,23 @@
 <template>
-  <a-card hoverable style="width: 100%">
-    <div class="top flex flex-row w-fll pb-3">
-      <a-image class="pt-3" :width="100" :height="100" :src="img" />
+  <a-card
+    hoverable
+    style="width: 100%; background: #144071"
+    :bodyStyle="bodyStyle"
+  >
+    <div class="top">
+      <span class="title">{{ info.boxName }}</span>
+    </div>
+    <div class="bottom flex flex-row w-fll pb-3">
+      <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
         <div class="row">
-          <span class="title mr-3 mb-3">{{ info.materialName }}</span>
+          <span class="number mr-3">{{
+            "(" +
+            info.materialRemainNumber +
+            "/" +
+            info.materialTotalNumber +
+            ")"
+          }}</span>
           <a-tag
             size="mini"
             :color="info.status && returnStatus(info.status).color"
@@ -25,67 +38,38 @@
           }}</span>
         </div>
         <div class="row">
-          <span class="label">箱号:</span>
-          <span class="value">{{ info.boxCode }}</span>
+          <span class="label">尺寸:</span>
+          <span class="value">{{ info.size && sizeType[info.size] }}</span>
         </div>
         <div class="row">
           <span class="label">物资编码:</span>
-          <span class="value">{{ info.materialCode }}</span>
+          <span class="value">{{ info.boxCode }}</span>
         </div>
-      </div>
-    </div>
-    <div class="bottom mt-10 flex flex-row justify-between align-middle">
-      <div class="left">
-        <a-button
-          type="primary"
-          class="mr-3"
-          v-if="isDebit"
-          @click="changeDebit"
-          :disabled="info.status !== 1"
-          >借贷</a-button
-        >
-        <a-button
-          danger
-          v-if="info.status === 1 && !isDebit"
-          @click="handCansel"
-          >取消借贷</a-button
-        >
-      </div>
-      <div class="right" v-if="info.status === 1">
-        <a-button
-          type="primary"
-          ghost
-          class="mr-3"
-          :disabled="isMaintain"
-          @click="changeMaintain"
-          >维修</a-button
-        >
-        <a-button
-          type="primary"
-          ghost
-          :disabled="isRepair"
-          @click="changeRepair"
-          >保养</a-button
-        >
       </div>
     </div>
   </a-card>
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
 export default defineComponent({
-  name: "MeterialInfo",
+  name: "BoxInfo",
   props: {
-    meterialInfo: Object,
+    boxInfo: Object,
   },
   setup(props) {
     const state = reactive({
       info: {},
-      isMaintain: false,
-      isRepair: false,
-      isDebit: true,
       img: "",
+      isDebit: true,
+      bodyStyle: {
+        padding: "10px",
+      },
+    });
+    const sizeType = ref({
+      1: "一箱一桌(800 x 600 x 600)",
+      2: "一箱两柜(1200 x 800 x 800)",
+      3: "一箱一柜(1200 x 800 x 400)",
+      4: "其他箱子",
     });
     const positionInfo = ref({
       0: "未知",
@@ -112,52 +96,12 @@ export default defineComponent({
       15: "检验",
     });
     onMounted(() => {
-      state.info = props.meterialInfo;
+      state.info = props.boxInfo;
       state.img =
-        props.meterialInfo.materialImages.length > 0
-          ? props.meterialInfo.materialImages.fileUrl
+        props.boxInfo.boxImages && props.boxInfo.boxImages[0].url
+          ? props.boxInfo.boxImages[0].url
           : "www.test";
     });
-    const changeMaintain = () => {
-      const params = {
-        operationType: 2,
-        resourceType: 1,
-        materialId: props.meterialInfo.id,
-      };
-      addBatchPendingData(params).then((res) => {
-        state.isMaintain = true;
-      });
-    };
-    const changeRepair = () => {
-      const params = {
-        operationType: 3,
-        resourceType: 1,
-        materialId: props.meterialInfo.id,
-      };
-      addBatchPendingData(params).then((res) => {
-        state.isRepair = false;
-      });
-    };
-    const changeDebit = () => {
-      const params = {
-        operationType: 1,
-        resourceType: 1,
-        materialId: props.meterialInfo.id,
-      };
-      addBatchPendingData(params).then((res) => {
-        state.isDebit = false;
-      });
-    };
-    const handCansel = () => {
-      const params = {
-        operationType: 1,
-        resourceType: 1,
-        materialId: props.meterialInfo.id,
-      };
-      deleteByFindData(params).then((res) => {
-        state.isDebit = true;
-      });
-    };
     const returnStatus = (status) => {
       let state = {};
       switch (status) {
@@ -206,16 +150,12 @@ export default defineComponent({
       }
       return state;
     };
-
     return {
       ...toRefs(state),
       positionInfo,
       department,
+      sizeType,
       returnStatus,
-      changeMaintain,
-      changeRepair,
-      changeDebit,
-      handCansel,
     };
   },
 });
@@ -226,14 +166,14 @@ export default defineComponent({
 }
 .row {
   .title {
-    font-size: 16px;
+    font-size: 14px;
   }
   .label {
-    margin-right: 14px;
+    margin-right: 10px;
     color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
-    line-height: 22px;
+    line-height: 20px;
   }
 }
 </style>

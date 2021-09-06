@@ -1,7 +1,7 @@
 <template>
   <a-card hoverable style="width: 100%">
     <div class="top flex flex-row w-fll pb-3">
-      <a-image class="pt-3" :width="100" :height="100" :src="'www.baidu.com'" />
+      <a-image class="pt-3" :width="100" :height="100" :src="img" />
       <div class="right ml-20">
         <div class="row">
           <span class="title mr-3 mb-3">{{ info.boxName }}</span>
@@ -73,6 +73,7 @@ export default defineComponent({
     const state = reactive({
       info: {},
       isDebit: true,
+      img: "",
     });
     const sizeType = ref({
       1: "一箱一桌(800 x 600 x 600)",
@@ -106,6 +107,10 @@ export default defineComponent({
     });
     onMounted(() => {
       state.info = props.boxInfo;
+      state.img =
+        props.boxInfo.boxImages && props.boxInfo.boxImages[0].url
+          ? props.boxInfo.boxImages[0].url
+          : "www.test";
     });
     const returnStatus = (status) => {
       let state = {};

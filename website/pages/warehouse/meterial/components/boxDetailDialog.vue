@@ -91,7 +91,13 @@
       :key="'init'"
       :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
     >
-      <div class="box">ddddd</div>
+      <div class="box">
+        <SmallBox
+          v-for="(item, index) in boxList"
+          :key="index"
+          :boxInfo="item"
+        ></SmallBox>
+      </div>
     </a-tab-pane>
   </a-tabs>
 </template>
@@ -101,13 +107,16 @@ import {
   updateBoxData,
   findSpecifiedBoxData,
   deleteBoxInfoData,
+  findBoxInfoAllData,
 } from "api/warehouse/meterial";
+import SmallBox from "./smallBox.vue";
 import { Form } from "components";
 export default defineComponent({
   name: "SiderBar",
-  components: { Form },
+  components: { Form, SmallBox },
   props: {
     id: Number,
+    boxCode: String,
   },
   setup(props, ctx) {
     const state = reactive({
@@ -116,6 +125,7 @@ export default defineComponent({
       isEditOther: true,
       dataSource: {},
       loading: true,
+      boxList: [],
     });
     const baseForm = ref([
       {
@@ -289,6 +299,7 @@ export default defineComponent({
     ]);
     onMounted(() => {
       initData();
+      initBoxList();
     });
 
     const handleSubmitBase = () => {
@@ -314,8 +325,13 @@ export default defineComponent({
         state.loading = true;
       });
     };
+    const initBoxList = () => {
+      state.boxList = [];
+      findBoxInfoAllData({ boxCode: props.boxCode }).then((res) => {
+        state.boxList = res;
+      });
+    };
     const handDelete = (data) => {
-      console.log(data, "ddd");
       const id = data.id;
       deleteBoxInfoData(id).then((res) => {
         ctx.emit("close");
@@ -331,6 +347,7 @@ export default defineComponent({
       handleSubmitInit,
       initData,
       handDelete,
+      initBoxList,
     };
   },
 });
@@ -340,5 +357,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   background: pink;
+  overflow-y: auto;
 }
 </style>

@@ -34,6 +34,7 @@
         </div>
         <Modal
           v-model:visible="meterialAddVisible"
+          size="heavy"
           title="物资入库"
           key="materials"
         >
@@ -70,7 +71,12 @@
           ></BoxInfo>
           <a-button type="link"> 点击加载更多~</a-button>
         </div>
-        <Modal v-model:visible="boxAddVisible" title="新增箱子" key="box">
+        <Modal
+          v-model:visible="boxAddVisible"
+          size="heavy"
+          title="新增箱子"
+          key="box"
+        >
           <AddBoxDialog></AddBoxDialog>
         </Modal>
       </a-tab-pane>
@@ -78,6 +84,7 @@
     <Modal
       v-model:visible="meterialDetailVisible"
       :title="meterialDetailDialogTitle"
+      size="heavy"
       key="box"
     >
       <MeterialDetailDialog
@@ -88,10 +95,12 @@
     <Modal
       v-model:visible="boxDetailVisible"
       :title="boxDetailDialogTitle"
+      size="heavy"
       key="box"
     >
       <BoxDetailDialog
         :id="boxId"
+        :boxCode="boxCode"
         @close="closeBoxDetailDialog"
       ></BoxDetailDialog>
     </Modal>
@@ -136,6 +145,7 @@ export default defineComponent({
       materialsList: [],
       meterialId: "",
       boxId: "",
+      boxCode: "",
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
     });
@@ -176,6 +186,7 @@ export default defineComponent({
         "(" + item.materialRemainNumber + "/" + item.materialTotalNumber + ")";
 
       state.boxId = item.id;
+      state.boxCode = item.boxCode;
       state.boxDetailVisible = true;
       state.boxDetailDialogTitle = item.boxName + num;
     };
