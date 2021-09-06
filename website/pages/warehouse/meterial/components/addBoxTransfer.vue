@@ -1,11 +1,10 @@
 <template>
-  <div></div>
+  <div>穿梭框</div>
 </template>
 <script>
-import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 export default defineComponent({
   name: "addBoxTransfer",
-  components: { Form },
   setup() {
     const state = reactive({
       test: "",
