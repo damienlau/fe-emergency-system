@@ -22,17 +22,17 @@ export default defineComponent({
         key: "boxName",
       },
       {
-        title: "借贷科室",
+        title: "借货科室",
         dataIndex: "departmentName",
         key: "departmentName",
       },
       {
-        title: "借贷人",
+        title: "借货人",
         dataIndex: "personnelName",
         key: "personnelName",
       },
       {
-        title: "借贷人联系方式",
+        title: "借货人联系方式",
         dataIndex: "personnelPhone",
         key: "personnelPhone",
       },
@@ -84,7 +84,7 @@ export default defineComponent({
       {
         type: "select",
         key: "departmentType",
-        label: "借贷科室",
+        label: "借货科室",
         placeholder: "全部",
 
         // 1 急救/重症， 2 门诊， 3 后勤， 4 指挥， 5 重症， 6 超声， 7 清创， 8 留观， 9 药房， 10 耗材， 11 手术， 12 防疫/隔离， 13 消毒， 14 住院， 15 检验",

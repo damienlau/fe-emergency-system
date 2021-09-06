@@ -1,58 +1,117 @@
 <template>
-  <a-tabs v-model:activeKey="activeKey" :animated="false">
-    <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
-      <Form
-        v-if="loading"
-        :columns="baseForm"
-        :dataSource="dataSource"
-        :edit="!isEditBase"
-        @submit="handleSubmitBase"
-      >
-        <template #button>
-          <a-popconfirm
-            title="确认删除吗?"
-            ok-text="确认"
-            cancel-text="取消"
-            @confirm="handDelete(dataSource)"
-          >
-            <a-button
-              type="primary"
-              ghost
-              class="flex flex-row items-center p-0 mr-3"
-              danger
+  <div class="content">
+    <div class="btn" v-if="activeKey === 'init' && !isEditInit">
+      <a-button type="text">撤销</a-button>
+      <a-button type="text" danger>全部移除</a-button>
+    </div>
+    <a-tabs v-model:activeKey="activeKey" :animated="false">
+      <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
+        <Form
+          v-if="loading"
+          :columns="baseForm"
+          :dataSource="dataSource"
+          :edit="!isEditBase"
+          @submit="handleSubmitBase"
+        >
+          <template #button>
+            <a-popconfirm
+              title="确认删除吗?"
+              ok-text="确认"
+              cancel-text="取消"
+              @confirm="handDelete(dataSource)"
             >
-              删除
-            </a-button>
-          </a-popconfirm>
+              <a-button
+                type="primary"
+                ghost
+                class="flex flex-row items-center p-0 mr-3"
+                danger
+              >
+                删除
+              </a-button>
+            </a-popconfirm>
 
-          <a-button
-            type="primary"
-            ghost
-            class="mr-3"
-            v-if="isEditBase"
-            @click="isEditBase = false"
-            >编辑</a-button
-          >
-          <a-button
-            type="primary"
-            ghost
-            class="flex flex-row items-center p-0 mr-3"
-            htmlType="submit"
-            v-if="!isEditBase"
-            >保存</a-button
-          >
-        </template>
-      </Form>
-    </a-tab-pane>
-    <a-tab-pane :key="'other'" tab="其他信息">
-      <Form
-        v-if="loading"
-        :columns="otherForm"
-        :dataSource="dataSource"
-        :edit="!isEditOther"
-        @submit="handleSubmitOther"
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3"
+              v-if="isEditBase"
+              @click="isEditBase = false"
+              >编辑</a-button
+            >
+            <a-button
+              type="primary"
+              ghost
+              class="flex flex-row items-center p-0 mr-3"
+              htmlType="submit"
+              v-if="!isEditBase"
+              >保存</a-button
+            >
+          </template>
+        </Form>
+      </a-tab-pane>
+      <a-tab-pane :key="'other'" tab="其他信息">
+        <Form
+          v-if="loading"
+          :columns="otherForm"
+          :dataSource="dataSource"
+          :edit="!isEditOther"
+          @submit="handleSubmitOther"
+        >
+          <template #button>
+            <a-popconfirm
+              title="确认删除吗?"
+              ok-text="确认"
+              cancel-text="取消"
+              @confirm="handDelete(dataSource)"
+            >
+              <a-button
+                type="primary"
+                ghost
+                class="flex flex-row items-center p-0 mr-3"
+                danger
+              >
+                删除
+              </a-button>
+            </a-popconfirm>
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3"
+              v-if="isEditOther"
+              @click="isEditOther = false"
+              >编辑</a-button
+            >
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3"
+              htmlType="submit"
+              v-if="!isEditOther"
+              >保存</a-button
+            >
+          </template>
+        </Form>
+      </a-tab-pane>
+      <a-tab-pane
+        :key="'init'"
+        :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
       >
-        <template #button>
+        <div class="box">
+          <div class="addBox">
+            <PlusOutlined :style="{ fontSize: '30px' }" />
+            <span class="mt-20"> 添加物资</span>
+          </div>
+          <SmallBox
+            v-for="(item, index) in boxList"
+            :key="index"
+            :boxInfo="item"
+            :showDelete="!isEditInit"
+            @click="chooseActive(item)"
+            :class="item.active ? 'active' : 'unactive'"
+          >
+          </SmallBox>
+        </div>
+        <div class="footer">
           <a-popconfirm
             title="确认删除吗?"
             ok-text="确认"
@@ -62,6 +121,7 @@
             <a-button
               type="primary"
               ghost
+              v-if="isEditInit"
               class="flex flex-row items-center p-0 mr-3"
               danger
             >
@@ -72,28 +132,17 @@
             type="primary"
             ghost
             class="mr-3"
-            v-if="isEditOther"
-            @click="isEditOther = false"
+            v-if="isEditInit"
+            @click="isEditInit = false"
             >编辑</a-button
           >
-          <a-button
-            type="primary"
-            ghost
-            class="mr-3"
-            htmlType="submit"
-            v-if="!isEditOther"
+          <a-button type="primary" ghost class="mr-3" v-if="!isEditInit"
             >保存</a-button
           >
-        </template>
-      </Form>
-    </a-tab-pane>
-    <a-tab-pane
-      :key="'init'"
-      :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
-    >
-      <div class="box">ddddd</div>
-    </a-tab-pane>
-  </a-tabs>
+        </div>
+      </a-tab-pane>
+    </a-tabs>
+  </div>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
@@ -101,21 +150,27 @@ import {
   updateBoxData,
   findSpecifiedBoxData,
   deleteBoxInfoData,
+  findBoxInfoAllData,
 } from "api/warehouse/meterial";
+import SmallBox from "./smallBox.vue";
 import { Form } from "components";
+import { PlusOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "SiderBar",
-  components: { Form },
+  name: "boxDetailDialog",
+  components: { Form, SmallBox, PlusOutlined },
   props: {
     id: Number,
+    boxCode: String,
   },
   setup(props, ctx) {
     const state = reactive({
       activeKey: "base",
       isEditBase: true,
       isEditOther: true,
+      isEditInit: true,
       dataSource: {},
       loading: true,
+      boxList: [],
     });
     const baseForm = ref([
       {
@@ -289,6 +344,7 @@ export default defineComponent({
     ]);
     onMounted(() => {
       initData();
+      initBoxList();
     });
 
     const handleSubmitBase = () => {
@@ -314,11 +370,24 @@ export default defineComponent({
         state.loading = true;
       });
     };
+    const initBoxList = () => {
+      state.boxList = [];
+      findBoxInfoAllData({ boxCode: props.boxCode }).then((res) => {
+        state.boxList = res;
+      });
+    };
     const handDelete = (data) => {
-      console.log(data, "ddd");
       const id = data.id;
       deleteBoxInfoData(id).then((res) => {
         ctx.emit("close");
+      });
+    };
+    const chooseActive = (item) => {
+      if (state.isEditInit) return;
+      state.boxList.map((box) => {
+        if (box.boxCode === item.boxCode) {
+          box.active = !box.active;
+        }
       });
     };
     return {
@@ -331,6 +400,8 @@ export default defineComponent({
       handleSubmitInit,
       initData,
       handDelete,
+      initBoxList,
+      chooseActive,
     };
   },
 });
@@ -338,7 +409,45 @@ export default defineComponent({
 <style lang="less" scoped>
 .box {
   width: 100%;
+  height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  .addBox {
+    width: 340px;
+    height: 180px;
+    background: #57799a;
+    margin: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+}
+.active {
+  border: 2px solid #3290fc;
+}
+.unactive {
+  border: none;
+}
+.content {
+  width: 100%;
   height: 100%;
-  background: pink;
+  position: relative;
+  .btn {
+    position: absolute;
+    right: 20px;
+    top: 18px;
+    z-index: 999;
+  }
+  .footer {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

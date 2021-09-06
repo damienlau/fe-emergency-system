@@ -1,5 +1,13 @@
 <template>
   <div>
+    <Modal
+      v-model:visible="addBoxTransferVisible"
+      title=""
+      size="heavy"
+      key="AddBoxTransfer"
+    >
+      <AddBoxTransfer></AddBoxTransfer>
+    </Modal>
     <a-tabs
       v-model:activeKey="activeKey"
       @tabClick="tabClick"
@@ -34,6 +42,7 @@
         </div>
         <Modal
           v-model:visible="meterialAddVisible"
+          size="heavy"
           title="物资入库"
           key="materials"
         >
@@ -70,14 +79,20 @@
           ></BoxInfo>
           <a-button type="link"> 点击加载更多~</a-button>
         </div>
-        <Modal v-model:visible="boxAddVisible" title="新增箱子" key="box">
-          <AddBoxDialog></AddBoxDialog>
+        <Modal
+          v-model:visible="boxAddVisible"
+          size="heavy"
+          title="新增箱子"
+          key="box"
+        >
+          <AddBoxDialog @showAddBoxTransfer="showAddBoxTransfer"></AddBoxDialog>
         </Modal>
       </a-tab-pane>
     </a-tabs>
     <Modal
       v-model:visible="meterialDetailVisible"
       :title="meterialDetailDialogTitle"
+      size="heavy"
       key="box"
     >
       <MeterialDetailDialog
@@ -88,10 +103,12 @@
     <Modal
       v-model:visible="boxDetailVisible"
       :title="boxDetailDialogTitle"
+      size="heavy"
       key="box"
     >
       <BoxDetailDialog
         :id="boxId"
+        :boxCode="boxCode"
         @close="closeBoxDetailDialog"
       ></BoxDetailDialog>
     </Modal>
@@ -102,6 +119,7 @@ import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
 import AddMeterialDialog from "../components/addMeterialDialog.vue";
+import AddBoxTransfer from "../components/addBoxTransfer.vue";
 import MeterialDetailDialog from "../components/meterialDetailDialog.vue";
 import BoxDetailDialog from "../components/boxDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
@@ -118,6 +136,7 @@ export default defineComponent({
     AddMeterialDialog,
     MeterialDetailDialog,
     BoxDetailDialog,
+    AddBoxTransfer,
   },
 
   setup() {
@@ -129,6 +148,7 @@ export default defineComponent({
       boxAddVisible: false, // 新增箱子
       meterialDetailVisible: false, // 物资详情
       boxDetailVisible: false, // 箱子详情
+      addBoxTransferVisible: false, // 箱子穿梭框
       boxInfo: {
         name: "测试",
       },
@@ -136,6 +156,7 @@ export default defineComponent({
       materialsList: [],
       meterialId: "",
       boxId: "",
+      boxCode: "",
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
     });
@@ -176,6 +197,7 @@ export default defineComponent({
         "(" + item.materialRemainNumber + "/" + item.materialTotalNumber + ")";
 
       state.boxId = item.id;
+      state.boxCode = item.boxCode;
       state.boxDetailVisible = true;
       state.boxDetailDialogTitle = item.boxName + num;
     };
@@ -186,6 +208,9 @@ export default defineComponent({
     const closeBoxDetailDialog = () => {
       state.boxDetailVisible = false;
       getBoxData();
+    };
+    const showAddBoxTransfer = () => {
+      state.addBoxTransferVisible = true;
     };
 
     return {
@@ -200,6 +225,7 @@ export default defineComponent({
       showBoxDetailDialog,
       closeMeterialDetailDialog,
       closeBoxDetailDialog,
+      showAddBoxTransfer,
     };
   },
 });
@@ -213,7 +239,6 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: wrap;
   height: 100%;
-  background: pink;
   overflow-y: auto;
   padding-bottom: 20px;
   .BoxInfo {

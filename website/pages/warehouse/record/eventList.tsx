@@ -45,17 +45,17 @@ export default defineComponent({
         key: "boxName",
       },
       {
-        title: "借贷科室",
+        title: "借货科室",
         dataIndex: "departmentName",
         key: "departmentName",
       },
       {
-        title: "借贷人",
+        title: "借货人",
         dataIndex: "personnelName",
         key: "personnelName",
       },
       {
-        title: "借贷人联系方式",
+        title: "借货人联系方式",
         dataIndex: "personnelPhone",
         key: "personnelPhone",
       },

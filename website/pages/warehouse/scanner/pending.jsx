@@ -2,7 +2,12 @@
 
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Modal as AntModal,message,ImagePreviewGroup,Image } from "ant-design-vue";
+import {
+  Modal as AntModal,
+  message,
+  ImagePreviewGroup,
+  Image,
+} from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty, Card } from "components";
 import { useRouter } from "vue-router";
 
@@ -18,13 +23,11 @@ export default defineComponent({
       data: [
         {
           id: 1,
-          status:0,
-          title: "测试数据标题",         
+          status: 0,
+          title: "测试数据标题",
           page: "（20/20）",
-          capacities: [
-            20,20
-          ],
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          capacities: [20, 20],
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [
             "物资名称1",
             "物资名称2",
@@ -33,29 +36,25 @@ export default defineComponent({
             "物资名称5",
             "物资名称6",
             "物资名称7",
-            "物资名称8"
+            "物资名称8",
           ],
         },
         {
           id: 2,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 3,
-          status:0,
+          status: 0,
           title: "标题移入右侧",
           page: "（20/20）",
-          capacities: [
-            20,20
-          ],
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          capacities: [20, 20],
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [
             "物资名称1",
             "物资名称2",
@@ -64,76 +63,64 @@ export default defineComponent({
             "物资名称5",
             "物资名称6",
             "物资名称7",
-            "物资名称8"
+            "物资名称8",
           ],
         },
         {
           id: 4,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 5,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 6,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 7,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 8,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
         {
           id: 9,
-          status:0,
+          status: 0,
           title: "测试数据标题单个物资",
           page: "",
-          
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
-          content: [
-                 
-          ],
+
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          content: [],
         },
-      ]
+      ],
     });
     // 已出仓标题及数据展示
     const finishedDelivery = ref({
@@ -142,7 +129,7 @@ export default defineComponent({
       key: "finished",
       data: [
         {
-          id:10,
+          id: 10,
           title: "测试数据标题",
           page: "（20/20）",
           capacities: [
@@ -158,11 +145,11 @@ export default defineComponent({
             "物资名称5",
             "物资名称6",
             "物资名称7",
-            "物资名称8"
+            "物资名称8",
           ],
         },
         {
-          id:11,
+          id: 11,
           title: "测试数据标题单个物资",
           page: "",
          
@@ -173,14 +160,12 @@ export default defineComponent({
           ],
         },
         {
-          id:12,
+          id: 12,
           title: "测试数据标题",
           page: "（20/20）",
-          capacities: [
-            20,20
-          ],
-          status:1,
-          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          capacities: [20, 20],
+          status: 1,
+          url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [
             "物资名称1",
             "物资名称2",
@@ -189,33 +174,32 @@ export default defineComponent({
             "物资名称5",
             "物资名称6",
             "物资名称7",
-            "物资名称8"
+            "物资名称8",
           ],
-        }
-      ]
+        },
+      ],
     });
     //扫描出仓模态框是否可见
     const visible = ref(false);
-    
+
     const menus = ref([
       {
         label: "符合清单物资",
         key: "1",
-        count: 0,       
-        data: [                
-        ]
+        count: 0,
+        data: [],
       },
       {
         label: "未符合清单物资",
         key: "2",
         count: 0,
-        data:[]
+        data: [],
       },
       {
         label: "未扫描到的物资",
         key: "3",
         count: 0,
-        data:[]
+        data: [],
       },
     ]);
     //扫描出仓模态框数据初始化
@@ -229,10 +213,10 @@ export default defineComponent({
         } else if (arr[item].status == 1) {
           menus.value[1].data.push(index);
         }
-      })
-      pengdingDelivery.value.data.forEach((index, item, arr) => {           
-        menus.value[2].data.push(index);               
-      })
+      });
+      pengdingDelivery.value.data.forEach((index, item, arr) => {
+        menus.value[2].data.push(index);
+      });
       menus.value[0].count = menus.value[0].data.length;
       menus.value[1].count = menus.value[1].data.length;
       menus.value[2].count = menus.value[2].data.length; 
@@ -292,8 +276,8 @@ export default defineComponent({
       //     cardData.value = response;
       //     menuEmpty.value = !response.length;
       //   });
-      cardData.value = []
-      switch(activeKey){
+      cardData.value = [];
+      switch (activeKey) {
         case "1":
           cardData.value = menus.value[0].data;
           menuEmpty.value = !cardData.value.length;
@@ -307,33 +291,33 @@ export default defineComponent({
           menuEmpty.value = !cardData.value.length;
           break;
         default:
-          break
+          break;
       }
-    }
+    };
     //已出仓物资移除事件
     const handleClickDelete = (id) => {
-      finishedDelivery.value.data.forEach((value,index,array) => {
+      finishedDelivery.value.data.forEach((value, index, array) => {
         if (array[index].id == id) {
-          finishedDelivery.value.data.splice(index,1)
+          finishedDelivery.value.data.splice(index, 1);
         }
-      })
-    }
+      });
+    };
     //扫描移动事件测试
     const handleMovePending = () => {
       if (rackNumber.value > 9) {
-        message.error('无物资待出仓')
+        message.error("无物资待出仓");
         return;
       }
       pengdingDelivery.value.data.forEach((value, index, array) => {
         if (array[index].id == rackNumber.value) {
           let addDeliveryData;
           addDeliveryData = array[index];
-          pengdingDelivery.value.data.splice(index, 1)
-          finishedDelivery.value.data.unshift(addDeliveryData)
+          pengdingDelivery.value.data.splice(index, 1);
+          finishedDelivery.value.data.unshift(addDeliveryData);
         }
-      })
+      });
       rackNumber.value++;
-    }
+    };
     // 监听点击卡片移除事件
     const handleClickCardExtra = (activeKey) => {
       finishedDelivery.value.data.forEach((value, index, array) => {
@@ -411,7 +395,6 @@ export default defineComponent({
     };
     
     onMounted(() => {
-      
       //获取待出仓物资
       //console.log(router.currentRoute.value.params)
       //  store
@@ -423,7 +406,7 @@ export default defineComponent({
       //          title: item.newFileName,
       //          page: item.id,
       //          url: item.fileUrl,
-      //          content: item.newFileName.split(""),               
+      //          content: item.newFileName.split(""),
       //        }
       //      });
       //      finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
@@ -451,55 +434,76 @@ export default defineComponent({
 
               <a-layout-content class="ml-16 mr-16 h-full">
                 <div class="relative inline-block w-full h-full">
-                  <div  class={pengdingDelivery.value.data.length == 0 ?'flex items-center':""} class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
-                    
-                    {pengdingDelivery.value.data.length == 0 ?
-                      <div class="m-auto" >
+                  <div
+                    class={
+                      pengdingDelivery.value.data.length == 0
+                        ? "flex items-center"
+                        : ""
+                    }
+                    class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto"
+                  >
+                    {pengdingDelivery.value.data.length == 0 ? (
+                      <div class="m-auto">
                         <a-empty
                           description="当前待出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}>                          
-                        </a-empty>
+                          image={`/website/assets/icon_empty_scanner.png`}
+                        ></a-empty>
                       </div>
-                    : pengdingDelivery.value.data.map((listItem) => {
-                      return (
-                        <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
-                          <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
-                            <div class="flex items-center justify-center">
-                              <span class="text-20">{ listItem.title}</span>
-                              <span class="text-success">{ listItem.page}</span>
+                    ) : (
+                      pengdingDelivery.value.data.map((listItem) => {
+                        return (
+                          <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
+                            <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
+                              <div class="flex items-center justify-center">
+                                <span class="text-20">{listItem.title}</span>
+                                <span class="text-success">
+                                  {listItem.page}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                          <div class="flex py-16 px-16">
-                            <div class="h-modal-lightermin w-modal-lightermin bg-white">
-                              <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>
-                            </div>                            
-                            <div class={listItem.content.length == 0 ? 'flex items-center' : ""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
+                            <div class="flex py-16 px-16">
+                              <div class="h-modal-lightermin w-modal-lightermin bg-white">
+                                <img
+                                  class="h-modal-lightermin w-modal-lightermin"
+                                  src={listItem.url}
+                                />
+                              </div>
+                              <div
+                                class={
+                                  listItem.content.length == 0
+                                    ? "flex items-center"
+                                    : ""
+                                }
+                                class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
+                              >
                                 {listItem.content.length == 0 ? (
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`/website/assets/icon_empty_data.png`}>
-                                    </a-empty>
+                                      image={`/website/assets/icon_empty_data.png`}
+                                    ></a-empty>
                                   </div>
-                                ) : listItem.content.map((item, index) => {
-                                  return (
-                                    <>
-                                      <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
-                                        <span class="text-14 w-full overflow-hidden h-22">
-                                          {item}
-                                        </span>
-                                      </div>
-                                    </>
-                                  )
-                                })}
+                                ) : (
+                                  listItem.content.map((item, index) => {
+                                    return (
+                                      <>
+                                        <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                          <span class="text-14 w-full overflow-hidden h-22">
+                                            {item}
+                                          </span>
+                                        </div>
+                                      </>
+                                    );
+                                  })
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )
-                    })}
-                    
-                    </div>
+                        );
+                      })
+                    )}
                   </div>
+                </div>
               </a-layout-content>
             </a-layout>
           </div>
@@ -515,61 +519,95 @@ export default defineComponent({
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
                 <div>{finishedDelivery.value.label}</div>
                 <div class="absolute right-5">
-                    <a-button
-                      type="primary"
-                      onClick={() => handleMovePending()}
-                    >
-                      扫描操作
-                    </a-button>
-                    <a-button
-                      type="primary"
-                      onClick={() => handleClickPendingItem()}
-                    >
-                      扫描完成
-                    </a-button>
-                    {/* 卡片容器 */}
+                  <a-button type="primary" onClick={() => handleMovePending()}>
+                    扫描操作
+                  </a-button>
+                  <a-button
+                    type="primary"
+                    onClick={() => handleClickPendingItem()}
+                  >
+                    扫描完成
+                  </a-button>
+                  {/* 卡片容器 */}
                 </div>
               </a-layout-header>
               <a-layout-content class="ml-16 mr-16 h-full">
                 <div class="relative inline-block w-full h-full">
-                  <div  class={finishedDelivery.value.data.length == 0 ?'flex items-center':""}  class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto">
-
-                    {finishedDelivery.value.data.length == 0 ?
-                      <div class="m-auto" >
+                  <div
+                    class={
+                      finishedDelivery.value.data.length == 0
+                        ? "flex items-center"
+                        : ""
+                    }
+                    class="mt-16 w-full absolute top-0 bottom-0 overflow-y-auto"
+                  >
+                    {finishedDelivery.value.data.length == 0 ? (
+                      <div class="m-auto">
                         <a-empty
                           description="当前已出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}>
-                        </a-empty>
+                          image={`/website/assets/icon_empty_scanner.png`}
+                        ></a-empty>
                       </div>
-                      :finishedDelivery.value.data.map((listItem) => {
-                          return (
-                            <>
-                              <div class={listItem.status == 1 ? 'bg-red-400 border-danger border bg-opacity-10' : 'bg-navy-2'} class="mb-18 mr-8  h-modal-lightmin   ghost ">
-                                <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
-                                  <div class="flex items-center justify-center">
-                                    <span class="text-20">{listItem.title}</span>
-                                    <span class="text-success">{listItem.page}</span>
-                                    <a-space size={8} class={listItem.status == 1 ? '' : "hidden"} class="absolute right-5">
-                                      <a-button ghost danger  onClick={()=> handleClickDelete(listItem.id)}>
-                                        <Icon type="delete" />
-                                        移除
-                                      </a-button>
-                                    </a-space>
-                                  </div>
+                    ) : (
+                      finishedDelivery.value.data.map((listItem) => {
+                        return (
+                          <>
+                            <div
+                              class={
+                                listItem.status == 1
+                                  ? "bg-red-400 border-danger border bg-opacity-10"
+                                  : "bg-navy-2"
+                              }
+                              class="mb-18 mr-8  h-modal-lightmin   ghost "
+                            >
+                              <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
+                                <div class="flex items-center justify-center">
+                                  <span class="text-20">{listItem.title}</span>
+                                  <span class="text-success">
+                                    {listItem.page}
+                                  </span>
+                                  <a-space
+                                    size={8}
+                                    class={listItem.status == 1 ? "" : "hidden"}
+                                    class="absolute right-5"
+                                  >
+                                    <a-button
+                                      ghost
+                                      danger
+                                      onClick={() =>
+                                        handleClickDelete(listItem.id)
+                                      }
+                                    >
+                                      <Icon type="delete" />
+                                      移除
+                                    </a-button>
+                                  </a-space>
                                 </div>
-                                <div class="flex py-16 px-16">
-                                  <div class="h-modal-lightermin w-modal-lightermin bg-white">
-                                    <img class="h-modal-lightermin w-modal-lightermin" src={listItem.url} />
-                                  </div>
-                                  <div class={listItem.content.length == 0 ? 'flex items-center' : ""} class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden">
-                                    {listItem.content.length == 0 ? (
-                                      <div class="m-auto">
-                                        <a-empty
-                                          description="空空如也"
-                                          image={`/website/assets/icon_empty_data.png`}>
-                                        </a-empty>
-                                      </div>
-                                    ) : listItem.content.map((item, index) => {
+                              </div>
+                              <div class="flex py-16 px-16">
+                                <div class="h-modal-lightermin w-modal-lightermin bg-white">
+                                  <img
+                                    class="h-modal-lightermin w-modal-lightermin"
+                                    src={listItem.url}
+                                  />
+                                </div>
+                                <div
+                                  class={
+                                    listItem.content.length == 0
+                                      ? "flex items-center"
+                                      : ""
+                                  }
+                                  class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
+                                >
+                                  {listItem.content.length == 0 ? (
+                                    <div class="m-auto">
+                                      <a-empty
+                                        description="空空如也"
+                                        image={`/website/assets/icon_empty_data.png`}
+                                      ></a-empty>
+                                    </div>
+                                  ) : (
+                                    listItem.content.map((item, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
@@ -578,16 +616,22 @@ export default defineComponent({
                                             </span>
                                           </div>
                                         </>
-                                      )
-                                    })}
-                                  </div>
+                                      );
+                                    })
+                                  )}
                                 </div>
-                                <div class={listItem.status == 1 ? '' : "hidden"} class="text-danger text-12 mb-16">该物资/箱子不属于本次借贷清单</div>
                               </div>
-                            </>
-                          )
-                        })                      
-                    }                    
+                              <div
+                                class={listItem.status == 1 ? "" : "hidden"}
+                                class="text-danger text-12 mb-16"
+                              >
+                                该物资/箱子不属于本次借货清单
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
               </a-layout-content>
@@ -655,55 +699,85 @@ export default defineComponent({
                             danger
                             class={listItem.status == 1 ? '' : "hidden"}
                           >
-                            移除
-                          </a-button>
-                        </a-popconfirm>
-                      ),
-                      default: () => (
-                        <div class="flex flex-row">
-                          <div >
-                            <ImagePreviewGroup>
-                                  <Image
-                                    class="w-full h-full object-cover rounded"
-                                    src={listItem.url}
-                                    fallback="/icon_empty_search.png"
-                                    width={88}
-                                    height={88}
-                                  ></Image>
-                            </ImagePreviewGroup>
-                          </div>
-                          {/* <div class="flex-shrink-0 mr-16">
+                            <a-button
+                              class="flex flex-row items-center p-0"
+                              type="text"
+                              danger
+                              class={listItem.status == 1 ? "" : "hidden"}
+                            >
+                              移除
+                            </a-button>
+                          </a-popconfirm>
+                        ),
+                        default: () => (
+                          <div class="flex flex-row">
+                            <div>
+                              <ImagePreviewGroup>
+                                <Image
+                                  class="w-full h-full object-cover rounded"
+                                  src={listItem.url}
+                                  fallback="/icon_empty_search.png"
+                                  width={88}
+                                  height={88}
+                                ></Image>
+                              </ImagePreviewGroup>
+                            </div>
+                            {/* <div class="flex-shrink-0 mr-16">
                             <a-image width={108} height={108}></a-image>
                           </div> */}
-                          <div class="flex-auto ml-6 size-12 overflow-hidden">
-                            <p class="flex">
-                              <div  class="text-white text-opacity-70 ">
-                                货架位置：
-                              </div>
-                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
-                            </p>
-                            <p class="flex">
-                              <span class="text-white text-opacity-70">类型：</span>
-                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
-                            </p>
-                            <p class="flex">
-                              <span class="text-white text-opacity-70">尺寸：</span>
-                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
-                            </p>
-                            <p class="flex">
-                              <span class="text-white text-opacity-70">
-                                箱子编码：
-                              </span>
-                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
-                            </p>
+                            <div class="flex-auto ml-6 size-12 overflow-hidden">
+                              <p class="flex">
+                                <div class="text-white text-opacity-70 ">
+                                  货架位置：
+                                </div>
+                                <div
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  测试数据测试数据测试数据
+                                </div>
+                              </p>
+                              <p class="flex">
+                                <span class="text-white text-opacity-70">
+                                  类型：
+                                </span>
+                                <div
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  测试数据测试数据测试数据
+                                </div>
+                              </p>
+                              <p class="flex">
+                                <span class="text-white text-opacity-70">
+                                  尺寸：
+                                </span>
+                                <div
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  测试数据测试数据测试数据
+                                </div>
+                              </p>
+                              <p class="flex">
+                                <span class="text-white text-opacity-70">
+                                  箱子编码：
+                                </span>
+                                <div
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  测试数据测试数据测试数据
+                                </div>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ),
-                    }}
-                  </Card>
-                );
-              })}
-            </section>
+                        ),
+                      }}
+                    </Card>
+                  );
+                })}
+              </section>
             </div>
           </Tabs>
           <div class="absolute bottom-3 w-full text-center" style="left:0px;">

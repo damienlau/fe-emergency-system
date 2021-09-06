@@ -1,10 +1,18 @@
 <template>
-  <a-card hoverable style="width: 100%">
-    <div class="top flex flex-row w-fll pb-3">
-      <a-image class="pt-3" :width="100" :height="100" :src="img" />
+  <a-card
+    hoverable
+    style="width: 340px; height: 180px; background: #144071; margin: 4px"
+    :headStyle="headStyle"
+    :bodyStyle="bodyStyle"
+    :title="info.boxName"
+  >
+    <template #extra>
+      <a-button v-if="showDelete" type="text" danger>移除</a-button>
+    </template>
+    <div class="bottom flex flex-row w-fll pb-3">
+      <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
         <div class="row">
-          <span class="title mr-3 mb-3">{{ info.boxName }}</span>
           <span class="number mr-3">{{
             "(" +
             info.materialRemainNumber +
@@ -41,43 +49,31 @@
         </div>
       </div>
     </div>
-    <div class="bottom mt-10 flex flex-row justify-between align-middle">
-      <div class="left">
-        <a-button
-          type="primary"
-          class="mr-3"
-          v-if="info.inBatchPendingStatus === 0"
-          @click.stop="changeDebit"
-          :disabled="info.status !== 1"
-          >借货</a-button
-        >
-        <a-button
-          danger
-          v-if="info.inBatchPendingStatus === 1"
-          @click.stop="handCansel"
-          :disabled="info.status !== 1"
-          >取消借货</a-button
-        >
-      </div>
-    </div>
   </a-card>
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import {
-  addBatchPendingData,
-  deleteByFindData,
-  findSpecifiedBoxData,
-} from "api/warehouse/meterial";
 export default defineComponent({
-  name: "boxInfo",
+  name: "smallBox",
   props: {
     boxInfo: Object,
+    showDelete: {
+      type: Boolean,
+    },
   },
   setup(props) {
     const state = reactive({
       info: {},
       img: "",
+      isDebit: true,
+      headStyle: {
+        padding: "0 10px",
+        height: "40px",
+        borderBottom: "1px solid #4280c4",
+      },
+      bodyStyle: {
+        padding: "10px",
+      },
     });
     const sizeType = ref({
       1: "一箱一桌(800 x 600 x 600)",
@@ -164,40 +160,12 @@ export default defineComponent({
       }
       return state;
     };
-    const changeDebit = () => {
-      const params = {
-        operationType: 1,
-        resourceType: 2,
-        boxId: props.boxInfo.id,
-      };
-      addBatchPendingData(params).then((res) => {
-        findDetail();
-      });
-    };
-    const handCansel = () => {
-      const params = {
-        operationType: 1,
-        resourceType: 2,
-        boxId: props.boxInfo.id,
-      };
-      deleteByFindData(params).then((res) => {
-        findDetail();
-      });
-    };
-    const findDetail = () => {
-      findSpecifiedBoxData({ id: props.boxInfo.id }).then((res) => {
-        state.info = JSON.parse(JSON.stringify(res));
-      });
-    };
     return {
       ...toRefs(state),
       positionInfo,
       department,
       sizeType,
       returnStatus,
-      changeDebit,
-      handCansel,
-      findDetail,
     };
   },
 });
@@ -205,17 +173,20 @@ export default defineComponent({
 <style lang="less" scoped>
 .top {
   border-bottom: 1px solid #4280c4;
+  margin-bottom: 8px;
+  font-size: 16px;
+  margin: 5px;
 }
 .row {
   .title {
-    font-size: 16px;
+    font-size: 14px;
   }
   .label {
-    margin-right: 14px;
+    margin-right: 10px;
     color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
-    line-height: 22px;
+    line-height: 20px;
   }
 }
 </style>
