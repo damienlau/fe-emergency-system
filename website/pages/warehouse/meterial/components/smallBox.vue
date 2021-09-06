@@ -1,7 +1,7 @@
 <template>
   <a-card
     hoverable
-    style="width: 360px; background: #144071"
+    style="width: 340px; background: #144071"
     :bodyStyle="bodyStyle"
   >
     <div class="top">

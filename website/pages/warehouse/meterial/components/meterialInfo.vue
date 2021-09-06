@@ -39,16 +39,17 @@
         <a-button
           type="primary"
           class="mr-3"
-          v-if="isDebit"
-          @click="changeDebit"
+          v-if="info.inBatchPendingStatus === 0"
+          @click.stop="changeDebit"
           :disabled="info.status !== 1"
-          >借贷</a-button
+          >借货</a-button
         >
         <a-button
           danger
-          v-if="info.status === 1 && !isDebit"
-          @click="handCansel"
-          >取消借贷</a-button
+          v-if="info.inBatchPendingStatus === 1"
+          @click.stop="handCansel"
+          :disabled="info.status !== 1"
+          >取消借货</a-button
         >
       </div>
       <div class="right" v-if="info.status === 1">
@@ -56,15 +57,19 @@
           type="primary"
           ghost
           class="mr-3"
-          :disabled="isMaintain"
-          @click="changeMaintain"
+          :disabled="
+            info.inBatchPendingStatus === 2 || info.inBatchPendingStatus === 3
+          "
+          @click.stop="changeMaintain"
           >维修</a-button
         >
         <a-button
           type="primary"
           ghost
-          :disabled="isRepair"
-          @click="changeRepair"
+          :disabled="
+            info.inBatchPendingStatus === 2 || info.inBatchPendingStatus === 3
+          "
+          @click.stop="changeRepair"
           >保养</a-button
         >
       </div>
@@ -73,7 +78,11 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
+import {
+  addBatchPendingData,
+  deleteByFindData,
+  findSpecifiedMeterialData,
+} from "api/warehouse/meterial";
 export default defineComponent({
   name: "MeterialInfo",
   props: {
@@ -82,9 +91,6 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       info: {},
-      isMaintain: false,
-      isRepair: false,
-      isDebit: true,
       img: "",
     });
     const positionInfo = ref({
@@ -125,7 +131,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        state.isMaintain = true;
+        findDetail();
       });
     };
     const changeRepair = () => {
@@ -135,7 +141,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        state.isRepair = false;
+        findDetail();
       });
     };
     const changeDebit = () => {
@@ -145,7 +151,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        state.isDebit = false;
+        findDetail();
       });
     };
     const handCansel = () => {
@@ -155,7 +161,7 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       deleteByFindData(params).then((res) => {
-        state.isDebit = true;
+        findDetail();
       });
     };
     const returnStatus = (status) => {
@@ -206,7 +212,11 @@ export default defineComponent({
       }
       return state;
     };
-
+    const findDetail = () => {
+      findSpecifiedMeterialData({ id: props.meterialInfo.id }).then((res) => {
+        state.info = JSON.parse(JSON.stringify(res));
+      });
+    };
     return {
       ...toRefs(state),
       positionInfo,
@@ -216,6 +226,7 @@ export default defineComponent({
       changeRepair,
       changeDebit,
       handCansel,
+      findDetail,
     };
   },
 });
