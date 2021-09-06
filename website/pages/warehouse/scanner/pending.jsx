@@ -372,19 +372,21 @@ export default defineComponent({
     const formColumn = ref([
       {
         label: "归还人",
-        key: "name",
+        key: "personnelName",
+        required: true,
       },
       {
         label: "归还人工号",
-        key: "number",
+        key: "description",
+        required: true,
       },
       {
         label: "联系电话",
-        key: "telephone",
-      }
+        key: "personnelPhone",
+        required: true,
+      },
     ]);
-    // 确定归仓模态框表单数据
-    const formData = ref({});
+
     // 确定归仓表单卡片
     const handleClickMenuItem = () => {
       visiblesecond.value = !visiblesecond.value;
@@ -790,17 +792,12 @@ export default defineComponent({
           title="归还人信息"
         >
           {/* 扫描菜单-模态框表单 */}
-          <Form
-            v-model={[formData.value, "model"]}
-            columns={formColumn.value}
-            onSubmit={handleSubmitForm}
-          >
+          <Form columns={formColumn.value} onSubmit={handleSubmitForm}>
             {{
               button: () => (
-                <a-button ghost html-type="submit">
-                  <Icon class="align-baseline" type="determine" />
-                  确定
-                </a-button>
+                <Button type="primary" htmlType="submit">
+                  保存
+                </Button>
               ),
             }}
           </Form>
