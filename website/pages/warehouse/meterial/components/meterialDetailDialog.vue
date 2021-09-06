@@ -110,9 +110,9 @@ export default defineComponent({
   setup(props, ctx) {
     const state = reactive({
       activeKey: "base",
+      tabelData: [],
       isEditBase: true,
       isEditOther: true,
-      tabelData: [],
       dataSource: {},
       loading: true,
     });
@@ -161,65 +161,65 @@ export default defineComponent({
         options: [
           {
             label: "急救/重症",
-            key: "1",
+            key: 1,
           },
           {
             label: "门诊",
-            key: "2",
+            key: 2,
           },
           {
             label: "后勤",
-            key: "3",
+            key: 3,
           },
 
           {
             label: "指挥",
-            key: "4",
+            key: 4,
           },
           {
             label: "重症",
-            key: "5",
+            key: 5,
           },
 
           {
             label: "超声",
-            key: "6",
+            key: 6,
           },
           {
             label: "清创",
-            key: "7",
+            key: 7,
           },
           {
             label: "留观",
-            key: "8",
+            key: 8,
           },
           {
             label: "药房",
-            key: "9",
+            key: 9,
           },
           {
             label: "耗材",
-            key: "10",
+            key: 10,
           },
           {
             label: "手术",
-            key: "11",
+            key: 11,
           },
           {
             label: "防疫/隔离",
-            key: "12",
+            key: 12,
           },
           {
             label: "消毒",
-            key: "13",
+            key: 13,
           },
           {
             label: "住院",
-            key: "14",
+            key: 14,
           },
           {
             label: "检验",
-            key: "15",
+            key: 15,
           },
         ],
         required: false,
@@ -238,7 +238,7 @@ export default defineComponent({
         label: "物资图片",
         key: "materialImages",
         type: "upload",
-        required: true,
+        required: false,
       },
     ]);
     const otherForm = ref([
@@ -271,11 +271,11 @@ export default defineComponent({
         options: [
           {
             label: "无保质期",
-            key: "0",
+            key: 0,
           },
           {
             label: "有保质期",
-            key: "1",
+            key: 1,
           },
         ],
         required: false,

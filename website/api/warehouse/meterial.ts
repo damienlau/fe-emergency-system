@@ -23,13 +23,18 @@ export function findMeterialData(params) {
   });
 }
 
-// 查询指定数据
+// 查询指定数据 -物资
 export function findSpecifiedMeterialData(params) {
   return request.get("/material/info/find", {
     params,
   });
 }
-
+// 查询指定数据 -箱子
+export function findSpecifiedBoxData(params) {
+  return request.get("/box/info/find", {
+    params,
+  });
+}
 // 更新指定数据
 export function updateSpecifiedMeterialData(params) {
   return request.post("/material/info/update", params);
@@ -59,7 +64,12 @@ export function addBoxData(params) {
     ...params,
   });
 }
-
+// 仓库编辑箱子
+export function updateBoxData(params) {
+  return request.post("/box/info/update", {
+    ...params,
+  });
+}
 // 仓库新增物资
 export function addMeterialData(params) {
   return request.post("/material/info/add", {

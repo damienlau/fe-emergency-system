@@ -66,6 +66,7 @@
             :key="index"
             :boxInfo="item"
             class="BoxInfo mt-3"
+            @click="showBoxDetailDialog(item)"
           ></BoxInfo>
           <a-button type="link"> 点击加载更多~</a-button>
         </div>
@@ -84,6 +85,16 @@
         @close="closeMeterialDetailDialog"
       ></MeterialDetailDialog>
     </Modal>
+    <Modal
+      v-model:visible="boxDetailVisible"
+      :title="boxDetailDialogTitle"
+      key="box"
+    >
+      <BoxDetailDialog
+        :id="boxId"
+        @close="closeBoxDetailDialog"
+      ></BoxDetailDialog>
+    </Modal>
   </div>
 </template>
 <script>
@@ -92,6 +103,7 @@ import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
 import AddMeterialDialog from "../components/addMeterialDialog.vue";
 import MeterialDetailDialog from "../components/meterialDetailDialog.vue";
+import BoxDetailDialog from "../components/boxDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
 import { Modal, Tabs } from "components";
 import { findCriteriaPageData, findBoxPageData } from "api/warehouse/meterial";
@@ -105,6 +117,7 @@ export default defineComponent({
     AddBoxDialog,
     AddMeterialDialog,
     MeterialDetailDialog,
+    BoxDetailDialog,
   },
 
   setup() {
@@ -115,6 +128,7 @@ export default defineComponent({
       meterialAddVisible: false, //新增物资
       boxAddVisible: false, // 新增箱子
       meterialDetailVisible: false, // 物资详情
+      boxDetailVisible: false, // 箱子详情
       boxInfo: {
         name: "测试",
       },
@@ -123,6 +137,7 @@ export default defineComponent({
       meterialId: "",
       boxId: "",
       meterialDetailDialogTitle: "",
+      boxDetailDialogTitle: "",
     });
     onMounted(() => {
       getMaterialsData();
@@ -156,10 +171,20 @@ export default defineComponent({
       state.meterialDetailVisible = true;
       state.meterialDetailDialogTitle = item.materialName;
     };
+    const showBoxDetailDialog = (item) => {
+      state.boxId = item.id;
+      state.boxDetailVisible = true;
+      state.boxDetailDialogTitle = item.boxName;
+    };
     const closeMeterialDetailDialog = () => {
       state.meterialDetailVisible = false;
       getMaterialsData();
     };
+    const closeBoxDetailDialog = () => {
+      state.boxDetailVisible = false;
+      getBoxData();
+    };
+
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -169,7 +194,9 @@ export default defineComponent({
       tabClick,
       showMetarialDilog,
       showMeterialDetailDialog,
+      showBoxDetailDialog,
       closeMeterialDetailDialog,
+      closeBoxDetailDialog,
     };
   },
 });

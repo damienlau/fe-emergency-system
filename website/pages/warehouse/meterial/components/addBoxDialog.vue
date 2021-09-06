@@ -34,36 +34,135 @@ export default defineComponent({
     });
     const baseForm = ref([
       {
-        label: "物资名称",
-        key: "eventId",
-        required: true,
-      },
-      {
-        label: "品牌",
-        key: "personnelName",
-        required: false,
-      },
-      {
         label: "类型",
         key: "departmentType",
         type: "select",
-        options: [],
+        options: [
+          {
+            label: "急救/重症",
+            key: 1,
+          },
+          {
+            label: "门诊",
+            key: 2,
+          },
+          {
+            label: "后勤",
+            key: 3,
+          },
+
+          {
+            label: "指挥",
+            key: 4,
+          },
+          {
+            label: "重症",
+            key: 5,
+          },
+
+          {
+            label: "超声",
+            key: 6,
+          },
+          {
+            label: "清创",
+            key: 7,
+          },
+          {
+            label: "留观",
+            key: 8,
+          },
+          {
+            label: "药房",
+            key: 9,
+          },
+          {
+            label: "耗材",
+            key: 10,
+          },
+          {
+            label: "手术",
+            key: 11,
+          },
+          {
+            label: "防疫/隔离",
+            key: 12,
+          },
+          {
+            label: "消毒",
+            key: 13,
+          },
+          {
+            label: "住院",
+            key: 14,
+          },
+          {
+            label: "检验",
+            key: 15,
+          },
+        ],
         required: false,
       },
       {
-        label: "厂家批号",
-        key: "personnelJobNo",
+        label: "货架位置",
+        key: "rackPosition",
+        type: "select",
+        options: [
+          {
+            label: "未知",
+            key: 0,
+          },
+          {
+            label: "一层(下)",
+            key: 1,
+          },
+          {
+            label: "二层(中)",
+            key: 2,
+          },
+          {
+            label: "三层(上)",
+            key: 3,
+          },
+          {
+            label: "四层(顶)",
+            key: 4,
+          },
+        ],
         required: true,
       },
       {
-        label: "厂家",
-        key: "personnelPhone",
-        required: true,
+        label: "尺寸",
+        key: "size",
+        type: "select",
+        options: [
+          {
+            label: "一箱一桌(800 x 600 x 600)",
+            key: 1,
+          },
+          {
+            label: "一箱两柜(1200 x 800 x 800)",
+            key: 2,
+          },
+          {
+            label: "一箱一柜(1200 x 800 x 400)",
+            key: 3,
+          },
+          {
+            label: "其他箱子",
+            key: 4,
+          },
+        ],
+        required: false,
       },
-
+      {
+        label: "单位",
+        key: "unit",
+        required: false,
+      },
       {
         label: "物资图片",
-        key: "demo",
+        key: "boxImages",
         type: "upload",
         required: true,
       },
