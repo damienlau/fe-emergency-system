@@ -9,7 +9,7 @@ export default defineComponent({
   },
   emits: ["click"],
   setup(props, { slots, emit }) {
-    const tabActiveKey = (ref < string) | (number > props.columns[0].key);
+    const tabActiveKey = ref(props.columns[0].key);
     const tabNavbarCenterClasses = computed(() => {
       return {
         "ant-tabs-nav-center h-full rounded": props.center,

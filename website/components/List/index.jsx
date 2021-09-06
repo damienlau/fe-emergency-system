@@ -21,7 +21,7 @@ export default defineComponent({
       gutter: 16,
       column: props.grid,
     });
-    const cardListPagination = ref < PaginationProps > {};
+    const cardListPagination = ref({});
 
     watch(dataSource, (lists) => {
       cardListsData.value = lists.data;

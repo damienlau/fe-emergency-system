@@ -28,7 +28,7 @@ export default defineComponent({
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { dataSource } = toRefs<any>(props);
+    const { dataSource } = toRefs < any > props;
 
     const formData = ref(dataSource.value || {});
 
@@ -46,7 +46,7 @@ export default defineComponent({
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
             >
-              {render.options?.map((selectOption) => {
+              {render.options.map((selectOption) => {
                 return (
                   <SelectOption value={selectOption.key}>
                     {selectOption.label}
