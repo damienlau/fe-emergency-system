@@ -64,7 +64,11 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
+import {
+  addBatchPendingData,
+  deleteByFindData,
+  findSpecifiedBoxData,
+} from "api/warehouse/meterial";
 export default defineComponent({
   name: "BoxInfo",
   props: {
