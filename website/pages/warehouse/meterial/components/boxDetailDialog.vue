@@ -87,7 +87,12 @@
         </template>
       </Form>
     </a-tab-pane>
-    <a-tab-pane :key="'init'" tab="箱内物资"> </a-tab-pane>
+    <a-tab-pane
+      :key="'init'"
+      :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
+    >
+      <div class="box">ddddd</div>
+    </a-tab-pane>
   </a-tabs>
 </template>
 <script>
@@ -311,10 +316,8 @@ export default defineComponent({
     };
     const handDelete = (data) => {
       console.log(data, "ddd");
-      const params = {
-        id: data.id,
-      };
-      deleteBoxInfoData(params).then((res) => {
+      const id = data.id;
+      deleteBoxInfoData(id).then((res) => {
         ctx.emit("close");
       });
     };
@@ -332,4 +335,10 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.box {
+  width: 100%;
+  height: 100%;
+  background: pink;
+}
+</style>
