@@ -46,16 +46,17 @@
         <a-button
           type="primary"
           class="mr-3"
-          v-if="isDebit"
-          @click="changeDebit"
+          v-if="info.inBatchPendingStatus === 0"
+          @click.stop="changeDebit"
           :disabled="info.status !== 1"
-          >借贷</a-button
+          >借货</a-button
         >
         <a-button
           danger
-          v-if="info.status === 1 && !isDebit"
-          @click="handCansel"
-          >取消借贷</a-button
+          v-if="info.inBatchPendingStatus === 1"
+          @click.stop="handCansel"
+          :disabled="info.status !== 1"
+          >取消借货</a-button
         >
       </div>
     </div>
@@ -63,7 +64,11 @@
 </template>
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
-import { addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
+import {
+  addBatchPendingData,
+  deleteByFindData,
+  findSpecifiedBoxData,
+} from "api/warehouse/meterial";
 export default defineComponent({
   name: "BoxInfo",
   props: {
@@ -72,7 +77,6 @@ export default defineComponent({
   setup(props) {
     const state = reactive({
       info: {},
-      isDebit: true,
       img: "",
     });
     const sizeType = ref({
@@ -167,7 +171,7 @@ export default defineComponent({
         boxId: props.boxInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        state.isDebit = false;
+        findDetail();
       });
     };
     const handCansel = () => {
@@ -177,7 +181,12 @@ export default defineComponent({
         boxId: props.boxInfo.id,
       };
       deleteByFindData(params).then((res) => {
-        state.isDebit = true;
+        findDetail();
+      });
+    };
+    const findDetail = () => {
+      findSpecifiedBoxData({ id: props.boxInfo.id }).then((res) => {
+        state.info = JSON.parse(JSON.stringify(res));
       });
     };
     return {
@@ -188,6 +197,7 @@ export default defineComponent({
       returnStatus,
       changeDebit,
       handCansel,
+      findDetail,
     };
   },
 });

@@ -81,8 +81,14 @@ export default defineComponent({
                 });
               }}
               multiple
+              remove={(file) => {
+                console.log(file);
+              }}
               fileList={formData.value[render.key]}
               listType="picture-card"
+              onChange={(file) => {
+                console.log(file);
+              }}
             >
               <div class="flex flex-col items-center justify-center">
                 <Icon class="text-24" type="add" />

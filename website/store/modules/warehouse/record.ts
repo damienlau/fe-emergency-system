@@ -89,8 +89,8 @@ const actions = {
       findMaintenanceData({ operationType: activeKey, ...search }).then(
         (res) => {
           const maintainTableData = [];
-          if (res && res.data && res.data.content.length > 0) {
-            res.data.content.map((item) => {
+          if (res && res.content && res.content.length > 0) {
+            res.content.map((item) => {
               item.detailList.map((val, index) => {
                 maintainTableData.push({
                   materialName: val.materialInfo.materialName,
@@ -123,12 +123,12 @@ const actions = {
     return new Promise((reslove) => {
       findEventData().then((res) => {
         const eventTableData = [];
-        if (res && res.data.length > 0) {
-          res.data.map((eventItem) => {
+        if (res && res.length > 0) {
+          res.map((eventItem) => {
             findEventExpandData({ eventId: eventItem.id, ...search }).then(
               (res) => {
                 const eventExpandTableData = [];
-                res.data.map((item, index) => {
+                res.map((item, index) => {
                   if (item.outDetailSet.length > 0) {
                     item.outDetailSet.map((val, index) => {
                       eventExpandTableData.push({
@@ -183,8 +183,8 @@ const actions = {
     return new Promise((reslove, reject) => {
       findDailyData({ ...search }).then((res) => {
         const dailyTableData = [];
-        if (res && res.data.length > 0) {
-          res.data.map((item) => {
+        if (res && res.length > 0) {
+          res.map((item) => {
             if (item.outDetailSet.length > 0) {
               item.outDetailSet.map((val, index) => {
                 dailyTableData.push({
@@ -225,7 +225,7 @@ const actions = {
         endTime: moment().format("YYYY-MM-DD HH:mm:ss"),
       };
       updateSpecifiedMaintenanceData(params).then((res) => {
-        reslove(res.data);
+        reslove(res);
       });
     });
   },
