@@ -1,11 +1,10 @@
-import { addLendListsData, lendRequestProps } from "api/lists/lend";
-import { addMaintainListsData, maintainRequestProps } from "api/lists/maintain";
+import { addLendListsData } from "api/lists/lend";
+import { addMaintainListsData } from "api/lists/maintain";
 import {
   deleteShortcutData,
   findShortcutData,
   findShortcutCountData,
 } from "api/warehouse/shortcut";
-import { Commit, Dispatch, Store } from "vuex";
 
 const state = () => ({
   total: { all: 0, maintain: 0, repair: 0, lend: 0 },
@@ -15,9 +14,9 @@ const getters = {};
 
 const actions = {
   // 获取待操作清单数量
-  getTotals: ({ commit }: Store<Commit>) => {
-    return new Promise<void>((reslove) => {
-      findShortcutCountData().then((total: any) => {
+  getTotals: ({ commit }) => {
+    return new Promise((reslove) => {
+      findShortcutCountData().then((total) => {
         commit("SET_TOTAL", {
           all: total?.totalNum,
           maintain: total?.baoYangNum,
@@ -30,19 +29,19 @@ const actions = {
   },
 
   // 获取待操作清单列表
-  getLists: ({ dispatch }: Store<Dispatch>) => {
+  getLists: ({ dispatch }) => {
     return new Promise((reslove) => {
       dispatch("getTotals").then(() => {
-        findShortcutData().then((response: any) => {
+        findShortcutData().then((response) => {
           reslove({
             pagination: {
               current: response?.currentPage,
               total: response?.totalNum,
               pageSize: response?.pageSize,
             },
-            data: response?.content.map((lists: any) => {
+            data: response?.content.map((lists) => {
               switch (lists.resourceType) {
-                case MaterialType.box:
+                case 2:
                   return {
                     id: lists.id,
                     label: lists.warehouseBoxInfo.boxName || "暂无数据",
@@ -54,7 +53,7 @@ const actions = {
                   };
                   break;
 
-                case MaterialType.goods:
+                case 1:
                   return {
                     id: lists.id,
                     label:
@@ -72,18 +71,18 @@ const actions = {
 
   // 添加清单列表
   setLists: (
-    { dispatch }: Store<Dispatch>,
-    formData: lendRequestProps & maintainRequestProps
+    { dispatch },
+    formData
   ) => {
     return new Promise((reslove) => {
       if (formData.operationType) {
-        addMaintainListsData(formData).then((response: any) => {
+        addMaintainListsData(formData).then((response) => {
           dispatch("getLists").then(() => {
             reslove(response);
           });
         });
       } else {
-        addLendListsData(formData).then((response: any) => {
+        addLendListsData(formData).then((response) => {
           dispatch("getLists").then(() => {
             reslove(response);
           });
@@ -93,27 +92,19 @@ const actions = {
   },
 
   // 批量删除待操作清单列表
-  removeLists: ({ dispatch }: Store<Dispatch>, deleteLists: any) => {
-    deleteShortcutData(deleteLists).then((response: any) => {
+  removeLists: ({ dispatch }, deleteLists) => {
+    deleteShortcutData(deleteLists).then((response) => {
       dispatch("getLists");
     });
   },
 };
 
 const mutations = {
-  SET_TOTAL: (state: State, totals: State) => {
+  SET_TOTAL: (state, totals) => {
     state.total = totals;
   },
 };
 
-export enum MaterialType {
-  goods = 1,
-  box,
-}
-
-export interface State {
-  total: object;
-}
 
 export default {
   namespaced: true,

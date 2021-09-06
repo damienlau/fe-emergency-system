@@ -1,4 +1,4 @@
-import { computed, defineComponent, h, onUpdated, toRefs, watch } from "vue";
+import { computed, defineComponent, toRefs } from "vue";
 import { Modal } from "ant-design-vue";
 import Icon from "components/Icon";
 
@@ -14,7 +14,7 @@ export default defineComponent({
       type: String,
       required: false,
       default: "light",
-      validator(size: string) {
+      validator(size) {
         return ["ultralight", "lighter", "light", "heavy", "bold"].includes(
           size
         );

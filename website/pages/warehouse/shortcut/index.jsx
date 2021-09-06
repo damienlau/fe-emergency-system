@@ -15,16 +15,6 @@ import List from "components/List";
 import Modal from "components/Modal";
 import Tabs, { TabPaneProps } from "components/Tabs";
 
-export interface Data {
-  pagination?: {
-    current?: number;
-    pageSize?: number;
-    total?: number;
-  };
-  data?: {
-    [propertyName: string]: any;
-  };
-}
 
 export default defineComponent({
   setup() {
@@ -187,7 +177,7 @@ export default defineComponent({
       store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
     };
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData) => {
       store
         .dispatch("warehouseModule/shortcutModule/setLists", formData)
         .then((response) => {
@@ -292,7 +282,7 @@ export default defineComponent({
           v-model={[modalVisible.value, "visible"]}
           title={`${tabExtraOptions.value.alias}信息`}
         >
-          <Form dataSource={} columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
+          <Form columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
             {{
               button: () => (
                 <Button type="primary" htmlType="submit">

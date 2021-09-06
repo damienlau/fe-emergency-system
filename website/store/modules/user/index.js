@@ -1,5 +1,4 @@
 import { signIn } from "api/user";
-import { Commit, Store } from "vuex";
 
 const state = () => ({
   hasLogin: false,
@@ -9,8 +8,8 @@ const getters = {};
 
 const actions = {
   // 登录
-  setUserOnline: ({ commit }: Store<Commit>, userInfo) => {
-    return new Promise<void>((reslove) => {
+  setUserOnline: ({ commit }, userInfo) => {
+    return new Promise((reslove) => {
       signIn(userInfo).then((response) => {
         commit("SET_ONLINE");
       });
@@ -19,18 +18,15 @@ const actions = {
 };
 
 const mutations = {
-  SET_ONLINE: (state: State) => {
+  SET_ONLINE: (state) => {
     state.hasLogin = true;
   },
-  SET_TOKEN: (state: State, token: string) => {
+  SET_TOKEN: (state, token) => {
     state.hasLogin = true;
     localStorage.setItem("token", token);
   },
 };
 
-export interface State {
-  hasLogin?: boolean;
-}
 
 const modules = {};
 
