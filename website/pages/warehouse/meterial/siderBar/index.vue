@@ -5,6 +5,7 @@
       title=""
       size="heavy"
       key="AddBoxTransfer"
+      :zIndex="999"
     >
       <AddBoxTransfer></AddBoxTransfer>
     </Modal>
@@ -83,6 +84,7 @@
           v-model:visible="boxAddVisible"
           size="heavy"
           title="新增箱子"
+          :zIndex="1"
           key="box"
         >
           <AddBoxDialog @showAddBoxTransfer="showAddBoxTransfer"></AddBoxDialog>
