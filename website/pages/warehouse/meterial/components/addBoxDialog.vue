@@ -26,7 +26,7 @@ import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Form } from "components";
 export default defineComponent({
-  name: "SiderBar",
+  name: "addBoxDialog",
   components: { Form },
   setup() {
     const state = reactive({

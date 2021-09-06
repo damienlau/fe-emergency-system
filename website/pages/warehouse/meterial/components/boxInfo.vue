@@ -70,7 +70,7 @@ import {
   findSpecifiedBoxData,
 } from "api/warehouse/meterial";
 export default defineComponent({
-  name: "BoxInfo",
+  name: "boxInfo",
   props: {
     boxInfo: Object,
   },

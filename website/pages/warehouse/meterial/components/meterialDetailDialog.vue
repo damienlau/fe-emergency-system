@@ -102,7 +102,7 @@ import {
 } from "api/warehouse/meterial";
 
 export default defineComponent({
-  name: "SiderBar",
+  name: "meterialDetailDialog",
   components: { Form },
   props: {
     id: Number,
