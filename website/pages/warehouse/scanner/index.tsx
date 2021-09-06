@@ -78,7 +78,7 @@ export default defineComponent({
       store
         .dispatch("taskModule/eventModule/findTaskEvents")
         .then((response) => {
-          formColumn.value[0].options = response.map((option) => {
+          formColumn.value[0].options = response?.map((option) => {
             return {
               key: option.id,
               label: option.eventName,

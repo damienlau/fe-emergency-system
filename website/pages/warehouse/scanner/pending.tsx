@@ -2,7 +2,7 @@
 
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { Modal as AntModal,message } from "ant-design-vue";
+import { Modal as AntModal,message,ImagePreviewGroup,Image } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty, Card } from "components";
 import { useRouter } from "vue-router";
 
@@ -17,9 +17,13 @@ export default defineComponent({
       key: "pengding",
       data: [
         {
-          id:1,
-          title: "测试数据标题",
+          id: 1,
+          status:0,
+          title: "测试数据标题",         
           page: "（20/20）",
+          capacities: [
+            20,20
+          ],
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
             "物资名称1",
@@ -33,18 +37,24 @@ export default defineComponent({
           ],
         },
         {
-          id:2,
+          id: 2,
+          status:0,
           title: "测试数据标题单个物资",
           page: "",
+          
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
                  
           ],
         },
         {
-          id:3,
-          title: "测试数据标题移入右侧",
+          id: 3,
+          status:0,
+          title: "标题移入右侧",
           page: "（20/20）",
+          capacities: [
+            20,20
+          ],
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
             "物资名称1",
@@ -56,7 +66,73 @@ export default defineComponent({
             "物资名称7",
             "物资名称8"
           ],
-        } 
+        },
+        {
+          id: 4,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id: 5,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id: 6,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id: 7,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id: 8,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
+        {
+          id: 9,
+          status:0,
+          title: "测试数据标题单个物资",
+          page: "",
+          
+          url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          content: [
+                 
+          ],
+        },
       ]
     });
     // 已出仓标题及数据展示
@@ -66,9 +142,12 @@ export default defineComponent({
       key: "finished",
       data: [
         {
-          id:4,
+          id:10,
           title: "测试数据标题",
           page: "（20/20）",
+          capacities: [
+            20,20
+          ],
           status:0,
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
@@ -83,9 +162,10 @@ export default defineComponent({
           ],
         },
         {
-          id:5,
+          id:11,
           title: "测试数据标题单个物资",
           page: "",
+         
           status:1,
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
@@ -93,9 +173,12 @@ export default defineComponent({
           ],
         },
         {
-          id:6,
+          id:12,
           title: "测试数据标题",
           page: "（20/20）",
+          capacities: [
+            20,20
+          ],
           status:1,
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
@@ -113,31 +196,49 @@ export default defineComponent({
     });
     //扫描出仓模态框是否可见
     const visible = ref(false);
-    //扫描出仓模态框控制
-    const handleClickPendingItem = () => {
-      visible.value = !visible.value;
-    };
+    
     const menus = ref([
       {
         label: "符合清单物资",
         key: "1",
-        count: 5,
+        count: 0,       
         data: [                
         ]
       },
       {
         label: "未符合清单物资",
         key: "2",
-        count: 10,
+        count: 0,
         data:[]
       },
       {
         label: "未扫描到的物资",
         key: "3",
-        count: 20,
+        count: 0,
         data:[]
       },
     ]);
+    //扫描出仓模态框控制
+    const handleClickPendingItem = () => {
+      menus.value[0].data = []
+      menus.value[1].data = []
+      menus.value[2].data = []      
+      finishedDelivery.value.data.forEach((index, item, arr) => {
+        if (arr[item].status == 0) {
+          menus.value[0].data.push(index);
+        } else if (arr[item].status == 1) {
+          menus.value[1].data.push(index);
+        }
+      })
+      pengdingDelivery.value.data.forEach((index, item, arr) => {           
+        menus.value[2].data.push(index);               
+      })
+      menus.value[0].count = menus.value[0].data.length;
+      menus.value[1].count = menus.value[1].data.length;
+      menus.value[2].count = menus.value[2].data.length; 
+      console.log(menus.value[2].data)
+      visible.value = !visible.value;
+    };
     // 菜单列表空状态
     const menuEmpty = ref(true);
     // 菜单列表当前激活值
@@ -169,13 +270,15 @@ export default defineComponent({
             )
             .then(() => {
               visible.value = !visible.value;
-              handleClickTabPane();
+              //handleClickTabPane();
             });
         }
       })
     }
     //菜单列表切换数据展示
-    const handleClickTabPane = (activeKey = menuActiveKey.value) => {
+    const handleClickTabPane = ({ activeKey }) => {
+      
+      
       menuActiveKey.value = activeKey;
       // store
       //   .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", activeKey)
@@ -183,14 +286,19 @@ export default defineComponent({
       //     cardData.value = response;
       //     menuEmpty.value = !response.length;
       //   });
+      cardData.value = []
       switch(activeKey){
         case "1":
-          cardData.value.push(finishedDelivery.value.data)
-          menuEmpty.value = !finishedDelivery.value.data.length;
+          cardData.value = menus.value[0].data;
+          menuEmpty.value = !cardData.value.length;
           break;
         case "2":
+          cardData.value = menus.value[1].data;
+          menuEmpty.value = !cardData.value.length;
           break;
         case "3":
+          cardData.value = menus.value[2].data;
+          menuEmpty.value = !cardData.value.length;
           break;
         default:
           break
@@ -206,7 +314,7 @@ export default defineComponent({
     }
     //扫描移动事件测试
     const handleMovePending = () => {
-      if (rackNumber.value > 3) {
+      if (rackNumber.value > 9) {
         message.error('无物资待出仓')
         return;
       }
@@ -228,7 +336,7 @@ export default defineComponent({
           [{ id: activeKey }]
         )
         .then(() => {
-          handleClickTabPane();
+          //handleClickTabPane();
         });
     };
     //监听模态框全部移除事件
@@ -249,12 +357,13 @@ export default defineComponent({
               })
             )
             .then(() => {
-              handleClickTabPane();
+              //handleClickTabPane();
             });
         }
       })
     }
     onMounted(() => {
+      
       //获取待出仓物资
       //console.log(router.currentRoute.value.params)
       //  store
@@ -461,15 +570,15 @@ export default defineComponent({
               }}
             >
             {/* 卡片容器 */}
-            <section class="overflow-y-auto grid grid-cols-5 gap-16">
+            <section class="overflow-y-auto grid grid-cols-3 gap-16">
               {cardData.value.map((listItem) => {
                 return (
-                  <Card title={listItem.label}>
+                  <Card>
                     {{
                       // 卡片自定义标题
                       title: () => (
                         <p class="text-16 font-medium">
-                          <span>{listItem.label}</span>
+                          <span>{listItem.title}</span>
                           {listItem.capacities && (
                             <span>
                               ({listItem.capacities[0]}/{listItem.capacities[1]})
@@ -486,40 +595,52 @@ export default defineComponent({
                           placement="bottomRight"
                           onConfirm={() => handleClickCardExtra(listItem.key)}
                         >
-                          <a-button
+                          <a-button 
                             class="flex flex-row items-center p-0"
                             type="text"
                             danger
-                            v-slots={{
-                              icon: () => <Icon type="delete" />,
-                            }}
+                            class={listItem.status == 1 ? '' : "hidden"}
                           >
-                            移出
+                            移除
                           </a-button>
                         </a-popconfirm>
                       ),
                       default: () => (
                         <div class="flex flex-row">
-                          <div class="flex-shrink-0 mr-16">
-                            <a-image width={108} height={108}></a-image>
+                          <div >
+                            <ImagePreviewGroup>
+                                  <Image
+                                    class="w-full h-full object-cover rounded"
+                                    src={listItem.url}
+                                    fallback="/icon_empty_search.png"
+                                    width={88}
+                                    height={88}
+                                  ></Image>
+                            </ImagePreviewGroup>
                           </div>
-                          <div>
-                            <p>
+                          {/* <div class="flex-shrink-0 mr-16">
+                            <a-image width={108} height={108}></a-image>
+                          </div> */}
+                          <div class="flex-auto ml-6 size-12 overflow-hidden">
+                            <p class="flex">
+                              <div  class="text-white text-opacity-70 ">
+                                货架位置：
+                              </div>
+                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
+                            </p>
+                            <p class="flex">
+                              <span class="text-white text-opacity-70">类型：</span>
+                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
+                            </p>
+                            <p class="flex">
+                              <span class="text-white text-opacity-70">尺寸：</span>
+                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
+                            </p>
+                            <p class="flex">
                               <span class="text-white text-opacity-70">
-                                货架位置
+                                箱子编码：
                               </span>
-                              <span class="text-16">{listItem.position}</span>
-                            </p>
-                            <p>
-                              <span class="text-white text-opacity-70">类型</span>
-                            </p>
-                            <p>
-                              <span class="text-white text-opacity-70">尺寸</span>
-                            </p>
-                            <p>
-                              <span class="text-white text-opacity-70">
-                                箱子编码
-                              </span>
+                              <div style="white-space: nowrap;overflow: hidden;" class="overflow-ellipsis flex-1">测试数据测试数据测试数据</div>
                             </p>
                           </div>
                         </div>
@@ -530,7 +651,7 @@ export default defineComponent({
               })}
             </section>
           </Tabs>
-          <div class="absolute bottom-5 w-full text-center" style="left:-22px;">
+          <div class="absolute bottom-3 w-full text-center" style="left:-22px;">
             <a-button class="mr-10" ghost html-type="submit" onClick={handleSubmit}>
               返回扫描
             </a-button>
