@@ -28,7 +28,7 @@ export default defineComponent({
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { dataSource } = toRefs < any > props;
+    const { dataSource } = toRefs(props);
 
     const formData = ref(dataSource.value || {});
 
