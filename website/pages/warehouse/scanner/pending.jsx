@@ -693,12 +693,6 @@ export default defineComponent({
                           placement="bottomRight"
                           onConfirm={() => handleClickCardExtra(listItem.id)}
                         >
-                          <a-button 
-                            class="flex flex-row items-center p-0"
-                            type="text"
-                            danger
-                            class={listItem.status == 1 ? '' : "hidden"}
-                          >
                             <a-button
                               class="flex flex-row items-center p-0"
                               type="text"
@@ -721,10 +715,7 @@ export default defineComponent({
                                   height={88}
                                 ></Image>
                               </ImagePreviewGroup>
-                            </div>
-                            {/* <div class="flex-shrink-0 mr-16">
-                            <a-image width={108} height={108}></a-image>
-                          </div> */}
+                            </div>                   
                             <div class="flex-auto ml-6 size-12 overflow-hidden">
                               <p class="flex">
                                 <div class="text-white text-opacity-70 ">
