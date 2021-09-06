@@ -15,7 +15,7 @@ export default defineComponent({
     const menuColumns = computed(() => store.state.navigation);
 
     // 点击菜单跳转路由
-    const handleChange = (menuActiveKey: string[]) => {
+    const handleChange = (menuActiveKey) => {
       let routeName_ = menuActiveKey.find(
         (routeLink) => route.name !== routeLink
       );

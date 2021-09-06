@@ -1,6 +1,4 @@
 import { createStore } from "vuex";
-import { MenuItemProps } from "components/Menu";
-import { RouteLocationNormalizedLoaded, RouteRecordRaw } from "vue-router";
 import taskModule from "./modules/task";
 import warehouseModule from "./modules/warehouse";
 import userModule from "./modules/user";
@@ -17,13 +15,13 @@ const getters = {};
 const actions = {
   setGlobalNavigationMenu: (
     { commit },
-    routes: RouteLocationNormalizedLoaded
+    routes
   ) => {
     let navs_ = routes?.matched.find(
-      (route: RouteRecordRaw) => route.meta?.navigator
+      (route) => route.meta?.navigator
     );
 
-    let menus_ = navs_?.children.map((item: RouteRecordRaw) => {
+    let menus_ = navs_?.children.map((item) => {
       return {
         ...item?.meta,
         key: item?.name,
@@ -35,22 +33,18 @@ const actions = {
 };
 
 const mutations = {
-  SET_SPINNING: (state: State) => {
+  SET_SPINNING: (state) => {
     state.spinning = !state.spinning;
   },
-  SET_NAVIGATION: (state: State, menus: MenuItemProps) => {
+  SET_NAVIGATION: (state, menus) => {
     state.navigation = menus;
   },
 };
 
 const modules = { taskModule, warehouseModule, userModule };
 
-export interface State {
-  spinning: boolean;
-  navigation: object;
-}
 
-export default createStore<State>({
+export default createStore({
   state,
   getters,
   actions,
