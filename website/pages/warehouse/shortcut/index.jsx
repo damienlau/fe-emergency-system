@@ -13,8 +13,7 @@ import Form from "components/Form";
 import Icon from "components/Icon";
 import List from "components/List";
 import Modal from "components/Modal";
-import Tabs, { TabPaneProps } from "components/Tabs";
-
+import Tabs from "components/Tabs";
 
 export default defineComponent({
   setup() {
@@ -141,8 +140,8 @@ export default defineComponent({
         ],
       },
     ]);
-    const tabExtraOptions = ref<TabPaneProps>({});
-    const cardListsData = ref<Data>({});
+    const tabExtraOptions = ref({});
+    const cardListsData = ref({});
     const modalVisible = ref(false);
 
     const handleClickTabPane = ({ item }) => {
@@ -172,7 +171,7 @@ export default defineComponent({
       modalVisible.value = !modalVisible.value;
     };
 
-    const handleDelete = (selected = cardListsData.value?.data) => {
+    const handleDelete = (selected = cardListsData.value.data) => {
       !Array.isArray(selected) && (selected = Array.of(selected));
       store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
     };
@@ -208,7 +207,7 @@ export default defineComponent({
             default: () => (
               <List grid={5} class="h-full" dataSource={cardListsData.value}>
                 {{
-                  card: ({ item, index }) => (
+                  card: ({ item }) => (
                     <>
                       <section class="dark:bg-navy-2 dark:hover:bg-navy-3 rounded">
                         {/* Card Header Start */}
