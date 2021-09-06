@@ -224,7 +224,6 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: wrap;
   height: 100%;
-  background: pink;
   overflow-y: auto;
   padding-bottom: 20px;
   .BoxInfo {

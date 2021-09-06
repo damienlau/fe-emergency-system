@@ -1,7 +1,7 @@
 <template>
   <a-card
     hoverable
-    style="width: 100%; background: #144071"
+    style="width: 360px; background: #144071"
     :bodyStyle="bodyStyle"
   >
     <div class="top">
@@ -163,6 +163,9 @@ export default defineComponent({
 <style lang="less" scoped>
 .top {
   border-bottom: 1px solid #4280c4;
+  margin-bottom: 8px;
+  font-size: 16px;
+  margin: 5px;
 }
 .row {
   .title {
