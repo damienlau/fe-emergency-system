@@ -365,37 +365,6 @@ export default defineComponent({
         }
       })
     }
-
-    // 确定归仓模态框
-    const visiblesecond = ref(false);
-    // 确定归仓配置项
-    const formColumn = ref([
-      {
-        label: "归还人",
-        key: "personnelName",
-        required: true,
-      },
-      {
-        label: "归还人工号",
-        key: "description",
-        required: true,
-      },
-      {
-        label: "联系电话",
-        key: "personnelPhone",
-        required: true,
-      },
-    ]);
-
-    // 确定归仓表单卡片
-    const handleClickMenuItem = () => {
-      visiblesecond.value = !visiblesecond.value;
-    };
-    // 监听模态框表单提交事件
-    const handleSubmitForm = () => {      
-      visiblesecond.value = !visiblesecond.value;
-    };
-    
     onMounted(() => {
       //获取待出仓物资
       //console.log(router.currentRoute.value.params)
@@ -780,28 +749,8 @@ export default defineComponent({
             <a-button ghost html-type="submit" onClick={handlePendingSubmit}>
               确定出仓
             </a-button>
-            <a-button onClick={handleClickMenuItem}>
-              测试
-            </a-button>
           </div>
-        </Modal>
-        
-        <Modal
-          v-model={[visiblesecond.value, "visible"]}
-          size="ultralight"
-          title="归还人信息"
-        >
-          {/* 扫描菜单-模态框表单 */}
-          <Form columns={formColumn.value} onSubmit={handleSubmitForm}>
-            {{
-              button: () => (
-                <Button type="primary" htmlType="submit">
-                  保存
-                </Button>
-              ),
-            }}
-          </Form>
-        </Modal>  
+        </Modal>      
       </>
     );
   },
