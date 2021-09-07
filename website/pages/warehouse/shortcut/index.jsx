@@ -15,6 +15,8 @@ import List from "components/List";
 import Modal from "components/Modal";
 import Tabs from "components/Tabs";
 
+import emptyImage from "assets/icon_empty_search.png";
+
 export default defineComponent({
   setup() {
     const { departments } = defaultConfig;
@@ -179,7 +181,7 @@ export default defineComponent({
     const handleSubmit = (formData) => {
       store
         .dispatch("warehouseModule/shortcutModule/setLists", formData)
-        .then((response) => {
+        .then(() => {
           handleVisibleDialog();
         });
     };
@@ -249,7 +251,7 @@ export default defineComponent({
                         {/* Card Body Start */}
                         <section class="flex flex-row p-16">
                           {/* thumbnail */}
-                          <div>
+                          <div class="mr-16">
                             <ImagePreviewGroup>
                               {item.thumbnail.map((image, key) => {
                                 return (
@@ -257,7 +259,7 @@ export default defineComponent({
                                     <Image
                                       class="w-full h-full object-cover rounded"
                                       src={image.fileUrl}
-                                      fallback="/icon_empty_search.png"
+                                      fallback={emptyImage}
                                       width={108}
                                       height={108}
                                     ></Image>
@@ -265,6 +267,34 @@ export default defineComponent({
                                 );
                               })}
                             </ImagePreviewGroup>
+                          </div>
+                          <div class="overflow-hidden">
+                            <p class="truncate mb-4">
+                              <span class="text-white text-opacity-70">
+                                货架位置：
+                              </span>
+                              <span class="text-16">{item.position}</span>
+                            </p>
+                            <p class="truncate mb-4">
+                              <span class="text-white text-opacity-70">
+                                类型：
+                              </span>
+                              <span class="text-16">{item.type}</span>
+                            </p>
+                            <p class="truncate mb-4">
+                              <span class="text-white text-opacity-70">
+                                {item.quantity ? "尺寸" : "箱号"}：
+                              </span>
+                              <span class="text-16">
+                                {item.size || item.boxName}
+                              </span>
+                            </p>
+                            <p class="truncate">
+                              <span class="text-white text-opacity-70">
+                                {item.quantity ? "箱子" : "物资"}编码：
+                              </span>
+                              <span class="text-16">{item.code}</span>
+                            </p>
                           </div>
                           {/* descriptions */}
                         </section>

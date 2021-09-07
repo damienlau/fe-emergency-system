@@ -57,6 +57,19 @@ export default defineComponent({
           );
 
         case "upload":
+          if (typeof formData.value[render.key] !== "undefined") {
+            formData.value[render.key].map((images) => {
+              return {
+                uid: images.id,
+                name: images.name,
+                status: "done",
+                url: images.fileUrl,
+              };
+            });
+
+            console.log(formData.value[render.key]);
+          }
+
           return (
             <Upload
               customRequest={({ file }) => {
@@ -67,6 +80,8 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
+                      id: file.uid,
+                      oldFileName: file.name,
                       fileUrl: response.join(),
                     });
                   } else {
@@ -75,6 +90,8 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
+                      id: file.uid,
+                      oldFileName: file.name,
                       fileUrl: response.join(),
                     });
                   }
@@ -87,7 +104,7 @@ export default defineComponent({
               fileList={formData.value[render.key]}
               listType="picture-card"
               onChange={(file) => {
-                console.log(file);
+                console.log(formData.value);
               }}
             >
               <div class="flex flex-col items-center justify-center">
