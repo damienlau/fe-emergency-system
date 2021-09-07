@@ -8,6 +8,7 @@
   >
     <template #extra>
       <a-button v-if="showDelete" type="text" danger>移除</a-button>
+      <a-button v-if="showAdd" type="text" style="color: green">添加</a-button>
     </template>
     <div class="bottom flex flex-row w-fll pb-3">
       <a-image class="pt-3" :width="80" :height="80" :src="img" />
@@ -60,6 +61,9 @@ export default defineComponent({
     showDelete: {
       type: Boolean,
     },
+    showAdd: {
+      type: Boolean,
+    },
   },
   setup(props) {
     const state = reactive({
@@ -108,8 +112,8 @@ export default defineComponent({
     onMounted(() => {
       state.info = props.boxInfo;
       state.img =
-        props.boxInfo.boxImages && props.boxInfo.boxImages[0].url
-          ? props.boxInfo.boxImages[0].url
+        props.boxInfo.boxImages && props.boxInfo.boxImages[0].fileUrl
+          ? props.boxInfo.boxImages[0].fileUrl
           : "www.test";
     });
     const returnStatus = (status) => {

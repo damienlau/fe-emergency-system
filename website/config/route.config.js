@@ -16,7 +16,20 @@ const routesConfig = [
             name: "Material",
             path: "material",
             meta: { label: "仓库" },
-            component: () => import("pages/warehouse/meterial/index.vue"),
+            component: RouterView,
+            children: [
+              {
+                path: "",
+                meta: { label: "首页" },
+                component: () => import("pages/warehouse/meterial/index.vue"),
+              },
+              {
+                name: "Shelf",
+                path: "shelf",
+                meta: { label: "货架" },
+                component: () => import("pages/warehouse/meterial/shelf"),
+              },
+            ],
           },
           {
             name: "Record",
@@ -59,8 +72,8 @@ const routesConfig = [
                 path: "emergency",
                 meta: { label: "紧急扫描" },
                 component: () => import("pages/warehouse/scanner/emergency"),
-              }
-            ]             
+              },
+            ],
           },
         ],
       },

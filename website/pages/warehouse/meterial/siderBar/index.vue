@@ -1,14 +1,5 @@
 <template>
   <div>
-    <Modal
-      v-model:visible="addBoxTransferVisible"
-      title=""
-      size="heavy"
-      key="AddBoxTransfer"
-      :zIndex="999"
-    >
-      <AddBoxTransfer></AddBoxTransfer>
-    </Modal>
     <a-tabs
       v-model:activeKey="activeKey"
       @tabClick="tabClick"
@@ -87,7 +78,7 @@
           :zIndex="1"
           key="box"
         >
-          <AddBoxDialog @showAddBoxTransfer="showAddBoxTransfer"></AddBoxDialog>
+          <AddBoxDialog @close="closeAddBoxDialog"></AddBoxDialog>
         </Modal>
       </a-tab-pane>
     </a-tabs>
@@ -107,6 +98,7 @@
       :title="boxDetailDialogTitle"
       size="heavy"
       key="box"
+      :zIndex="1"
     >
       <BoxDetailDialog
         :id="boxId"
@@ -121,7 +113,7 @@ import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
 import AddMeterialDialog from "../components/addMeterialDialog.vue";
-import AddBoxTransfer from "../components/addBoxTransfer.vue";
+import AddBoxTransfer from "../components/addBoxMeterialTransferDialog.vue";
 import MeterialDetailDialog from "../components/meterialDetailDialog.vue";
 import BoxDetailDialog from "../components/boxDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
@@ -150,10 +142,6 @@ export default defineComponent({
       boxAddVisible: false, // 新增箱子
       meterialDetailVisible: false, // 物资详情
       boxDetailVisible: false, // 箱子详情
-      addBoxTransferVisible: false, // 箱子穿梭框
-      boxInfo: {
-        name: "测试",
-      },
       boxList: [],
       materialsList: [],
       meterialId: "",
@@ -211,10 +199,10 @@ export default defineComponent({
       state.boxDetailVisible = false;
       getBoxData();
     };
-    const showAddBoxTransfer = () => {
-      state.addBoxTransferVisible = true;
+    const closeAddBoxDialog = () => {
+      state.boxAddVisible = false;
+      getBoxData();
     };
-
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -227,7 +215,7 @@ export default defineComponent({
       showBoxDetailDialog,
       closeMeterialDetailDialog,
       closeBoxDetailDialog,
-      showAddBoxTransfer,
+      closeAddBoxDialog,
     };
   },
 });

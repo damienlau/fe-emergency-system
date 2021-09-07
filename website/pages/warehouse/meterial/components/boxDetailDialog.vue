@@ -1,9 +1,5 @@
 <template>
   <div class="content">
-    <div class="btn" v-if="activeKey === 'init' && !isEditInit">
-      <a-button type="text">撤销</a-button>
-      <a-button type="text" danger>全部移除</a-button>
-    </div>
     <a-tabs v-model:activeKey="activeKey" :animated="false">
       <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
         <Form
@@ -97,19 +93,21 @@
         :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
       >
         <div class="box">
-          <div class="addBox">
+          <div
+            class="addBox mt-8"
+            @click="showAddBoxTransfer"
+            v-if="!isEditInit"
+          >
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
           </div>
-          <SmallBox
-            v-for="(item, index) in boxList"
+          <SmallMeterial
+            v-for="(item, index) in materialList"
             :key="index"
-            :boxInfo="item"
+            :materialInfo="item"
             :showDelete="!isEditInit"
-            @click="chooseActive(item)"
-            :class="item.active ? 'active' : 'unactive'"
           >
-          </SmallBox>
+          </SmallMeterial>
         </div>
         <div class="footer">
           <a-popconfirm
@@ -136,12 +134,39 @@
             @click="isEditInit = false"
             >编辑</a-button
           >
-          <a-button type="primary" ghost class="mr-3" v-if="!isEditInit"
+          <a-button
+            type="primary"
+            ghost
+            class="mr-3"
+            v-if="!isEditInit"
+            @click="addBoxMaterial"
             >保存</a-button
           >
         </div>
       </a-tab-pane>
     </a-tabs>
+
+    <div class="btn" v-if="activeKey === 'init' && !isEditInit">
+      <a-button type="text" @click="handBack">撤销</a-button>
+      <a-popconfirm
+        title="确认全部移除吗?"
+        ok-text="确认"
+        cancel-text="取消"
+        @confirm="handDeleteAll"
+        v-if="materialList.length > 0"
+      >
+        <a-button type="text" danger>全部移除</a-button>
+      </a-popconfirm>
+    </div>
+    <Modal
+      v-model:visible="addBoxTransferVisible"
+      title=""
+      size="heavy"
+      key="AddBoxTransfer"
+      :zIndex="999"
+    >
+      <AddBoxTransfer @chooseMeterial="chooseMeterial"></AddBoxTransfer>
+    </Modal>
   </div>
 </template>
 <script>
@@ -150,14 +175,15 @@ import {
   updateBoxData,
   findSpecifiedBoxData,
   deleteBoxInfoData,
-  findBoxInfoAllData,
+  findMaterialInfoAllData,
 } from "api/warehouse/meterial";
-import SmallBox from "./smallBox.vue";
-import { Form } from "components";
+import SmallMeterial from "./smallMeterial.vue";
+import { Form, Modal } from "components";
 import { PlusOutlined } from "@ant-design/icons-vue";
+import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 export default defineComponent({
   name: "boxDetailDialog",
-  components: { Form, SmallBox, PlusOutlined },
+  components: { Form, SmallMeterial, PlusOutlined, Modal, AddBoxTransfer },
   props: {
     id: Number,
     boxCode: String,
@@ -170,7 +196,8 @@ export default defineComponent({
       isEditInit: true,
       dataSource: {},
       loading: true,
-      boxList: [],
+      materialList: [],
+      addBoxTransferVisible: false,
     });
     const baseForm = ref([
       {
@@ -190,65 +217,65 @@ export default defineComponent({
         options: [
           {
             label: "急救/重症",
-            key: 1,
+            key: "1",
           },
           {
             label: "门诊",
-            key: 2,
+            key: "2",
           },
           {
             label: "后勤",
-            key: 3,
+            key: "3",
           },
 
           {
             label: "指挥",
-            key: 4,
+            key: "4",
           },
           {
             label: "重症",
-            key: 5,
+            key: "5",
           },
 
           {
             label: "超声",
-            key: 6,
+            key: "6",
           },
           {
             label: "清创",
-            key: 7,
+            key: "7",
           },
           {
             label: "留观",
-            key: 8,
+            key: "8",
           },
           {
             label: "药房",
-            key: 9,
+            key: "9",
           },
           {
             label: "耗材",
-            key: 10,
+            key: "10",
           },
           {
             label: "手术",
-            key: 11,
+            key: "11",
           },
           {
             label: "防疫/隔离",
-            key: 12,
+            key: "12",
           },
           {
             label: "消毒",
-            key: 13,
+            key: "13",
           },
           {
             label: "住院",
-            key: 14,
+            key: "14",
           },
           {
             label: "检验",
-            key: 15,
+            key: "15",
           },
         ],
         required: false,
@@ -260,23 +287,23 @@ export default defineComponent({
         options: [
           {
             label: "未知",
-            key: 0,
+            key: "0",
           },
           {
             label: "一层(下)",
-            key: 1,
+            key: "1",
           },
           {
             label: "二层(中)",
-            key: 2,
+            key: "2",
           },
           {
             label: "三层(上)",
-            key: 3,
+            key: "3",
           },
           {
             label: "四层(顶)",
-            key: 4,
+            key: "4",
           },
         ],
         required: true,
@@ -288,19 +315,19 @@ export default defineComponent({
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
-            key: 1,
+            key: "1",
           },
           {
             label: "一箱两柜(1200 x 800 x 800)",
-            key: 2,
+            key: "2",
           },
           {
             label: "一箱一柜(1200 x 800 x 400)",
-            key: 3,
+            key: "3",
           },
           {
             label: "其他箱子",
-            key: 4,
+            key: "4",
           },
         ],
         required: false,
@@ -314,7 +341,7 @@ export default defineComponent({
         label: "物资图片",
         key: "boxImages",
         type: "upload",
-        required: true,
+        required: false,
       },
     ]);
     const otherForm = ref([
@@ -344,18 +371,18 @@ export default defineComponent({
     ]);
     onMounted(() => {
       initData();
-      initBoxList();
+      initMaterialList();
     });
 
     const handleSubmitBase = () => {
       updateBoxData(data).then((res) => {
-        this.isEditBase = true;
+        state.isEditBase = true;
         initData();
       });
     };
     const handleSubmitOther = (data) => {
       updateBoxData(data).then((res) => {
-        this.isEditOther = true;
+        state.isEditOther = true;
         initData();
       });
     };
@@ -370,10 +397,10 @@ export default defineComponent({
         state.loading = true;
       });
     };
-    const initBoxList = () => {
-      state.boxList = [];
-      findBoxInfoAllData({ boxCode: props.boxCode }).then((res) => {
-        state.boxList = res;
+    const initMaterialList = () => {
+      state.materialList = [];
+      findMaterialInfoAllData({ boxCode: props.boxCode }).then((res) => {
+        state.materialList = res;
       });
     };
     const handDelete = (data) => {
@@ -382,12 +409,33 @@ export default defineComponent({
         ctx.emit("close");
       });
     };
-    const chooseActive = (item) => {
-      if (state.isEditInit) return;
-      state.boxList.map((box) => {
-        if (box.boxCode === item.boxCode) {
-          box.active = !box.active;
-        }
+    const showAddBoxTransfer = () => {
+      state.addBoxTransferVisible = true;
+    };
+
+    const chooseMeterial = (arr) => {
+      state.materialList = state.materialList.concat(arr);
+      state.addBoxTransferVisible = false;
+    };
+    const handBack = () => {
+      initMaterialList();
+    };
+    const handDeleteAll = () => {
+      state.materialList = [];
+    };
+    const addBoxMaterial = () => {
+      const idArr = [];
+      if (state.materialList.length > 0) {
+        state.materialList.map((item) => {
+          idArr.push(item.id);
+        });
+      }
+      const params = {
+        id: props.id,
+        materialIds: idArr,
+      };
+      updateBoxData(params).then((res) => {
+        ctx.emit("close");
       });
     };
     return {
@@ -400,8 +448,12 @@ export default defineComponent({
       handleSubmitInit,
       initData,
       handDelete,
-      initBoxList,
-      chooseActive,
+      initMaterialList,
+      showAddBoxTransfer,
+      chooseMeterial,
+      handBack,
+      handDeleteAll,
+      addBoxMaterial,
     };
   },
 });
@@ -414,10 +466,9 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   .addBox {
-    width: 340px;
+    width: 335px;
     height: 180px;
     background: #57799a;
-    margin: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
