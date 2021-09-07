@@ -19,28 +19,57 @@
           </template>
         </Form>
       </a-tab-pane>
-      <a-tab-pane :key="'init'" tab="箱内物资">
-        <div class="addBox" @click="handAdd">
+      <a-tab-pane
+        :key="'init'"
+        tab="箱内物资"
+        class="flex flex-row flex-wrap justify-start overflow-y-auto"
+      >
+        <div class="addBox mt-8" @click="showAddBoxTransfer">
           <PlusOutlined :style="{ fontSize: '30px' }" />
           <span class="mt-20"> 添加物资</span>
         </div>
+        <SmallMeterial
+          class="mt-8"
+          v-for="(item, index) in meterialList"
+          :materialInfo="item"
+          :key="index"
+        ></SmallMeterial>
+
+        <div class="flex flex-row justify-center align-middle">
+          <a-button type="primary" ghost class="mr-3">保存</a-button>
+        </div>
       </a-tab-pane>
     </a-tabs>
+    <a-modal v-model:visible="addBoxTransferVisible" title="" :zIndex="999">
+      <AddBoxTransfer @chooseMeterial="chooseMeterial"></AddBoxTransfer>
+    </a-modal>
   </div>
+  <!-- <Modal
+    v-model:visible="addBoxTransferVisible"
+    title=""
+    size="heavy"
+    key="AddBoxTransfer"
+    :zIndex="999"
+  >
+    <AddBoxTransfer></AddBoxTransfer>
+  </Modal> -->
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Form } from "components";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import AddBoxTransfer from "./addBoxTransfer.vue";
+import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
+import SmallMeterial from "./smallMeterial.vue";
 export default defineComponent({
   name: "addBoxDialog",
-  components: { Form, PlusOutlined, AddBoxTransfer },
+  components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial },
   setup(props, slot) {
     const state = reactive({
       activeKey: "base",
-      addBoxDialogVisible: false,
+      boxInfo: {},
+      addBoxTransferVisible: false, // 穿梭框
+      meterialList: [],
     });
     const baseForm = ref([
       {
@@ -111,7 +140,7 @@ export default defineComponent({
             key: 15,
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "货架位置",
@@ -163,12 +192,12 @@ export default defineComponent({
             key: 4,
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "单位",
         key: "unit",
-        required: false,
+        required: true,
       },
       {
         label: "物资图片",
@@ -204,18 +233,24 @@ export default defineComponent({
     ]);
     onMounted(() => {});
 
-    const handleSubmitBase = () => {
-      console.log("ddddd");
+    const handleSubmitBase = (data) => {
+      state.boxInfo = { ...state.boxInfo, ...data };
+      addBoxData(data);
     };
     const handleSubmitOther = (data) => {
+      state.boxInfo = { ...state.boxInfo, ...data };
       addBoxData(data);
     };
 
     const handleSubmitInit = () => {
-      console.log("ddddd");
+      console.log(state.boxInfo, "ddd");
     };
-    const handAdd = () => {
-      slot.emit("showAddBoxTransfer");
+    const showAddBoxTransfer = () => {
+      state.addBoxTransferVisible = true;
+    };
+    const chooseMeterial = (arr) => {
+      state.meterialList = arr;
+      state.addBoxTransferVisible = false;
     };
     return {
       ...toRefs(state),
@@ -225,17 +260,17 @@ export default defineComponent({
       handleSubmitBase,
       handleSubmitOther,
       handleSubmitInit,
-      handAdd,
+      showAddBoxTransfer,
+      chooseMeterial,
     };
   },
 });
 </script>
 <style lang="less" scoped>
 .addBox {
-  width: 340px;
+  width: 335px;
   height: 180px;
   background: #57799a;
-  margin: 4px;
   display: flex;
   flex-direction: column;
   justify-content: center;

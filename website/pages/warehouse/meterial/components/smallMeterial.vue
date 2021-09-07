@@ -1,26 +1,23 @@
 <template>
   <a-card
     hoverable
-    style="width: 340px; height: 180px; background: #144071; margin: 4px"
+    style="width: 330px; height: 180px; background: #144071; margin: 4px"
     :headStyle="headStyle"
     :bodyStyle="bodyStyle"
-    :title="info.boxName"
+    :title="info.materialName"
   >
     <template #extra>
-      <a-button v-if="showDelete" type="text" danger>移除</a-button>
-      <a-button v-if="showAdd" type="text" style="color: green">添加</a-button>
+      <a-button v-if="showDelete" type="text" danger @click="handDelete"
+        >移除</a-button
+      >
+      <a-button v-if="showAdd" type="text" style="color: green" @click="handAdd"
+        >添加</a-button
+      >
     </template>
     <div class="bottom flex flex-row w-fll pb-3">
       <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
         <div class="row">
-          <span class="number mr-3">{{
-            "(" +
-            info.materialRemainNumber +
-            "/" +
-            info.materialTotalNumber +
-            ")"
-          }}</span>
           <a-tag
             size="mini"
             :color="info.status && returnStatus(info.status).color"
@@ -41,12 +38,12 @@
           }}</span>
         </div>
         <div class="row">
-          <span class="label">尺寸:</span>
-          <span class="value">{{ info.size && sizeType[info.size] }}</span>
+          <span class="label">箱号:</span>
+          <span class="value">{{ info.boxCode || "--" }}</span>
         </div>
         <div class="row">
           <span class="label">物资编码:</span>
-          <span class="value">{{ info.boxCode }}</span>
+          <span class="value">{{ info.assetCode || "--" }}</span>
         </div>
       </div>
     </div>
@@ -55,9 +52,9 @@
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
 export default defineComponent({
-  name: "smallBox",
+  name: "smallMeterial",
   props: {
-    boxInfo: Object,
+    materialInfo: Object,
     showDelete: {
       type: Boolean,
     },
@@ -65,11 +62,10 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  setup(props) {
+  setup(props, slot) {
     const state = reactive({
       info: {},
       img: "",
-      isDebit: true,
       headStyle: {
         padding: "0 10px",
         height: "40px",
@@ -78,12 +74,6 @@ export default defineComponent({
       bodyStyle: {
         padding: "10px",
       },
-    });
-    const sizeType = ref({
-      1: "一箱一桌(800 x 600 x 600)",
-      2: "一箱两柜(1200 x 800 x 800)",
-      3: "一箱一柜(1200 x 800 x 400)",
-      4: "其他箱子",
     });
     const positionInfo = ref({
       0: "未知",
@@ -110,10 +100,11 @@ export default defineComponent({
       15: "检验",
     });
     onMounted(() => {
-      state.info = props.boxInfo;
+      state.info = props.materialInfo;
       state.img =
-        props.boxInfo.boxImages && props.boxInfo.boxImages[0].url
-          ? props.boxInfo.boxImages[0].url
+        props.materialInfo.materialImages &&
+        props.materialInfo.materialImages[0].url
+          ? props.materialInfo.materialImages[0].url
           : "www.test";
     });
     const returnStatus = (status) => {
@@ -164,12 +155,19 @@ export default defineComponent({
       }
       return state;
     };
+    const handAdd = () => {
+      slot.emit("choose", props.materialInfo);
+    };
+    const handDelete = () => {
+      slot.emit("delete", props.materialInfo);
+    };
     return {
       ...toRefs(state),
       positionInfo,
       department,
-      sizeType,
       returnStatus,
+      handAdd,
+      handDelete,
     };
   },
 });

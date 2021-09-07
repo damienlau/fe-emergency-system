@@ -62,19 +62,9 @@ export default defineComponent({
               customRequest={({ file }) => {
                 uploadData(file).then((response) => {
                   if (typeof formData.value[render.key] === "undefined") {
-                    formData.value[render.key] = new Array({
-                      uid: file.uid,
-                      name: file.name,
-                      status: "done",
-                      url: response.join(),
-                      fileUrl: response.join(),
-                    });
+                    formData.value[render.key] = [{ fileUrl: response.join() }];
                   } else {
                     formData.value[render.key].push({
-                      uid: file.uid,
-                      name: file.name,
-                      status: "done",
-                      url: response.join(),
                       fileUrl: response.join(),
                     });
                   }

@@ -44,7 +44,7 @@ export default defineComponent({
       {
         label: "品牌",
         key: "brand",
-        required: false,
+        required: true,
       },
       {
         label: "类型",
@@ -114,7 +114,7 @@ export default defineComponent({
             key: 15,
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "厂家批号",
