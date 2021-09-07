@@ -23,11 +23,39 @@ export default defineComponent({
       data: [
         {
           id: 1,
-          status: 0,
+          resourceType:2,//1物资，2箱子
+          status: 1,//int 借货状态 1待借出 2已借出 3已归还
+          statusright:0,
           title: "测试数据标题",
           page: "（20/20）",
           capacities: [20, 20],
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          warehouseBoxInfo: {
+            id: 50,//箱子id
+            status: 1,//箱子状态：1在库，2已出库，3待出库            
+          },
+          materialInfo: {
+            id: '',//物资id
+            status: ''//物资状态：1在库，2已出库，3待出库
+            //4损耗，5报废，6维修，7保养
+          },
+          detailist: [
+            {
+              id: 1,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 2,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 3,
+              status:1,
+              resourceType:1,
+            },
+          ],
           content: [
             "物资名称1",
             "物资名称2",
@@ -41,20 +69,56 @@ export default defineComponent({
         },
         {
           id: 2,
-          status: 0,
+          resourceType:1,
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          warehouseBoxInfo: {
+            id: '',
+            status: '',          
+          },
+          materialInfo: {
+            id: '100',
+            status: 1            
+          },
           content: [],
         },
         {
           id: 3,
-          status: 0,
+          resourceType:2,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "标题移入右侧",
           page: "（20/20）",
           capacities: [20, 20],
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          warehouseBoxInfo: {
+            id: 51,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
+          detailist: [
+            {
+              id: 1,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 2,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 3,
+              status:1,
+              resourceType:1,
+            },
+          ],
           content: [
             "物资名称1",
             "物资名称2",
@@ -68,55 +132,109 @@ export default defineComponent({
         },
         {
           id: 4,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 52,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
         {
           id: 5,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 52,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
         {
           id: 6,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 53,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
         {
           id: 7,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 54,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
         {
           id: 8,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 55,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
         {
           id: 9,
-          status: 0,
+          resourceType:1,//1物资，2箱子
+          status: 1,
+          statusright:0,
           title: "测试数据标题单个物资",
+          warehouseBoxInfo: {
+            id: 56,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           page: "",
-
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
           content: [],
         },
@@ -130,13 +248,40 @@ export default defineComponent({
       data: [
         {
           id: 10,
+          resourceType:2,//1物资，2箱子
           title: "测试数据标题",
           page: "（20/20）",
           capacities: [
             20,20
           ],
-          status:0,//符合
+          status: 0,//符合
+          statusright: 0,
+          warehouseBoxInfo: {
+            id: 57,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
+          detailist: [
+            {
+              id: 1,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 2,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 3,
+              status:1,
+              resourceType:1,
+            },
+          ],
           content: [
             "物资名称1",
             "物资名称2",
@@ -150,10 +295,19 @@ export default defineComponent({
         },
         {
           id: 11,
+          resourceType:1,//1物资，2箱子
           title: "测试数据标题单个物资",
-          page: "",
-         
-          status:1,//未符合
+          page: "",         
+          status: 1,//未符合
+          statusright: 1,
+          warehouseBoxInfo: {
+            id: '',
+            statsu: ''         
+          },
+          materialInfo: {            
+            id: 58,
+            status: 1
+          },
           url: 'https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg',
           content: [
                  
@@ -161,11 +315,38 @@ export default defineComponent({
         },
         {
           id: 12,
+          resourceType:2,//1物资，2箱子
           title: "测试数据标题",
           page: "（20/20）",
           capacities: [20, 20],
           status: 1,
+          statusright: 1,
+          warehouseBoxInfo: {
+            id: 59,
+            status: 1,          
+          },
+          materialInfo: {
+            id: '',
+            status: ''            
+          },
           url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
+          detailist: [
+            {
+              id: 1,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 2,
+              status:1,
+              resourceType:1,
+            },
+            {
+              id: 3,
+              status:1,
+              resourceType:1,
+            },
+          ],
           content: [
             "物资名称1",
             "物资名称2",
@@ -208,9 +389,9 @@ export default defineComponent({
       menus.value[1].data = []
       menus.value[2].data = []      
       finishedDelivery.value.data.forEach((index, item, arr) => {
-        if (arr[item].status == 0) {
+        if (arr[item].statusright == 0) {
           menus.value[0].data.push(index);
-        } else if (arr[item].status == 1) {
+        } else if (arr[item].statusright == 1) {
           menus.value[1].data.push(index);
         }
       });
@@ -241,27 +422,48 @@ export default defineComponent({
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
       var savependingall = menus.value[0].data.concat(menus.value[1].data);
+      
+      var asavefilter = savependingall.filter((a) => {
+        return (a.warehouseBoxInfo.id == '')
+      })
+      var asavependingall = asavefilter.map((item) => {       
+        return {
+          id: item.id,
+          resourceType: item.resourceType,
+          status:item.status,
+          materialInfo:item.materialInfo,          
+        }
+      })
+      var bsavefilter = savependingall.filter((a) => {
+        return (a.materialInfo.id == '')
+      })
+      var bsavependingall = bsavefilter.map((item) => {       
+        return {
+          id: item.id,
+          resourceType: item.resourceType,
+          status:item.status,
+          warehouseBoxInfo: item.warehouseBoxInfo,
+          detailist:item.detailist
+        }
+      })
+      var newdata = asavependingall.concat(bsavependingall)
+      console.log(newdata)
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
         content: `出仓符合清单和未符合清单的全部物资`,
         centered: true,
-        onOk: () => {
-          // store
-          //   .dispatch(
-          //     "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
-          //     // cardData.value.map((cardItem) => {
-          //     //   return {
-          //     //     id: cardItem.key,
-          //     //   };
-          //     // }
-          //     // )
-          //     savependingall
-          //   )
-          //   .then(() => {
-          //     visible.value = !visible.value;
-          //     //handleClickTabPane();
-          //   });
+        onOk: () => {          
+          store
+            .dispatch(
+              "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+              newdata
+            )
+            .then(() => {
+              visible.value = !visible.value;
+              //handleClickTabPane();
+            });
+          
           finishedDelivery.value.data =[]      
           visible.value = !visible.value;
         }
@@ -358,7 +560,7 @@ export default defineComponent({
           //     //handleClickTabPane();
           //   });
           finishedDelivery.value.data = finishedDelivery.value.data.filter((item) => {                        
-            return item.status == 0;
+            return item.statusright == 0;
           })
           initPendingData();      
           cardData.value = menus.value[1].data;
@@ -367,29 +569,29 @@ export default defineComponent({
     }
     onMounted(() => {
       //获取待出仓物资
-      //console.log(router.currentRoute.value.params)
-      //  store
-      //    .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
-      //    .then((response) => {
-      //      console.log(response)
-      //      pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
-      //        return {
-      //          title: item.newFileName,
-      //          page: item.id,
-      //          url: item.fileUrl,
-      //          content: item.newFileName.split(""),
-      //        }
-      //      });
-      //      finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
-      //       return {
-      //         title: item.newFileName,
-      //         page: item.id,
-      //         url: item.fileUrl,
-      //         content: item.newFileName.split(""),
-      //         status:item.status
-      //       }
-      //      })
-      //    });
+      console.log(router.currentRoute.value.params)
+       store
+         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList", router.currentRoute.value.params)
+         .then((response) => {
+           console.log(response)
+          //  pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
+          //    return {
+          //      title: item.newFileName,
+          //      page: item.id,
+          //      url: item.fileUrl,
+          //      content: item.newFileName.split(""),
+          //    }
+          //  });
+          //  finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
+          //   return {
+          //     title: item.newFileName,
+          //     page: item.id,
+          //     url: item.fileUrl,
+          //     content: item.newFileName.split(""),
+          //     status:item.status
+          //   }
+          //  })
+         });
     });
 
     return () => (
@@ -427,9 +629,13 @@ export default defineComponent({
                             <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
                               <div class="flex items-center justify-center">
                                 <span class="text-20">{listItem.title}</span>
-                                <span class="text-success">
-                                  {listItem.page}
-                                </span>
+                                {
+                                  listItem.resourceType == 2 ?  (
+                                    <span class="text-success">
+                                      {listItem.page}
+                                    </span>
+                                  ):''
+                                }                                
                               </div>
                             </div>
                             <div class="flex py-16 px-16">
@@ -525,7 +731,7 @@ export default defineComponent({
                           <>
                             <div
                               class={
-                                listItem.status == 1
+                                listItem.statusright == 1
                                   ? "bg-red-400 border-danger border bg-opacity-10"
                                   : "bg-navy-2"
                               }
@@ -534,12 +740,16 @@ export default defineComponent({
                               <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">{listItem.title}</span>
-                                  <span class="text-success">
-                                    {listItem.page}
-                                  </span>
+                                  {
+                                    listItem.resourceType == 2 ?  (
+                                      <span class="text-success">
+                                        {listItem.page}
+                                      </span>
+                                    ):''
+                                  }
                                   <a-space
                                     size={8}
-                                    class={listItem.status == 1 ? "" : "hidden"}
+                                    class={listItem.statusright == 1 ? "" : "hidden"}
                                     class="absolute right-5"
                                   >
                                     <a-button
@@ -593,7 +803,7 @@ export default defineComponent({
                                 </div>
                               </div>
                               <div
-                                class={listItem.status == 1 ? "" : "hidden"}
+                                class={listItem.statusright == 1 ? "" : "hidden"}
                                 class="text-danger text-12 mb-16"
                               >
                                 该物资/箱子不属于本次借货清单
@@ -668,7 +878,7 @@ export default defineComponent({
                               class="flex flex-row items-center p-0"
                               type="text"
                               danger
-                              class={listItem.status == 1 ? "" : "hidden"}
+                              class={listItem.statusright == 1 ? "" : "hidden"}
                             >
                               移除
                             </a-button>

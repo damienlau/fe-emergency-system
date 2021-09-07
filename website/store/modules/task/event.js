@@ -9,7 +9,7 @@ const actions = {
   findTaskEvents: () => {
     return new Promise((resolve, reject) => {
       findTaskEventData().then((response) => {
-        resolve(response.data);
+        resolve(response);
       });
     });
   },

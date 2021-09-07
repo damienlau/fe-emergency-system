@@ -35,9 +35,11 @@ const routesConfig = [
             path: "scanner",
             meta: { label: "出/归仓扫描" },
             component: RouterView,
+            redirect:'/scanner',
             children: [
               {
-                path:'',
+                path: '/scanner',
+                name:'scanner',
                 component: () => import("pages/warehouse/scanner"),
               },
               {
