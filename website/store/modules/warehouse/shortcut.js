@@ -5,6 +5,9 @@ import {
   findShortcutData,
   findShortcutCountData,
 } from "api/warehouse/shortcut";
+import defaultConfig from "config/defaultSettings";
+
+const { departments, shelf } = defaultConfig;
 
 const state = () => ({
   total: { all: 0, maintain: 0, repair: 0, lend: 0 },
@@ -18,10 +21,10 @@ const actions = {
     return new Promise((reslove) => {
       findShortcutCountData().then((total) => {
         commit("SET_TOTAL", {
-          all: total?.totalNum,
-          maintain: total?.baoYangNum,
-          repair: total?.weiXiuNum,
-          lend: total?.outNum,
+          all: total.totalNum,
+          maintain: total.baoYangNum,
+          repair: total.weiXiuNum,
+          lend: total.outNum,
         });
         reslove();
       });
@@ -35,32 +38,44 @@ const actions = {
         findShortcutData().then((response) => {
           reslove({
             pagination: {
-              current: response?.currentPage,
-              total: response?.totalNum,
-              pageSize: response?.pageSize,
+              current: response.currentPage,
+              total: response.totalNum,
+              pageSize: response.pageSize,
             },
-            data: response?.content.map((lists) => {
+            data: response.content.map((lists) => {
               switch (lists.resourceType) {
-                case 2:
-                  return {
-                    id: lists.id,
-                    label: lists.warehouseBoxInfo.boxName || "暂无数据",
-                    thumbnail: lists.warehouseBoxInfo.boxImages,
-                    quantity: {
-                      remain: lists.warehouseBoxInfo.materialRemainNumber,
-                      total: lists.warehouseBoxInfo.materialTotalNumber,
-                    },
-                  };
-                  break;
-
                 case 1:
                   return {
                     id: lists.id,
                     label:
                       lists.warehouseMaterialInfo.materialName || "暂无数据",
+                    code: lists.warehouseMaterialInfo.materialCode,
                     thumbnail: lists.warehouseMaterialInfo.materialImages,
+                    type: departments[
+                      lists.warehouseMaterialInfo.departmentType
+                    ],
+                    position: `${lists.warehouseMaterialInfo.rackNumber}号货架${
+                      shelf[lists.warehouseMaterialInfo.rackPosition]
+                    }`,
+                    boxName: lists.warehouseMaterialInfo.boxName,
                   };
-                  break;
+
+                case 2:
+                  return {
+                    id: lists.id,
+                    label: lists.warehouseBoxInfo.boxName || "暂无数据",
+                    code: lists.warehouseBoxInfo.boxCode,
+                    thumbnail: lists.warehouseBoxInfo.boxImages,
+                    quantity: {
+                      remain: lists.warehouseBoxInfo.materialRemainNumber,
+                      total: lists.warehouseBoxInfo.materialTotalNumber,
+                    },
+                    size: lists.warehouseBoxInfo.size,
+                    type: departments[lists.warehouseBoxInfo.departmentType],
+                    position: `${lists.warehouseBoxInfo.rackNumber}号货架${
+                      shelf[lists.warehouseBoxInfo.rackPosition]
+                    }`,
+                  };
               }
             }),
           });
@@ -70,10 +85,7 @@ const actions = {
   },
 
   // 添加清单列表
-  setLists: (
-    { dispatch },
-    formData
-  ) => {
+  setLists: ({ dispatch }, formData) => {
     return new Promise((reslove) => {
       if (formData.operationType) {
         addMaintainListsData(formData).then((response) => {
@@ -93,7 +105,7 @@ const actions = {
 
   // 批量删除待操作清单列表
   removeLists: ({ dispatch }, deleteLists) => {
-    deleteShortcutData(deleteLists).then((response) => {
+    deleteShortcutData(deleteLists).then(() => {
       dispatch("getLists");
     });
   },
@@ -104,7 +116,6 @@ const mutations = {
     state.total = totals;
   },
 };
-
 
 export default {
   namespaced: true,
