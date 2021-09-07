@@ -1,5 +1,14 @@
 <template>
   <div>
+    <Modal
+      v-model:visible="addBoxTransferVisible"
+      title=""
+      size="heavy"
+      key="AddBoxTransfer"
+      :zIndex="999"
+    >
+      <AddBoxTransfer></AddBoxTransfer>
+    </Modal>
     <a-tabs
       v-model:activeKey="activeKey"
       @tabClick="tabClick"
@@ -75,9 +84,10 @@
           v-model:visible="boxAddVisible"
           size="heavy"
           title="新增箱子"
+          :zIndex="1"
           key="box"
         >
-          <AddBoxDialog></AddBoxDialog>
+          <AddBoxDialog @showAddBoxTransfer="showAddBoxTransfer"></AddBoxDialog>
         </Modal>
       </a-tab-pane>
     </a-tabs>
@@ -111,6 +121,7 @@ import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
 import AddMeterialDialog from "../components/addMeterialDialog.vue";
+import AddBoxTransfer from "../components/addBoxTransfer.vue";
 import MeterialDetailDialog from "../components/meterialDetailDialog.vue";
 import BoxDetailDialog from "../components/boxDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
@@ -127,6 +138,7 @@ export default defineComponent({
     AddMeterialDialog,
     MeterialDetailDialog,
     BoxDetailDialog,
+    AddBoxTransfer,
   },
 
   setup() {
@@ -138,6 +150,7 @@ export default defineComponent({
       boxAddVisible: false, // 新增箱子
       meterialDetailVisible: false, // 物资详情
       boxDetailVisible: false, // 箱子详情
+      addBoxTransferVisible: false, // 箱子穿梭框
       boxInfo: {
         name: "测试",
       },
@@ -198,6 +211,9 @@ export default defineComponent({
       state.boxDetailVisible = false;
       getBoxData();
     };
+    const showAddBoxTransfer = () => {
+      state.addBoxTransferVisible = true;
+    };
 
     return {
       ...toRefs(state),
@@ -211,6 +227,7 @@ export default defineComponent({
       showBoxDetailDialog,
       closeMeterialDetailDialog,
       closeBoxDetailDialog,
+      showAddBoxTransfer,
     };
   },
 });

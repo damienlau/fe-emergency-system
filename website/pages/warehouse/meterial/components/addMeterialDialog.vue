@@ -2,7 +2,6 @@
   <a-tabs v-model:activeKey="activeKey" :animated="false">
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form
-
         :columns="baseForm"
         :dataSource="dataSource"
         @submit="handleSubmitBase"
@@ -30,7 +29,7 @@ import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addMeterialData } from "api/warehouse/meterial";
 import { Form } from "components";
 export default defineComponent({
-  name: "SiderBar",
+  name: "addMeterialDialog",
   components: { Form },
   setup() {
     const state = reactive({

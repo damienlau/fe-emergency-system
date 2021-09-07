@@ -1,12 +1,14 @@
 <template>
   <a-card
     hoverable
-    style="width: 340px; background: #144071"
+    style="width: 340px; height: 180px; background: #144071; margin: 4px"
+    :headStyle="headStyle"
     :bodyStyle="bodyStyle"
+    :title="info.boxName"
   >
-    <div class="top">
-      <span class="title">{{ info.boxName }}</span>
-    </div>
+    <template #extra>
+      <a-button v-if="showDelete" type="text" danger>移除</a-button>
+    </template>
     <div class="bottom flex flex-row w-fll pb-3">
       <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
@@ -52,15 +54,23 @@
 <script>
 import { defineComponent, ref, onMounted, toRefs, reactive } from "vue";
 export default defineComponent({
-  name: "BoxInfo",
+  name: "smallBox",
   props: {
     boxInfo: Object,
+    showDelete: {
+      type: Boolean,
+    },
   },
   setup(props) {
     const state = reactive({
       info: {},
       img: "",
       isDebit: true,
+      headStyle: {
+        padding: "0 10px",
+        height: "40px",
+        borderBottom: "1px solid #4280c4",
+      },
       bodyStyle: {
         padding: "10px",
       },

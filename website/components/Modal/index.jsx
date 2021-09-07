@@ -6,6 +6,10 @@ export default defineComponent({
   name: "Modal",
   props: {
     visible: Boolean,
+    zIndex: {
+      type: Number,
+      required: false,
+    },
     title: {
       type: String,
       required: false,
@@ -27,7 +31,9 @@ export default defineComponent({
     const modalClasses = computed(() => {
       return `ant-modal-bg h-modal-${props.size} w-modal-${props.size} bg-modal-${props.size} bg-no-repeat pb-0`;
     });
-
+    const zIndex = computed(() => {
+      return props.zIndex;
+    });
     const handleCloseModal = () => {
       emit("update:visible", !visible.value);
     };
@@ -41,6 +47,7 @@ export default defineComponent({
         footer={null}
         forceRender={true}
         destroyOnClose={true}
+        zIndex={zIndex.value}
         onCancel={handleCloseModal}
       >
         <div

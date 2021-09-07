@@ -84,7 +84,7 @@ import {
   findSpecifiedMeterialData,
 } from "api/warehouse/meterial";
 export default defineComponent({
-  name: "MeterialInfo",
+  name: "meterialInfo",
   props: {
     meterialInfo: Object,
   },

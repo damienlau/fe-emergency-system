@@ -1,36 +1,46 @@
 <template>
-  <a-tabs v-model:activeKey="activeKey" :animated="false">
-    <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
-      <Form :columns="baseForm" @submit="handleSubmitBase">
-        <template #button>
-          <a-button type="primary" ghost class="mr-3" htmlType="submit"
-            >保存</a-button
-          >
-        </template>
-      </Form>
-    </a-tab-pane>
-    <a-tab-pane :key="'other'" tab="其他信息">
-      <Form :columns="otherForm" @submit="handleSubmitOther">
-        <template #button>
-          <a-button type="primary" ghost class="mr-3" htmlType="submit"
-            >保存</a-button
-          >
-        </template>
-      </Form>
-    </a-tab-pane>
-    <a-tab-pane :key="'init'" tab="箱内物资"> </a-tab-pane>
-  </a-tabs>
+  <div>
+    <a-tabs v-model:activeKey="activeKey" :animated="false">
+      <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
+        <Form :columns="baseForm" @submit="handleSubmitBase">
+          <template #button>
+            <a-button type="primary" ghost class="mr-3" htmlType="submit"
+              >保存</a-button
+            >
+          </template>
+        </Form>
+      </a-tab-pane>
+      <a-tab-pane :key="'other'" tab="其他信息">
+        <Form :columns="otherForm" @submit="handleSubmitOther">
+          <template #button>
+            <a-button type="primary" ghost class="mr-3" htmlType="submit"
+              >保存</a-button
+            >
+          </template>
+        </Form>
+      </a-tab-pane>
+      <a-tab-pane :key="'init'" tab="箱内物资">
+        <div class="addBox" @click="handAdd">
+          <PlusOutlined :style="{ fontSize: '30px' }" />
+          <span class="mt-20"> 添加物资</span>
+        </div>
+      </a-tab-pane>
+    </a-tabs>
+  </div>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Form } from "components";
+import { PlusOutlined } from "@ant-design/icons-vue";
+import AddBoxTransfer from "./addBoxTransfer.vue";
 export default defineComponent({
-  name: "SiderBar",
-  components: { Form },
-  setup() {
+  name: "addBoxDialog",
+  components: { Form, PlusOutlined, AddBoxTransfer },
+  setup(props, slot) {
     const state = reactive({
       activeKey: "base",
+      addBoxDialogVisible: false,
     });
     const baseForm = ref([
       {
@@ -204,6 +214,9 @@ export default defineComponent({
     const handleSubmitInit = () => {
       console.log("ddddd");
     };
+    const handAdd = () => {
+      slot.emit("showAddBoxTransfer");
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -212,8 +225,21 @@ export default defineComponent({
       handleSubmitBase,
       handleSubmitOther,
       handleSubmitInit,
+      handAdd,
     };
   },
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.addBox {
+  width: 340px;
+  height: 180px;
+  background: #57799a;
+  margin: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+</style>
