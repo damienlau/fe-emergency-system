@@ -78,7 +78,7 @@
           :zIndex="1"
           key="box"
         >
-          <AddBoxDialog></AddBoxDialog>
+          <AddBoxDialog @close="closeAddBoxDialog"></AddBoxDialog>
         </Modal>
       </a-tab-pane>
     </a-tabs>
@@ -98,6 +98,7 @@
       :title="boxDetailDialogTitle"
       size="heavy"
       key="box"
+      :zIndex="1"
     >
       <BoxDetailDialog
         :id="boxId"
@@ -198,7 +199,10 @@ export default defineComponent({
       state.boxDetailVisible = false;
       getBoxData();
     };
-
+    const closeAddBoxDialog = () => {
+      state.boxAddVisible = false;
+      getBoxData();
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -211,6 +215,7 @@ export default defineComponent({
       showBoxDetailDialog,
       closeMeterialDetailDialog,
       closeBoxDetailDialog,
+      closeAddBoxDialog,
     };
   },
 });

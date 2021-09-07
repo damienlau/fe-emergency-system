@@ -93,6 +93,12 @@ export function findBoxInfoAllData(params) {
     params,
   });
 }
+// 全部仓库物资信息-无分页
+export function findMaterialInfoAllData(params) {
+  return request.get("/material/info/all", {
+    params,
+  });
+}
 // 全部仓库物资信息-分页
 export function findMaterialListData(params) {
   return request.get("/material/info/list", {

@@ -31,7 +31,7 @@
         </div>
         <SmallMeterial
           class="mt-8"
-          v-for="(item, index) in meterialList"
+          v-for="(item, index) in materialList"
           :materialInfo="item"
           :key="index"
         ></SmallMeterial>
@@ -69,7 +69,7 @@ export default defineComponent({
       activeKey: "base",
       boxInfo: {},
       addBoxTransferVisible: false, // 穿梭框
-      meterialList: [],
+      materialList: [],
     });
     const baseForm = ref([
       {
@@ -79,65 +79,93 @@ export default defineComponent({
         options: [
           {
             label: "急救/重症",
-            key: 1,
+            key: "1",
           },
           {
             label: "门诊",
-            key: 2,
+            key: "2",
           },
           {
             label: "后勤",
-            key: 3,
+            key: "3",
           },
 
           {
             label: "指挥",
-            key: 4,
+            key: "4",
           },
           {
             label: "重症",
-            key: 5,
+            key: "5",
           },
 
           {
             label: "超声",
-            key: 6,
+            key: "6",
           },
           {
             label: "清创",
-            key: 7,
+            key: "7",
           },
           {
             label: "留观",
-            key: 8,
+            key: "8",
           },
           {
             label: "药房",
-            key: 9,
+            key: "9",
           },
           {
             label: "耗材",
-            key: 10,
+            key: "10",
           },
           {
             label: "手术",
-            key: 11,
+            key: "11",
           },
           {
             label: "防疫/隔离",
-            key: 12,
+            key: "12",
           },
           {
             label: "消毒",
-            key: 13,
+            key: "13",
           },
           {
             label: "住院",
-            key: 14,
+            key: "14",
           },
           {
             label: "检验",
-            key: 15,
+            key: "15",
+          },
+        ],
+        required: true,
+      },
+      {
+        label: "货架",
+        key: "rackNumber",
+        type: "select",
+        options: [
+          {
+            label: "1号货架",
+            key: "1",
+          },
+          {
+            label: "2号货架",
+            key: "2",
+          },
+          {
+            label: "3号货架",
+            key: "3",
+          },
+          {
+            label: "4号货架",
+            key: "4",
+          },
+          {
+            label: "5号货架",
+            key: "5",
           },
         ],
         required: true,
@@ -149,23 +177,23 @@ export default defineComponent({
         options: [
           {
             label: "未知",
-            key: 0,
+            key: "0",
           },
           {
             label: "一层(下)",
-            key: 1,
+            key: "1",
           },
           {
             label: "二层(中)",
-            key: 2,
+            key: "2",
           },
           {
             label: "三层(上)",
-            key: 3,
+            key: "3",
           },
           {
             label: "四层(顶)",
-            key: 4,
+            key: "4",
           },
         ],
         required: true,
@@ -177,19 +205,19 @@ export default defineComponent({
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
-            key: 1,
+            key: "1",
           },
           {
             label: "一箱两柜(1200 x 800 x 800)",
-            key: 2,
+            key: "2",
           },
           {
             label: "一箱一柜(1200 x 800 x 400)",
-            key: 3,
+            key: "3",
           },
           {
             label: "其他箱子",
-            key: 4,
+            key: "4",
           },
         ],
         required: true,
@@ -203,7 +231,7 @@ export default defineComponent({
         label: "物资图片",
         key: "boxImages",
         type: "upload",
-        required: true,
+        required: false,
       },
     ]);
     const otherForm = ref([
@@ -235,21 +263,28 @@ export default defineComponent({
 
     const handleSubmitBase = (data) => {
       state.boxInfo = { ...state.boxInfo, ...data };
-      addBoxData(data);
+      addBoxData(state.boxInfo).then((res) => {
+        slot.emit("close");
+      });
     };
     const handleSubmitOther = (data) => {
       state.boxInfo = { ...state.boxInfo, ...data };
-      addBoxData(data);
+      addBoxData(state.boxInfo).then((res) => {
+        slot.emit("close");
+      });
     };
 
     const handleSubmitInit = () => {
       console.log(state.boxInfo, "ddd");
+      addBoxData(state.boxInfo).then((res) => {
+        slot.emit("close");
+      });
     };
     const showAddBoxTransfer = () => {
       state.addBoxTransferVisible = true;
     };
     const chooseMeterial = (arr) => {
-      state.meterialList = arr;
+      state.materialList = state.materialList.concat(arr);
       state.addBoxTransferVisible = false;
     };
     return {
