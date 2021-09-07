@@ -107,8 +107,8 @@ export default defineComponent({
       state.info = props.materialInfo;
       state.img =
         props.materialInfo.materialImages &&
-        props.materialInfo.materialImages[0].url
-          ? props.materialInfo.materialImages[0].url
+        props.materialInfo.materialImages[0].fileUrl
+          ? props.materialInfo.materialImages[0].fileUrl
           : "www.test";
     });
     const returnStatus = (status) => {

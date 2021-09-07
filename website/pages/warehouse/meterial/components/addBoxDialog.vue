@@ -2,7 +2,11 @@
   <div>
     <a-tabs v-model:activeKey="activeKey" :animated="false">
       <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
-        <Form :columns="baseForm" @submit="handleSubmitBase">
+        <Form
+          :formData="formDataBase"
+          :columns="baseForm"
+          @submit="handleSubmitBase"
+        >
           <template #button>
             <a-button type="primary" ghost class="mr-3" htmlType="submit"
               >保存</a-button
@@ -11,7 +15,11 @@
         </Form>
       </a-tab-pane>
       <a-tab-pane :key="'other'" tab="其他信息">
-        <Form :columns="otherForm" @submit="handleSubmitOther">
+        <Form
+          :formData="formDataOter"
+          :columns="otherForm"
+          @submit="handleSubmitOther"
+        >
           <template #button>
             <a-button type="primary" ghost class="mr-3" htmlType="submit"
               >保存</a-button
@@ -57,7 +65,8 @@
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
-import { Form, Modal } from "components";
+import { Modal } from "components";
+import Form from "components/Form/model.jsx";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
@@ -70,6 +79,8 @@ export default defineComponent({
       boxInfo: {},
       addBoxTransferVisible: false, // 穿梭框
       materialList: [],
+      formDataBase: {},
+      formDataOter: {},
     });
     const baseForm = ref([
       {
@@ -261,23 +272,30 @@ export default defineComponent({
     ]);
     onMounted(() => {});
 
-    const handleSubmitBase = (data) => {
-      state.boxInfo = { ...state.boxInfo, ...data };
+    const handleSubmitBase = () => {
+      state.boxInfo = { ...state.formDataBase };
       addBoxData(state.boxInfo).then((res) => {
-        slot.emit("close");
+        if (res) {
+          slot.emit("close");
+        }
       });
     };
-    const handleSubmitOther = (data) => {
-      state.boxInfo = { ...state.boxInfo, ...data };
+    const handleSubmitOther = () => {
+      state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
+      console.log(state.boxInfo, "state.boxInfo");
       addBoxData(state.boxInfo).then((res) => {
-        slot.emit("close");
+        if (res) {
+          slot.emit("close");
+        }
       });
     };
 
     const handleSubmitInit = () => {
       console.log(state.boxInfo, "ddd");
       addBoxData(state.boxInfo).then((res) => {
-        slot.emit("close");
+        if (res) {
+          slot.emit("close");
+        }
       });
     };
     const showAddBoxTransfer = () => {
