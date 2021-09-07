@@ -40,7 +40,7 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { Icon } from "components";
 import Sidebar from "./siderBar/index.vue";
-import Content from "./content.vue";
+import Content from "./content.jsx";
 export default defineComponent({
   name: "SiderBar",
   components: { Content, Icon, Sidebar },

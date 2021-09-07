@@ -27,6 +27,9 @@ module.exports = {
         "modal-light": "url('assets/bg_modal_dark_light.png')",
         "modal-heavy": "url('assets/bg_modal_dark_heavy.png')",
         "modal-bold": "url('assets/bg_modal_dark_bold.png')",
+        box: "url('assets/bg_box.png')",
+        "box-hover": "url('assets/bg_box_hover.png')",
+        "shelf-partition": "linear-gradient(180deg, #06315D 0%, #0E518F 100%)",
       }),
       // 颜色
       colors: {
@@ -39,9 +42,9 @@ module.exports = {
       // 高度
       height: {
         "modal-ultralight": "264px",
-		"modal-lightermin":"314px",
+        "modal-lightermin": "314px",
         "modal-lighter": "320px",
-		"modal-lightmin":"411px",
+        "modal-lightmin": "411px",
         "modal-light": "432px",
         "modal-heavy": "560px",
         "modal-bold": "748px",
@@ -49,7 +52,7 @@ module.exports = {
       // 宽度
       width: {
         "modal-ultralight": "620px",
-		"modal-lightermin":"314px",
+        "modal-lightermin": "314px",
         "modal-lighter": "620px",
         "modal-light": "620px",
         "modal-heavy": "920px",
