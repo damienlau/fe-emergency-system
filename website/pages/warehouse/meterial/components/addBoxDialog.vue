@@ -22,7 +22,8 @@
       <a-tab-pane
         :key="'init'"
         tab="箱内物资"
-        class="flex flex-row flex-wrap justify-start overflow-y-auto"
+        class="flex flex-row flex-wrap justify-start"
+        style="backgroud: pink"
       >
         <div class="addBox mt-8" @click="showAddBoxTransfer">
           <PlusOutlined :style="{ fontSize: '30px' }" />
@@ -34,36 +35,35 @@
           :materialInfo="item"
           :key="index"
         ></SmallMeterial>
-
-        <div class="flex flex-row justify-center align-middle">
-          <a-button type="primary" ghost class="mr-3">保存</a-button>
-        </div>
       </a-tab-pane>
+      <div
+        class="flex flex-row justify-center align-middle"
+        v-if="activeKey === 'init'"
+      >
+        <a-button type="primary" ghost class="mr-3">保存</a-button>
+      </div>
     </a-tabs>
-    <a-modal v-model:visible="addBoxTransferVisible" title="" :zIndex="999">
-      <AddBoxTransfer @chooseMeterial="chooseMeterial"></AddBoxTransfer>
-    </a-modal>
   </div>
-  <!-- <Modal
+  <Modal
     v-model:visible="addBoxTransferVisible"
     title=""
     size="heavy"
     key="AddBoxTransfer"
     :zIndex="999"
   >
-    <AddBoxTransfer></AddBoxTransfer>
-  </Modal> -->
+    <AddBoxTransfer @chooseMeterial="chooseMeterial"></AddBoxTransfer>
+  </Modal>
 </template>
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
-import { Form } from "components";
+import { Form, Modal } from "components";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
 export default defineComponent({
   name: "addBoxDialog",
-  components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial },
+  components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial, Modal },
   setup(props, slot) {
     const state = reactive({
       activeKey: "base",
