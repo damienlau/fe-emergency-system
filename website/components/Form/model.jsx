@@ -16,7 +16,7 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-    dataSource: {
+    formData: {
       type: Object,
       required: false,
     },
@@ -28,9 +28,7 @@ export default defineComponent({
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { dataSource } = toRefs(props);
-
-    const formData = ref(dataSource.value || {});
+    const { formData } = toRefs(props);
 
     const handleSubmit = () => {
       emit("submit", formData.value);
@@ -78,6 +76,7 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
+                      id: file.uid,
                       oldFileName: file.name,
                       fileUrl: response.join(),
                     });
@@ -87,6 +86,7 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
+                      id: file.uid,
                       oldFileName: file.name,
                       fileUrl: response.join(),
                     });
@@ -173,7 +173,9 @@ export default defineComponent({
           );
         })}
         <FormItem>
-          <div class="flex items-center justify-center">{slots.button?.()}</div>
+          <div class="flex items-center justify-center">
+            {slots.button && slots.button()}
+          </div>
         </FormItem>
       </Form>
     );
