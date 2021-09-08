@@ -310,7 +310,12 @@ export default defineComponent({
     const initData = () => {
       state.loading = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
-        state.dataSource = JSON.parse(JSON.stringify(res));
+        if (res.materialImages.length > 0) {
+          res.materialImages.forEach((item) => {
+            item.url = item.fileUrl;
+          });
+        }
+        state.dataSource = res;
         state.loading = true;
       });
     };

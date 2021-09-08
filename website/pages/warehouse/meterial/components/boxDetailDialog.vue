@@ -393,7 +393,12 @@ export default defineComponent({
     const initData = () => {
       state.loading = false;
       findSpecifiedBoxData({ id: props.id }).then((res) => {
-        state.dataSource = JSON.parse(JSON.stringify(res));
+        if (res.boxImages.length > 0) {
+          res.boxImages.forEach((item) => {
+            item.url = item.fileUrl;
+          });
+        }
+        state.dataSource = res;
         state.loading = true;
       });
     };

@@ -118,10 +118,14 @@ export default defineComponent({
       15: "检验",
     });
     onMounted(() => {
+      console.log(
+        props.meterialInfo.materialImages,
+        "props.meterialInfo.materialImages"
+      );
       state.info = props.meterialInfo;
       state.img =
         props.meterialInfo.materialImages.length > 0
-          ? props.meterialInfo.materialImages.fileUrl
+          ? props.meterialInfo.materialImages[0].fileUrl
           : "www.test";
     });
     const changeMaintain = () => {
