@@ -31,7 +31,7 @@ export default defineComponent({
     const { formData } = toRefs(props);
 
     const handleSubmit = () => {
-      emit("submit", formData.value);
+      emit("submit");
     };
 
     const formItemRenderNode = (render) => {
@@ -69,7 +69,6 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
-                      id: file.uid,
                       oldFileName: file.name,
                       fileUrl: response.join(),
                     });
@@ -79,7 +78,6 @@ export default defineComponent({
                       name: file.name,
                       status: "done",
                       url: response.join(),
-                      id: file.uid,
                       oldFileName: file.name,
                       fileUrl: response.join(),
                     });

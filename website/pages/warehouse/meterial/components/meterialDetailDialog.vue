@@ -297,13 +297,13 @@ export default defineComponent({
     });
     const handleSubmitBase = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        this.isEditBase = true;
+        state.isEditBase = true;
         initData();
       });
     };
     const handleSubmitOther = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        this.isEditOther = true;
+        state.isEditOther = true;
         initData();
       });
     };

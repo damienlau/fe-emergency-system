@@ -7,10 +7,14 @@
     :title="info.materialName"
   >
     <template #extra>
-      <a-button v-if="showDelete" type="text" danger @click="handDelete"
+      <a-button v-if="showDelete" type="text" danger @click.stop="handDelete"
         >移除</a-button
       >
-      <a-button v-if="showAdd" type="text" style="color: green" @click="handAdd"
+      <a-button
+        v-if="showAdd"
+        type="text"
+        style="color: green"
+        @click.stop="handAdd"
         >添加</a-button
       >
     </template>
@@ -103,8 +107,8 @@ export default defineComponent({
       state.info = props.materialInfo;
       state.img =
         props.materialInfo.materialImages &&
-        props.materialInfo.materialImages[0].url
-          ? props.materialInfo.materialImages[0].url
+        props.materialInfo.materialImages[0].fileUrl
+          ? props.materialInfo.materialImages[0].fileUrl
           : "www.test";
     });
     const returnStatus = (status) => {
