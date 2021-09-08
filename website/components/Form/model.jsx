@@ -8,7 +8,7 @@ import {
 } from "ant-design-vue";
 import { uploadData } from "api/utils";
 import Icon from "components/Icon";
-import { defineComponent, ref, toRefs } from "vue";
+import { defineComponent, toRefs } from "vue";
 
 export default defineComponent({
   props: {
@@ -43,8 +43,22 @@ export default defineComponent({
               allowClear
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
-              options={render.options}
-            ></Select>
+              // options={render.options}
+              onChange={(value) => {
+                console.log(value, formData.value[render.key]);
+              }}
+              onSelect={(value) => {
+                console.log(value, formData.value[render.key]);
+              }}
+            >
+              {render.options.map((option) => {
+                return (
+                  <SelectOption value={option.key} key={option.key}>
+                    {option.label}
+                  </SelectOption>
+                );
+              })}
+            </Select>
           );
 
         case "upload":
@@ -150,7 +164,8 @@ export default defineComponent({
                       {
                         required: true,
                         message: `${formItem.label}为必填项`,
-                        trigger: "change",
+                        trigger: ["change", "blur"],
+                        type: "any",
                       },
                     ]
                   : []

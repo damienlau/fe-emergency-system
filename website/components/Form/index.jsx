@@ -45,8 +45,12 @@ export default defineComponent({
               allowClear
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
-              options={render.options}
-            ></Select>
+              // options={render.options}
+            >
+              {render.options.map((option) => {
+                return <SelectOption value={option.key} title={option.label} />;
+              })}
+            </Select>
           );
 
         case "upload":
@@ -152,6 +156,7 @@ export default defineComponent({
                       {
                         required: true,
                         message: `${formItem.label}为必填项`,
+                        type: "any",
                         trigger: "change",
                       },
                     ]
