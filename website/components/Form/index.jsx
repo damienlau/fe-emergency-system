@@ -28,7 +28,7 @@ export default defineComponent({
   },
   emits: ["submit"],
   setup(props, { slots, emit }) {
-    const { dataSource } = toRefs(props);
+    const { columns, dataSource } = toRefs(props);
 
     const formData = ref(dataSource.value || {});
 
@@ -41,19 +41,12 @@ export default defineComponent({
         case "select":
           return (
             <Select
-              v-model={[formData.value[`${render.key}`], "value"]}
+              v-model={[formData.value[render.key], "value"]}
               allowClear
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
-            >
-              {render.options.map((selectOption) => {
-                return (
-                  <SelectOption value={selectOption.key}>
-                    {selectOption.label}
-                  </SelectOption>
-                );
-              })}
-            </Select>
+              options={render.options}
+            ></Select>
           );
 
         case "upload":
@@ -148,7 +141,7 @@ export default defineComponent({
         hideRequiredMark
         onFinish={handleSubmit}
       >
-        {props.columns.map((formItem) => {
+        {columns.value.map((formItem) => {
           return (
             <FormItem
               name={formItem.key}

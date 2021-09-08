@@ -43,15 +43,8 @@ export default defineComponent({
               allowClear
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
-            >
-              {render.options.map((selectOption) => {
-                return (
-                  <SelectOption value={selectOption.key}>
-                    {selectOption.label}
-                  </SelectOption>
-                );
-              })}
-            </Select>
+              options={render.options}
+            ></Select>
           );
 
         case "upload":
