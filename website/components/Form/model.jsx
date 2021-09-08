@@ -151,6 +151,7 @@ export default defineComponent({
         hideRequiredMark
         onFinish={handleSubmit}
       >
+        {slots.default()}
         {props.columns.map((formItem) => {
           return (
             <FormItem
