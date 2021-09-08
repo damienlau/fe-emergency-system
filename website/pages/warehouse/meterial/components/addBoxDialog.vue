@@ -68,13 +68,14 @@
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Modal } from "components";
-import Form from "components/Form/model.jsx";
+import Form from "components/Form/model";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
 export default defineComponent({
   name: "addBoxDialog",
   components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial, Modal },
+  emits: ["close"],
   setup(props, slot) {
     const state = reactive({
       activeKey: "base",
