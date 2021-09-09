@@ -8,7 +8,7 @@ import {
 } from "ant-design-vue";
 import { uploadData } from "api/utils";
 import Icon from "components/Icon";
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, ref, toRefs } from "vue";
 
 export default defineComponent({
   props: {
@@ -16,7 +16,7 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-    formData: {
+    dataSource: {
       type: Object,
       required: false,
     },
@@ -31,7 +31,7 @@ export default defineComponent({
     const { formData } = toRefs(props);
 
     const handleSubmit = () => {
-      emit("submit");
+      emit("submit", formData.value);
     };
 
     const formItemRenderNode = (render) => {
@@ -43,18 +43,11 @@ export default defineComponent({
               allowClear
               disabled={!props.edit}
               placeholder={`请选择${render.label}`}
-              // options={render.options}
-              onChange={(value) => {
-                console.log(value, formData.value[render.key]);
-              }}
-              onSelect={(value) => {
-                console.log(value, formData.value[render.key]);
-              }}
             >
-              {render.options.map((option) => {
+              {render.options.map((selectOption) => {
                 return (
-                  <SelectOption value={option.key} key={option.key}>
-                    {option.label}
+                  <SelectOption value={selectOption.key}>
+                    {selectOption.label}
                   </SelectOption>
                 );
               })}
@@ -71,6 +64,8 @@ export default defineComponent({
                 url: images.fileUrl,
               };
             });
+
+            console.log(formData.value[render.key]);
           }
 
           return (
@@ -151,7 +146,6 @@ export default defineComponent({
         hideRequiredMark
         onFinish={handleSubmit}
       >
-        {slots.default()}
         {props.columns.map((formItem) => {
           return (
             <FormItem
@@ -165,8 +159,7 @@ export default defineComponent({
                       {
                         required: true,
                         message: `${formItem.label}为必填项`,
-                        trigger: ["change", "blur"],
-                        type: "any",
+                        trigger: "change",
                       },
                     ]
                   : []
@@ -180,9 +173,7 @@ export default defineComponent({
           );
         })}
         <FormItem>
-          <div class="flex items-center justify-center">
-            {slots.button && slots.button()}
-          </div>
+          <div class="flex items-center justify-center">{slots.button?.()}</div>
         </FormItem>
       </Form>
     );
