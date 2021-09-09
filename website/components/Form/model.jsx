@@ -16,7 +16,7 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-    dataSource: {
+    formData: {
       type: Object,
       required: false,
     },

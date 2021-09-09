@@ -169,11 +169,11 @@ export default defineComponent({
         options: [
           {
             label: "无保质期",
-            key: 0,
+            key: "0",
           },
           {
             label: "有保质期",
-            key: 1,
+            key: "1",
           },
         ],
         required: false,
