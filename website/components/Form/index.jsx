@@ -43,7 +43,15 @@ export default defineComponent({
     }) => {
       switch (type) {
         case "date":
-          return <DatePicker />;
+          return (
+            <DatePicker
+              v-model={[formData.value[`${key}`], "value"]}
+              format={"YYYY/MM/DD"}
+              valueFormat={"YYYY-MM-DD 00:00:00"}
+              disabled={props.disabled}
+              placeholder={`请选择${label || placeholder}`}
+            />
+          );
 
         case "select":
           return (
