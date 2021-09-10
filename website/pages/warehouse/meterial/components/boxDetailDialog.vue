@@ -160,6 +160,7 @@
     </div>
     <Modal
       v-model:visible="addBoxTransferVisible"
+      @cancel="addBoxTransferVisible = false"
       title=""
       size="heavy"
       key="AddBoxTransfer"

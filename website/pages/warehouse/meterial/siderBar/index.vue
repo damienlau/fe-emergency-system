@@ -37,6 +37,7 @@
           size="heavy"
           title="物资入库"
           key="materials"
+          @cancel="meterialAddVisible = false"
         >
           <AddMeterialDialog></AddMeterialDialog>
         </Modal>
@@ -73,6 +74,7 @@
         </div>
         <Modal
           v-model:visible="boxAddVisible"
+          @cancel="boxAddVisible = false"
           size="heavy"
           title="新增箱子"
           :zIndex="1"
@@ -85,6 +87,7 @@
     <Modal
       v-model:visible="meterialDetailVisible"
       :title="meterialDetailDialogTitle"
+      @cancel="meterialDetailVisible = false"
       size="heavy"
       key="box"
     >
@@ -96,6 +99,7 @@
     <Modal
       v-model:visible="boxDetailVisible"
       :title="boxDetailDialogTitle"
+      @cancel="boxDetailVisible = false"
       size="heavy"
       key="box"
       :zIndex="1"
