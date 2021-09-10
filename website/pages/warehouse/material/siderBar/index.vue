@@ -30,7 +30,21 @@
             class="BoxInfo mt-3"
             @click="showMeterialDetailDialog(item)"
           ></MeterialInfo>
-          <a-button type="link"> 点击加载更多~</a-button>
+          <div style="height: 120px; width: 240px">
+            <a-button
+              type="link"
+              v-if="paginationMaterials.total > materialsList.length"
+              @click="handAddMoreMaterial"
+            >
+              点击加载更多~</a-button
+            >
+            <a-button
+              type="link"
+              v-if="!(paginationMaterials.total > materialsList.length)"
+            >
+              没有数据了~</a-button
+            >
+          </div>
         </div>
         <Modal
           v-model:visible="meterialAddVisible"
@@ -39,7 +53,7 @@
           key="materials"
           @cancel="meterialAddVisible = false"
         >
-          <AddMeterialDialog></AddMeterialDialog>
+          <AddMeterialDialog @close="closeAddMeteriaDialog"></AddMeterialDialog>
         </Modal>
       </a-tab-pane>
       <a-tab-pane :key="'box'" tab="箱子">
@@ -70,7 +84,21 @@
             class="BoxInfo mt-3"
             @click="showBoxDetailDialog(item)"
           ></BoxInfo>
-          <a-button type="link"> 点击加载更多~</a-button>
+          <div style="height: 120px; width: 240px">
+            <a-button
+              type="link"
+              v-if="paginationBox.total > boxList.length"
+              @click="handAddMoreBox"
+            >
+              点击加载更多~</a-button
+            >
+            <a-button
+              type="link"
+              v-if="!(paginationBox.total > boxList.length)"
+            >
+              没有数据了~</a-button
+            >
+          </div>
         </div>
         <Modal
           v-model:visible="boxAddVisible"
@@ -153,29 +181,57 @@ export default defineComponent({
       boxCode: "",
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
+      paginationMaterials: {
+        current: 1,
+        pageSize: 10,
+        total: 0,
+      },
+      paginationBox: {
+        current: 1,
+        pageSize: 10,
+        total: 0,
+      },
     });
     onMounted(() => {
-      getMaterialsData();
+      getFirstMaterialsData();
     });
     const getMaterialsData = () => {
-      state.materialsList = [];
       const search = meterialSearchValue.value;
-      findCriteriaPageData({ materialName: search }).then((res) => {
-        state.materialsList = res.content;
+      const pageOrdersJSON = encodeURIComponent(
+        `[{'direction':'desc','property':'id'}]`
+      );
+      const params = {
+        currentPage: state.paginationMaterials.current,
+        pageSize: state.paginationMaterials.pageSize,
+        pageOrdersJSON: pageOrdersJSON,
+        materialName: search,
+      };
+      findCriteriaPageData(params).then((res) => {
+        state.materialsList = state.materialsList.concat(res.content);
+        state.paginationMaterials.total = res.totalNum;
       });
     };
     const getBoxData = () => {
-      state.boxList = [];
       const search = boxSearchValue.value;
-      findBoxPageData({ boxName: search }).then((res) => {
-        state.boxList = res.content;
+      const pageOrdersJSON = encodeURIComponent(
+        `[{'direction':'desc','property':'id'}]`
+      );
+      const params = {
+        currentPage: state.paginationMaterials.current,
+        pageSize: state.paginationMaterials.pageSize,
+        pageOrdersJSON: pageOrdersJSON,
+        boxName: search,
+      };
+      findBoxPageData(params).then((res) => {
+        state.boxList = state.boxList.concat(res.content);
+        state.paginationBox.total = res.totalNum;
       });
     };
     const tabClick = (tabs) => {
       if (tabs === "box") {
-        getBoxData();
+        getFirstBoxData();
       } else {
-        getMaterialsData();
+        getFirstMaterialsData();
       }
     };
     const showMetarialDilog = () => {
@@ -197,15 +253,39 @@ export default defineComponent({
     };
     const closeMeterialDetailDialog = () => {
       state.meterialDetailVisible = false;
-      getMaterialsData();
+      getFirstMaterialsData();
     };
     const closeBoxDetailDialog = () => {
       state.boxDetailVisible = false;
-      getBoxData();
+      getFirstBoxData();
     };
     const closeAddBoxDialog = () => {
       state.boxAddVisible = false;
+      getFirstBoxData();
+    };
+    const closeAddMeteriaDialog = () => {
+      state.meterialAddVisible = false;
+      getFirstMaterialsData();
+    };
+    const handAddMoreMaterial = () => {
+      state.paginationMaterials.current++;
+      getMaterialsData();
+    };
+    const handAddMoreBox = () => {
+      state.paginationBox.current++;
       getBoxData();
+    };
+    const getFirstBoxData = () => {
+      // 初始化数据
+      state.boxList = [];
+      state.paginationBox.current = 1;
+      getBoxData();
+    };
+    const getFirstMaterialsData = () => {
+      // 初始化数据
+      state.materialsList = [];
+      state.paginationMaterials.current = 1;
+      getMaterialsData();
     };
     return {
       ...toRefs(state),
@@ -220,6 +300,11 @@ export default defineComponent({
       closeMeterialDetailDialog,
       closeBoxDetailDialog,
       closeAddBoxDialog,
+      closeAddMeteriaDialog,
+      handAddMoreMaterial,
+      handAddMoreBox,
+      getFirstBoxData,
+      getFirstMaterialsData,
     };
   },
 });

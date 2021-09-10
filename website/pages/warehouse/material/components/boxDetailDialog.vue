@@ -6,7 +6,7 @@
           v-if="loading"
           v-model:dataSource="dataSource"
           :columns="baseForm"
-          :disabled="!isEditBase"
+          :disabled="isEditBase"
           @submit="handleSubmitBase"
         >
           <template #button>
@@ -50,7 +50,7 @@
           v-if="loading"
           :columns="otherForm"
           v-model:dataSource="dataSource"
-          :disabled="!isEditOther"
+          :disabled="isEditOther"
           @submit="handleSubmitOther"
         >
           <template #button>

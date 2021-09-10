@@ -35,7 +35,7 @@ import Form from "components/Form";
 export default defineComponent({
   name: "addMeterialDialog",
   components: { Form },
-  setup() {
+  setup(props, slot) {
     const state = reactive({
       activeKey: "base",
       formDataBase: {},
@@ -204,11 +204,15 @@ export default defineComponent({
     onMounted(() => {});
     const handleSubmitBase = () => {
       const data = { ...state.formDataBase, ...state.formDataOter };
-      addMeterialData(data);
+      addMeterialData(data).then((res) => {
+        slot.emit("close");
+      });
     };
     const handleSubmitOther = () => {
       const data = { ...state.formDataBase, ...state.formDataOter };
-      addMeterialData(data);
+      addMeterialData(data).then((res) => {
+        slot.emit("close");
+      });
     };
     return {
       ...toRefs(state),
