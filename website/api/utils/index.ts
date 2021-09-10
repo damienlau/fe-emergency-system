@@ -16,11 +16,10 @@ export const uploadData = (parameter: File) => {
       },
     })
     .then((response: any) => {
-      return [
-        {
-          url: response.join(),
-          fileUrl: response.join(),
-        },
-      ];
+      return {
+        name: parameter.name,
+        url: response.join(),
+        fileUrl: response.join(),
+      };
     });
 };

@@ -53,7 +53,6 @@ export default defineComponent({
     );
 
     const createFormComponentRender = ({
-      disabled,
       key,
       label,
       options,
@@ -100,8 +99,13 @@ export default defineComponent({
             <Upload
               v-model={[formData.value[`${key}`], "fileList"]}
               customRequest={({ file }) => {
-                uploadData(file).then((response) => {
-                  formData.value[`${key}`] = response;
+                uploadData(file).then((response: any) => {
+                  formData.value[`${key}`].map((image: any, index: number) => {
+                    if (image.uid) {
+                      formData.value[`${key}`].splice(index, 1);
+                    }
+                  });
+                  formData.value[`${key}`].push(response);
                 });
               }}
               listType="picture-card"
