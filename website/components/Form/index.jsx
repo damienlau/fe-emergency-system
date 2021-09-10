@@ -1,6 +1,7 @@
 import { defineComponent, ref, toRefs } from "@vue/runtime-core";
 import {
   Col,
+  DatePicker,
   Form,
   FormItem,
   Input,
@@ -22,6 +23,11 @@ export default defineComponent({
       type: Object,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: ["onUpdate:dataSource", "submit"],
   setup(props, { emit, slots }) {
@@ -29,7 +35,6 @@ export default defineComponent({
     const formData = ref(dataSource.value || {});
 
     const createFormComponentRender = ({
-      disabled,
       key,
       label,
       options,
@@ -37,12 +42,15 @@ export default defineComponent({
       type,
     }) => {
       switch (type) {
+        case "date":
+          return <DatePicker />;
+
         case "select":
           return (
             <Select
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请选择${label || placeholder}`}
             >
               {options.map((selectOption) => {
@@ -63,7 +71,7 @@ export default defineComponent({
             <Textarea
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Textarea>
           );
@@ -83,7 +91,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Input>
           );
