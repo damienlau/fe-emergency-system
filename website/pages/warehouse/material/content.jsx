@@ -1,5 +1,5 @@
 import { defineComponent, ref, onUpdated } from "vue";
-import Form from "components/Form/model";
+import Form from "components/Form";
 
 export default defineComponent({
   name: "Content",

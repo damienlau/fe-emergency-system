@@ -1,9 +1,7 @@
 <template>
   <a-layout class="h-full bg-transparent">
     <a-layout class="bg-transparent">
-      <a-layout-content>
-        <Content />
-      </a-layout-content>
+      <a-layout-content> </a-layout-content>
     </a-layout>
     <a-layout-sider
       v-model:collapsed="collapsed"
@@ -40,10 +38,9 @@
 import { defineComponent, toRefs, reactive } from "vue";
 import { Icon } from "components";
 import Sidebar from "./siderBar/index.vue";
-import Content from "./content.jsx";
 export default defineComponent({
   name: "SiderBar",
-  components: { Content, Icon, Sidebar },
+  components: { Icon, Sidebar },
 
   setup() {
     const state = reactive({

@@ -1,77 +1,76 @@
 import { RouterView } from "vue-router";
 
-const routesConfig = [
+export default [
   {
-    name: "Home",
     path: "/",
+    name: "Home",
     component: () => import("layouts/BasicLayout"),
     children: [
       {
-        name: "Warehouse",
         path: "warehouse",
-        meta: { label: "应急仓库", navigator: true },
+        name: "Warehouse",
         component: RouterView,
         children: [
           {
-            name: "Material",
             path: "material",
-            meta: { label: "仓库" },
             component: RouterView,
             children: [
               {
                 path: "",
-                meta: { label: "首页" },
-                component: () => import("pages/warehouse/meterial/index.vue"),
+                name: "Material",
+                component: () => import("pages/warehouse/material/index.vue"),
               },
+              // {
+              //   path: "shelf",
+              //   name: "Shelf",
+              //   component: () => import("pages/warehouse/material/shelf"),
+              // },
+            ],
+          },
+          {
+            path: "record",
+            component: RouterView,
+            children: [
               {
-                name: "Shelf",
-                path: "shelf",
-                meta: { label: "货架" },
-                component: () =>
-                  import("pages/warehouse/meterial/shelf/index.vue"),
+                path: "",
+                name: "Record",
+                component: () => import("pages/warehouse/record"),
               },
             ],
           },
           {
-            name: "Record",
-            path: "record",
-            meta: { label: "借还记录" },
-            component: () => import("pages/warehouse/record"),
-          },
-          {
-            name: "Shortcut",
             path: "shortcut",
-            meta: { label: "一键操作" },
-            component: () => import("pages/warehouse/shortcut"),
-          },
-          {
-            name: "Scanner",
-            path: "scanner",
-            meta: { label: "出/归仓扫描" },
             component: RouterView,
-            redirect: "/scanner",
             children: [
               {
-                path: "/scanner",
-                name: "scanner",
+                path: "",
+                name: "Shortcut",
+                component: () => import("pages/warehouse/shortcut"),
+              },
+            ],
+          },
+          {
+            path: "scanner",
+            component: RouterView,
+            children: [
+              {
+                path: "",
+                name: "Scanner",
                 component: () => import("pages/warehouse/scanner"),
               },
               {
-                name: "Pending",
                 path: "pending",
-                meta: { label: "出仓扫描" },
+                name: "Pending",
                 component: () => import("pages/warehouse/scanner/pending"),
               },
               {
-                name: "Belong",
                 path: "belong",
-                meta: { label: "归仓扫描" },
+                name: "Belong",
                 component: () => import("pages/warehouse/scanner/belong"),
               },
               {
-                name: "Emergency",
                 path: "emergency",
-                meta: { label: "紧急扫描" },
+                name: "Emergency",
                 component: () => import("pages/warehouse/scanner/emergency"),
               },
             ],
@@ -81,19 +80,15 @@ const routesConfig = [
     ],
   },
   {
-    name: "User",
     path: "/user",
-    meta: { label: "个人中心" },
-    component: RouterView,
+    name: "User",
+    component: () => import("layouts/UserLayout"),
     children: [
       {
-        name: "Login",
         path: "login",
-        meta: { label: "登录" },
+        name: "Login",
         component: () => import("pages/user/login"),
       },
     ],
   },
 ];
-
-export default routesConfig;

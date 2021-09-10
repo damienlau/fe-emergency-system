@@ -12,7 +12,7 @@
 
 <script>
 import Tabs from "components/Tabs";
-import Form from "components/Form/model";
+import Form from "components/Form";
 import { ref } from "vue";
 export default {
   components: { Form, Tabs },
