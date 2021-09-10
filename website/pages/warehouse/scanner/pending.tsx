@@ -45,26 +45,9 @@ export default defineComponent({
         //       status:1,
         //       resourceType:1,
         //     },
-        //     {
-        //       id: 2,
-        //       status:1,
-        //       resourceType:1,
-        //     },
-        //     {
-        //       id: 3,
-        //       status:1,
-        //       resourceType:1,
-        //     },
         //   ],
         //   content: [
         //     "物资名称1",
-        //     "物资名称2",
-        //     "物资名称3",
-        //     "物资名称4",
-        //     "物资名称5",
-        //     "物资名称6",
-        //     "物资名称7",
-        //     "物资名称8",
         //   ],
         // },        
       ],
@@ -375,24 +358,6 @@ export default defineComponent({
          .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",JSON.parse(sessionStorage.getItem("nameNo")) )
          .then((response) => {
           DetailSpecifiedShortcutList(response[0].id)
-           
-          //  pengdingDelivery.value.data = response.content[0].warehouseBoxInfo.boxImages.map((item) => {
-          //    return {
-          //      title: item.newFileName,
-          //      page: item.id,
-          //      url: item.fileUrl,
-          //      content: item.newFileName.split(""),
-          //    }
-          //  });
-          //  finishedDelivery.value.data = response.content[1].warehouseBoxInfo.boxImages.map((item) => {
-          //   return {
-          //     title: item.newFileName,
-          //     page: item.id,
-          //     url: item.fileUrl,
-          //     content: item.newFileName.split(""),
-          //     status:item.status
-          //   }
-          //  })
          });
       openSweepGate();
     });

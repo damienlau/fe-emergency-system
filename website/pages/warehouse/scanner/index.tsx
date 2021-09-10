@@ -35,16 +35,13 @@ export default defineComponent({
       {
         label: "事件",
         type: "select",
-
         key: "eventId",
         options: [          
         ]
-        // option: store.dispatch(""),
       },
       {
         label: "借货人工号",
         key: "personnelJobNo",
-        //required: true,
       },
     ]);
     // 模态框表单数据
@@ -66,6 +63,11 @@ export default defineComponent({
       });
       visible.value = !visible.value;
     };
+
+    //模态框右上角按钮
+    const handleCancel = () => {
+      visible.value = !visible.value;
+    }
 
     onMounted(() => {
       // 获取表单选择框选项
@@ -116,11 +118,12 @@ export default defineComponent({
           v-model={[visible.value, "visible"]}
           size="ultralight"
           title="请填写信息"
+          onCancel={handleCancel}
         >
           {/* 扫描菜单-模态框表单 */}
-          <div class="flex-1 h-full overflow-hidden">
+          <div class="flex-1 h-full overflow-hidden justify-center">
           <Form
-            v-model={[formData.value, "model"]}
+            v-model={[formData.value, "dataSource"]}
             columns={formColumn.value}
             onSubmit={handleSubmitForm}
           >
