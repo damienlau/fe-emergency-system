@@ -4,12 +4,26 @@ import request from "utils/request";
 
 const shortcutRequestUrls = {
   find: "/outForm/all",
+  finddetail:"/outDetail/all",
   save: "/outDetail/confirm/out",
+  savereturn: "/outDetail/confirm/return",
+  sweepopen: "/scan/open",
+  sweepreader: "/scan/reader",
+  sweepclose: "/scan/close",
+  allBoxinfo: "/box/info/all",
+  material:"/material/info/all"
 };
 
 // 出仓待出仓列表
 export const findSpecifiedShortcutData = (params) => {
-  return request.get(shortcutRequestUrls.find,{params} ).then((response) => {
+  return request.get(shortcutRequestUrls.find, { params }).then((response) => {
+    return response;
+  });
+};
+
+// 出仓待出仓列表明细
+export const findDetailSpecifiedShortcutData = (params) => {
+  return request.get(shortcutRequestUrls.finddetail,{params} ).then((response) => {
     return response;
   });
 };
@@ -20,3 +34,46 @@ export const saveSpecifiedShortcutData = (params) => {
     return response;
   });
 };
+
+// 归仓确认出仓
+export const returnSpecifiedShortcutData = (params) => {
+  return request.post(shortcutRequestUrls.savereturn,params ).then((response) => {
+    return response;
+  });
+};
+
+//扫描门开启
+export const sweepGateOpen = (params) => {
+  return request.get(shortcutRequestUrls.sweepopen, params).then((response) => {
+    return response;
+  })
+}
+
+//扫描门读取
+export const sweepGateReader = (params) => {
+  return request.get(shortcutRequestUrls.sweepreader, params).then((response) => {
+    return response;
+  })
+}
+
+//扫描门关闭
+export const sweepGateClose = (params) => {
+  return request.get(shortcutRequestUrls.sweepclose, params).then((response) => {
+    return response;
+  })
+}
+
+//全部仓库箱子
+export const allBoxinfoPending = (params) => {
+  return request.get(shortcutRequestUrls.allBoxinfo, {params}).then((response) => {
+    return response;
+  })
+}
+
+
+//全部仓库物资
+export const allmaterialPending = (params) => {
+  return request.get(shortcutRequestUrls.material, {params}).then((response) => {
+    return response;
+  })
+}

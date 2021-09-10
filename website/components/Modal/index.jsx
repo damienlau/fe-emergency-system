@@ -25,7 +25,7 @@ export default defineComponent({
       },
     },
   },
-  emits: ["update:visible"],
+  emits: ["onUpdate:visible", "cancel"],
   setup(props, { emit, slots }) {
     const { visible } = toRefs(props);
     const modalClasses = computed(() => {
@@ -35,7 +35,8 @@ export default defineComponent({
       return props.zIndex;
     });
     const handleCloseModal = () => {
-      emit("update:visible", !visible.value);
+      emit("onUpdate:visible", !visible.value);
+      emit("cancel");
     };
 
     return () => (
