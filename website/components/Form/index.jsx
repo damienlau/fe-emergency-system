@@ -1,16 +1,18 @@
+import { defineComponent, ref, toRefs } from "@vue/runtime-core";
 import {
+  Col,
   Form,
   FormItem,
   Input,
+  Row,
   Select,
   SelectOption,
+  Textarea,
   Upload,
 } from "ant-design-vue";
-import { uploadData } from "api/utils";
-import Icon from "components/Icon";
-import { defineComponent, ref, toRefs } from "vue";
 
 export default defineComponent({
+  name: "Form",
   props: {
     columns: {
       type: Array,
@@ -20,159 +22,122 @@ export default defineComponent({
       type: Object,
       required: false,
     },
-    edit: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
   },
-  emits: ["submit"],
-  setup(props, { slots, emit }) {
-    const { columns, dataSource } = toRefs(props);
-
+  emits: ["onUpdate:dataSource", "submit"],
+  setup(props, { emit, slots }) {
+    const { dataSource } = toRefs(props);
     const formData = ref(dataSource.value || {});
 
-    const handleSubmit = () => {
-      emit("submit", formData.value);
-    };
-
-    const formItemRenderNode = (render) => {
-      switch (render.type) {
+    const createFormComponentRender = ({
+      disabled,
+      key,
+      label,
+      options,
+      placeholder,
+      type,
+    }) => {
+      switch (type) {
         case "select":
           return (
             <Select
-              v-model={[formData.value[render.key], "value"]}
+              v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={!props.edit}
-              placeholder={`请选择${render.label}`}
-              // options={render.options}
+              disabled={disabled}
+              placeholder={`请选择${label || placeholder}`}
             >
-              {render.options.map((option) => {
-                return <SelectOption value={option.key} title={option.label} />;
+              {options.map((selectOption) => {
+                return (
+                  <SelectOption
+                    key={selectOption.key}
+                    title={selectOption.label}
+                  >
+                    {selectOption.label}
+                  </SelectOption>
+                );
               })}
             </Select>
           );
 
-        case "upload":
-          if (typeof formData.value[render.key] !== "undefined") {
-            formData.value[render.key].map((images) => {
-              return {
-                uid: images.id,
-                name: images.name,
-                status: "done",
-                url: images.fileUrl,
-              };
-            });
-          }
-
-          return (
-            <Upload
-              customRequest={({ file }) => {
-                uploadData(file).then((response) => {
-                  if (typeof formData.value[render.key] === "undefined") {
-                    formData.value[render.key] = new Array({
-                      uid: file.uid,
-                      name: file.name,
-                      status: "done",
-                      url: response.join(),
-                      oldFileName: file.name,
-                      fileUrl: response.join(),
-                    });
-                  } else {
-                    formData.value[render.key].push({
-                      uid: file.uid,
-                      name: file.name,
-                      status: "done",
-                      url: response.join(),
-                      oldFileName: file.name,
-                      fileUrl: response.join(),
-                    });
-                  }
-                });
-              }}
-              multiple
-              remove={(file) => {
-                console.log(file);
-              }}
-              fileList={formData.value[render.key]}
-              listType="picture-card"
-              onChange={(file) => {
-                console.log(formData.value);
-              }}
-            >
-              <div class="flex flex-col items-center justify-center">
-                <Icon class="text-24" type="add" />
-                <span>上传图片</span>
-              </div>
-            </Upload>
-          );
         case "textArea":
           return (
-            <a-textarea
-              v-model={[formData.value[render.key], "value"]}
-              placeholder={`请输入${render.label}`}
-              rows="4"
-              disabled={!props.edit}
-            />
+            <Textarea
+              v-model={[formData.value[`${key}`], "value"]}
+              allowClear
+              disabled={disabled}
+              placeholder={`请输入${label || placeholder}`}
+            ></Textarea>
           );
-        case "date":
+
+        case "upload":
           return (
-            <a-date-picker
-              v-model={[formData.value[render.key], "value"]}
-              format={"YYYY/MM/DD"}
-              valueFormat={"YYYY-MM-DD 00:00:00"}
-              disabled={!props.edit}
-            />
+            <Upload
+              v-model={[formData.value[`${key}`], "fileList"]}
+              listType="picture-card"
+            >
+              <span>上传图片</span>
+            </Upload>
           );
+
         default:
           return (
             <Input
-              v-model={[formData.value[render.key], "value"]}
+              v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={!props.edit}
-              placeholder={`请输入${render.label}`}
+              disabled={disabled}
+              placeholder={`请输入${label || placeholder}`}
             ></Input>
           );
       }
     };
 
+    const handleSubmit = () => {
+      emit("onUpdate:dataSource", formData.value);
+      emit("submit", formData.value);
+    };
+
     return () => (
       <Form
+        hideRequiredMark={true}
         model={formData.value}
-        colon={false}
-        hideRequiredMark
         onFinish={handleSubmit}
       >
-        {columns.value.map((formItem) => {
-          return (
-            <FormItem
-              name={formItem.key}
-              labelAlign="right"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 12 }}
-              rules={
-                formItem.required
-                  ? [
-                      {
-                        required: true,
-                        message: `${formItem.label}为必填项`,
-                        type: "any",
-                        trigger: "change",
-                      },
-                    ]
-                  : []
-              }
-            >
-              {{
-                label: () => <span class="text-16">{formItem.label}</span>,
-                default: () => formItemRenderNode(formItem),
-              }}
-            </FormItem>
-          );
-        })}
-        <FormItem>
-          <div class="flex items-center justify-center">{slots.button?.()}</div>
-        </FormItem>
+        <Row>
+          {props.columns.map((formItem) => {
+            return (
+              <Col span={formItem.span || 24}>
+                <FormItem
+                  colon={!!formItem.colon}
+                  name={formItem.key}
+                  rules={[
+                    {
+                      message: `${
+                        formItem.label || formItem.placeholder
+                      }为必填项`,
+                      required:
+                        (typeof formItem.required === "undefined"
+                          ? !formItem.required
+                          : formItem.required) && !formItem.disabled,
+                      trigger: ["blur", "change"],
+                      type: "any",
+                    },
+                  ]}
+                >
+                  {{
+                    default: () => createFormComponentRender(formItem),
+                    label: () => (
+                      <span class="text-16 text-white text-opacity-70">
+                        {formItem.label}
+                      </span>
+                    ),
+                  }}
+                </FormItem>
+              </Col>
+            );
+          })}
+          <Col span={24}>
+            <FormItem class="text-center">{slots.button()}</FormItem>
+          </Col>
+        </Row>
       </Form>
     );
   },

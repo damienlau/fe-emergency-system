@@ -3,9 +3,12 @@ import { RouterView, useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Spin } from "ant-design-vue";
 // import Menu from "components/Menu";
+import defaultConfig from "config/defaultSettings";
+import PageHeader from "components/PageHeader";
 
 export default defineComponent({
   setup() {
+    const { title } = defaultConfig;
     // const route = useRoute();
     // const router = useRouter();
     const store = useStore();
@@ -29,6 +32,7 @@ export default defineComponent({
     return () => (
       <>
         <header class="h-72 px-32 dark:bg-navy-3">
+          {/* <PageHeader title={title}></PageHeader> */}
           {/* <Menu
             center
             class="h-72 leading-72"

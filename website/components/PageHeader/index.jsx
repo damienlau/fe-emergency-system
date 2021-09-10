@@ -16,11 +16,11 @@ export default defineComponent({
           {props.title ? (
             <h1 class="text-22 leading-72 font-medium">{props.title}</h1>
           ) : (
-            slots.title?.()
+            slots.title()
           )}
         </div>
-        <div>{slots.default?.()}</div>
-        <div>{slots.extra?.()}</div>
+        <div>{slots.default()}</div>
+        <div>{slots.extra()}</div>
       </div>
     );
   },

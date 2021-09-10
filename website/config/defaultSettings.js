@@ -1,4 +1,5 @@
 const settings = {
+  title: "深圳多特医疗技术有限公司",
   departments: {
     1: "急救/重症",
     2: "门诊",
