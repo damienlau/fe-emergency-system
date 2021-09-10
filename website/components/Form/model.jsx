@@ -16,7 +16,7 @@ export default defineComponent({
       type: Array,
       required: true,
     },
-    formData: {
+    dataSource: {
       type: Object,
       required: false,
     },
@@ -31,7 +31,7 @@ export default defineComponent({
     const { formData } = toRefs(props);
 
     const handleSubmit = () => {
-      emit("submit");
+      emit("submit", formData.value);
     };
 
     const formItemRenderNode = (render) => {
@@ -64,6 +64,8 @@ export default defineComponent({
                 url: images.fileUrl,
               };
             });
+
+            console.log(formData.value[render.key]);
           }
 
           return (
@@ -171,9 +173,7 @@ export default defineComponent({
           );
         })}
         <FormItem>
-          <div class="flex items-center justify-center">
-            {slots.button && slots.button()}
-          </div>
+          <div class="flex items-center justify-center">{slots.button?.()}</div>
         </FormItem>
       </Form>
     );

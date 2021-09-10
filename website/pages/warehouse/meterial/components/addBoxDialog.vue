@@ -48,7 +48,9 @@
         class="flex flex-row justify-center align-middle"
         v-if="activeKey === 'init'"
       >
-        <a-button type="primary" ghost class="mr-3">保存</a-button>
+        <a-button type="primary" ghost class="mr-3" @click="addBoxMaterial"
+          >保存</a-button
+        >
       </div>
     </a-tabs>
   </div>
@@ -66,13 +68,14 @@
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Modal } from "components";
-import Form from "components/Form/model.jsx";
+import Form from "components/Form/model";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
 export default defineComponent({
   name: "addBoxDialog",
   components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial, Modal },
+  emits: ["close"],
   setup(props, slot) {
     const state = reactive({
       activeKey: "base",
@@ -273,7 +276,7 @@ export default defineComponent({
     onMounted(() => {});
 
     const handleSubmitBase = () => {
-      state.boxInfo = { ...state.formDataBase };
+      state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
         if (res) {
           slot.emit("close");
@@ -282,7 +285,6 @@ export default defineComponent({
     };
     const handleSubmitOther = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
-      console.log(state.boxInfo, "state.boxInfo");
       addBoxData(state.boxInfo).then((res) => {
         if (res) {
           slot.emit("close");
@@ -291,7 +293,6 @@ export default defineComponent({
     };
 
     const handleSubmitInit = () => {
-      console.log(state.boxInfo, "ddd");
       addBoxData(state.boxInfo).then((res) => {
         if (res) {
           slot.emit("close");
@@ -305,6 +306,24 @@ export default defineComponent({
       state.materialList = state.materialList.concat(arr);
       state.addBoxTransferVisible = false;
     };
+    const addBoxMaterial = () => {
+      const idArr = [];
+      if (state.materialList.length > 0) {
+        state.materialList.map((item) => {
+          idArr.push(item.id);
+        });
+      }
+      const params = {
+        materialIds: idArr,
+        ...state.formDataBase,
+        ...state.formDataOter,
+      };
+      addBoxData(params).then((res) => {
+        if (res) {
+          slot.emit("close");
+        }
+      });
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -315,6 +334,7 @@ export default defineComponent({
       handleSubmitInit,
       showAddBoxTransfer,
       chooseMeterial,
+      addBoxMaterial,
     };
   },
 });

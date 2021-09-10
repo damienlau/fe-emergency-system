@@ -32,7 +32,7 @@
         <div class="row">
           <span class="label">货架位置:</span>
           <span class="value">{{
-            info.rackPosition && positionInfo[info.rackPosition]
+            positionInfo[info.rackPosition] || "- -"
           }}</span>
         </div>
         <div class="row">

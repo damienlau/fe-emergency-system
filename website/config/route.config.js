@@ -27,7 +27,8 @@ const routesConfig = [
                 name: "Shelf",
                 path: "shelf",
                 meta: { label: "货架" },
-                component: () => import("pages/warehouse/meterial/shelf"),
+                component: () =>
+                  import("pages/warehouse/meterial/shelf/index.vue"),
               },
             ],
           },

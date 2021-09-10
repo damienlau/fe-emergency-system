@@ -66,6 +66,8 @@ export default defineComponent({
                 url: images.fileUrl,
               };
             });
+
+            console.log(formData.value[render.key]);
           }
 
           return (

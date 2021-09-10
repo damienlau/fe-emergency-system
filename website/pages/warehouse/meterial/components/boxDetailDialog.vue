@@ -386,15 +386,21 @@ export default defineComponent({
         initData();
       });
     };
-
-    const handleSubmitInit = () => {
-      console.log("ddddd");
-    };
     const initData = () => {
       state.loading = false;
       findSpecifiedBoxData({ id: props.id }).then((res) => {
-        state.dataSource = JSON.parse(JSON.stringify(res));
+        if (res.boxImages.length > 0) {
+          res.boxImages.forEach((item) => {
+            item.url = item.fileUrl;
+          });
+        }
+        res.status = String(res.status);
+        res.size = String(res.size);
+        res.rackPosition = String(res.rackPosition);
+        res.departmentType = String(res.departmentType);
+        state.dataSource = res;
         state.loading = true;
+        console.log(res, "resre");
       });
     };
     const initMaterialList = () => {
@@ -445,7 +451,6 @@ export default defineComponent({
       initForm,
       handleSubmitBase,
       handleSubmitOther,
-      handleSubmitInit,
       initData,
       handDelete,
       initMaterialList,

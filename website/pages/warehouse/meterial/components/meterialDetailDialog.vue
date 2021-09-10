@@ -297,20 +297,25 @@ export default defineComponent({
     });
     const handleSubmitBase = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        this.isEditBase = true;
+        state.isEditBase = true;
         initData();
       });
     };
     const handleSubmitOther = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        this.isEditOther = true;
+        state.isEditOther = true;
         initData();
       });
     };
     const initData = () => {
       state.loading = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
-        state.dataSource = JSON.parse(JSON.stringify(res));
+        if (res.materialImages.length > 0) {
+          res.materialImages.forEach((item) => {
+            item.url = item.fileUrl;
+          });
+        }
+        state.dataSource = res;
         state.loading = true;
       });
     };
