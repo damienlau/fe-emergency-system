@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": "./website",
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -13,5 +13,10 @@
     "types": ["node", "vite/client"],
     "target": "esnext"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "website/**/*.ts",
+    "website/**/*.d.ts",
+    "website/**/*.tsx",
+    "website/**/*.vue"
+  ]
 }
