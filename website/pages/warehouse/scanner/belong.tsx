@@ -112,8 +112,15 @@ export default defineComponent({
       openSweepGate()
       sweepGateVisiable.value = false;
     };
+    //一级模态框右上角触发事件
     const handleCancel = () => {
       visible.value = !visible.value;
+      closeSweepGate()
+      sweepGateVisiable.value = true;
+    }
+    //二级模态框右上角触发事件
+    const handleCancelsecond = () => {
+      visiblesecond.value = !visible.value;
       closeSweepGate()
       sweepGateVisiable.value = true;
     }
@@ -236,7 +243,7 @@ export default defineComponent({
     //获取借货单明细
     const DetailSpecifiedShortcutList = (id) => {
       store
-        .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
+        .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:2 })
         .then((res) => {
           pengdingDelivery.value.data = res.map((item) => {
             return Object.assign(item,{statusright:0})
@@ -779,7 +786,8 @@ export default defineComponent({
         <Modal
           v-model={[visiblesecond.value, "visible"]}
           size="lighter"
-          title="归还人信息"          
+          title="归还人信息"
+          onCancel={handleCancelsecond}
         >
           <div class="flex-1 h-full overflow-hidden">
           {/* 扫描菜单-模态框表单 */}
