@@ -4,9 +4,9 @@
       <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
         <Form
           v-if="loading"
+          v-model:dataSource="dataSource"
           :columns="baseForm"
-          :dataSource="dataSource"
-          :edit="!isEditBase"
+          :disabled="!isEditBase"
           @submit="handleSubmitBase"
         >
           <template #button>
@@ -49,8 +49,8 @@
         <Form
           v-if="loading"
           :columns="otherForm"
-          :dataSource="dataSource"
-          :edit="!isEditOther"
+          v-model:dataSource="dataSource"
+          :disabled="!isEditOther"
           @submit="handleSubmitOther"
         >
           <template #button>
@@ -160,6 +160,7 @@
     </div>
     <Modal
       v-model:visible="addBoxTransferVisible"
+      @cancel="addBoxTransferVisible = false"
       title=""
       size="heavy"
       key="AddBoxTransfer"
@@ -204,16 +205,19 @@ export default defineComponent({
         label: "箱子名称",
         key: "boxName",
         required: true,
+        span: 12,
       },
       {
         label: "箱子编码",
         key: "boxCode",
         required: false,
+        span: 12,
       },
       {
         label: "类型",
         key: "departmentType",
         type: "select",
+        span: 12,
         options: [
           {
             label: "急救/重症",
@@ -282,8 +286,38 @@ export default defineComponent({
       },
       {
         label: "货架位置",
+        key: "rackNumber",
+        type: "select",
+        span: 6,
+        options: [
+          {
+            label: "1号货架",
+            key: "1",
+          },
+          {
+            label: "2号货架",
+            key: "2",
+          },
+          {
+            label: "3号货架",
+            key: "3",
+          },
+          {
+            label: "4号货架",
+            key: "4",
+          },
+          {
+            label: "5号货架",
+            key: "5",
+          },
+        ],
+        required: true,
+      },
+      {
+        label: "",
         key: "rackPosition",
         type: "select",
+        span: 6,
         options: [
           {
             label: "未知",
@@ -306,6 +340,7 @@ export default defineComponent({
             key: "4",
           },
         ],
+        placeholder: "位置",
         required: true,
       },
       {
@@ -336,12 +371,14 @@ export default defineComponent({
         label: "单位",
         key: "unit",
         required: false,
+        span: 12,
       },
       {
         label: "物资图片",
         key: "boxImages",
         type: "upload",
         required: false,
+        span: 24,
       },
     ]);
     const otherForm = ref([
@@ -349,17 +386,20 @@ export default defineComponent({
         label: "华西资产编码",
         key: "assetCode",
         required: true,
+        span: 12,
       },
       {
         label: "重量",
         key: "weight",
         required: false,
+        span: 12,
       },
       {
         label: "备注",
         key: "remark",
         type: "textArea",
         required: false,
+        span: 24,
       },
     ]);
     const initForm = ref([
@@ -397,6 +437,7 @@ export default defineComponent({
         res.status = String(res.status);
         res.size = String(res.size);
         res.rackPosition = String(res.rackPosition);
+        res.rackNumber = String(res.rackNumber);
         res.departmentType = String(res.departmentType);
         state.dataSource = res;
         state.loading = true;

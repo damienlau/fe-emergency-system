@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import { resolve as resolved } from "path";
+import path from "path";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 
@@ -14,13 +14,15 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
-      api: resolved(__dirname, "website/api"),
-      assets: resolved(__dirname, "website/assets"),
-      components: resolved(__dirname, "website/components"),
-      config: resolved(__dirname, "website/config"),
-      layouts: resolved(__dirname, "website/layouts"),
-      pages: resolved(__dirname, "website/pages"),
-      utils: resolved(__dirname, "website/utils"),
+      api: path.resolve(__dirname, "website/api"),
+      assets: path.resolve(__dirname, "website/assets"),
+      components: path.resolve(__dirname, "website/components"),
+      config: path.resolve(__dirname, "website/config"),
+      layouts: path.resolve(__dirname, "website/layouts"),
+      pages: path.resolve(__dirname, "website/pages"),
+      router: path.resolve(__dirname, "website/router"),
+      store: path.resolve(__dirname, "website/store"),
+      utils: path.resolve(__dirname, "website/utils"),
     },
   },
   server: {

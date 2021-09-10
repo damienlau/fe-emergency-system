@@ -3,9 +3,9 @@
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form
         v-if="loading"
+        v-model:dataSource="dataSource"
         :columns="baseForm"
-        :dataSource="dataSource"
-        :edit="!isEditBase"
+        :disabled="!isEditBase"
         @submit="handleSubmitBase"
       >
         <template #button>
@@ -47,9 +47,9 @@
     <a-tab-pane :key="'other'" tab="其他信息" class="overflow-y-auto">
       <Form
         v-if="loading"
+        v-model:dataSource="dataSource"
         :columns="otherForm"
-        :dataSource="dataSource"
-        :edit="!isEditOther"
+        :disabled="!isEditOther"
         @submit="handleSubmitOther"
       >
         <template #button>
@@ -148,16 +148,19 @@ export default defineComponent({
         label: "物资名称",
         key: "materialName",
         required: true,
+        span: 12,
       },
       {
         label: "品牌",
         key: "brand",
         required: false,
+        span: 12,
       },
       {
         label: "类型",
         key: "departmentType",
         type: "select",
+        span: 12,
         options: [
           {
             label: "急救/重症",
@@ -228,17 +231,20 @@ export default defineComponent({
         label: "厂家批号",
         key: "productionBatch",
         required: true,
+        span: 12,
       },
       {
         label: "厂家",
         key: "productionEnterprise",
         required: true,
+        span: 12,
       },
       {
         label: "物资图片",
         key: "materialImages",
         type: "upload",
         required: false,
+        span: 24,
       },
     ]);
     const otherForm = ref([
@@ -246,16 +252,19 @@ export default defineComponent({
         label: "华西资产编码",
         key: "assetCode",
         required: true,
+        span: 12,
       },
       {
         label: "型号规格",
         key: "specification",
         required: false,
+        span: 12,
       },
       {
         label: "生产日期",
         key: "productionDate",
         required: false,
+        span: 12,
         type: "date",
       },
       {
@@ -263,11 +272,13 @@ export default defineComponent({
         key: "expirationDate",
         required: false,
         type: "date",
+        span: 12,
       },
       {
         label: "有无质保",
         key: "isExpiration",
         type: "select",
+        span: 12,
         options: [
           {
             label: "无保质期",
@@ -284,12 +295,14 @@ export default defineComponent({
         label: "单位",
         key: "unit",
         required: false,
+        span: 12,
       },
       {
         label: "备注",
         key: "remark",
         type: "textArea",
         required: false,
+        span: 24,
       },
     ]);
     onMounted(() => {

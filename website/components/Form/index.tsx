@@ -1,6 +1,7 @@
-import { defineComponent, ref, toRefs } from "@vue/runtime-core";
+import { defineComponent, PropType, ref, toRefs } from "@vue/runtime-core";
 import {
   Col,
+  DatePicker,
   Form,
   FormItem,
   Input,
@@ -10,23 +11,46 @@ import {
   Textarea,
   Upload,
 } from "ant-design-vue";
+import { uploadData } from "api/utils";
+
+export interface selectOptionProps {
+  key: string | number;
+  label?: string;
+}
+
+export interface formItemProps extends selectOptionProps {
+  colon?: boolean;
+  disabled?: boolean;
+  options?: selectOptionProps[];
+  placeholder?: string;
+  required?: boolean;
+  span?: number;
+  type?: string;
+}
 
 export default defineComponent({
   name: "Form",
   props: {
     columns: {
-      type: Array,
+      type: Array as PropType<formItemProps[]>,
       required: true,
     },
     dataSource: {
       type: Object,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: ["onUpdate:dataSource", "submit"],
   setup(props, { emit, slots }) {
     const { dataSource } = toRefs(props);
-    const formData = ref(dataSource.value || {});
+    const formData = ref<{ [prototypeName: string]: any }>(
+      dataSource.value || {}
+    );
 
     const createFormComponentRender = ({
       disabled,
@@ -35,17 +59,20 @@ export default defineComponent({
       options,
       placeholder,
       type,
-    }) => {
+    }: formItemProps) => {
       switch (type) {
+        case "date":
+          return <DatePicker />;
+
         case "select":
           return (
             <Select
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请选择${label || placeholder}`}
             >
-              {options.map((selectOption) => {
+              {options?.map((selectOption) => {
                 return (
                   <SelectOption
                     key={selectOption.key}
@@ -63,7 +90,7 @@ export default defineComponent({
             <Textarea
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Textarea>
           );
@@ -72,7 +99,13 @@ export default defineComponent({
           return (
             <Upload
               v-model={[formData.value[`${key}`], "fileList"]}
+              customRequest={({ file }) => {
+                uploadData(file).then((response) => {
+                  formData.value[`${key}`] = response;
+                });
+              }}
               listType="picture-card"
+              multiple={true}
             >
               <span>上传图片</span>
             </Upload>
@@ -83,14 +116,14 @@ export default defineComponent({
             <Input
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={disabled}
+              disabled={props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Input>
           );
       }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (parameter: { [prototypeName: string]: any }) => {
       emit("onUpdate:dataSource", formData.value);
       emit("submit", formData.value);
     };
@@ -135,7 +168,7 @@ export default defineComponent({
             );
           })}
           <Col span={24}>
-            <FormItem class="text-center">{slots.button()}</FormItem>
+            <FormItem class="text-center">{slots.button?.()}</FormItem>
           </Col>
         </Row>
       </Form>

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./website",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "types": ["node", "vite/client"],
+    "target": "esnext"
+  },
+  "include": [
+    "website/**/*.ts",
+    "website/**/*.d.ts",
+    "website/**/*.tsx",
+    "website/**/*.vue"
+  ]
+}
