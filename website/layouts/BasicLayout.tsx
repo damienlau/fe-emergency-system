@@ -36,7 +36,7 @@ export default defineComponent({
             })}
           </Menu>
         </LayoutHeader>
-        <LayoutContent>
+        <LayoutContent class="p-16">
           <RouterView />
         </LayoutContent>
       </Layout>

@@ -1,35 +1,33 @@
 import { defineComponent, ref } from "@vue/runtime-core";
 import { Button } from "ant-design-vue";
 import Form from "components/Form";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
     const formColumn = ref([
       {
-        label: "账号",
         key: "loginAccount",
+        placeholder: "账号",
       },
       {
-        label: "密码",
         key: "loginPassword",
+        placeholder: "密码",
         type: "password",
       },
-      {
-        label: "图片",
-        key: "image",
-        type: "upload",
-        required: false,
-      },
     ]);
+    const router = useRouter();
     const store = useStore();
 
     return () => (
-      <>
+      <section class="w-full h-full flex items-center justify-center">
         <Form
           columns={formColumn.value}
           onSubmit={(userInfo) => {
-            store.dispatch("user/setUserOnline", userInfo);
+            store.dispatch("user/setUserOnline", userInfo).then((response) => {
+              router.back();
+            });
           }}
         >
           {{
@@ -40,7 +38,7 @@ export default defineComponent({
             ),
           }}
         </Form>
-      </>
+      </section>
     );
   },
 });
