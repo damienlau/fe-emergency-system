@@ -3,7 +3,7 @@
     <a-tabs v-model:activeKey="activeKey" :animated="false">
       <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
         <Form
-          :formData="formDataBase"
+          v-model:dataSource="formDataBase"
           :columns="baseForm"
           @submit="handleSubmitBase"
         >
@@ -16,7 +16,7 @@
       </a-tab-pane>
       <a-tab-pane :key="'other'" tab="其他信息">
         <Form
-          :formData="formDataOter"
+          v-model:dataSource="formDataOter"
           :columns="otherForm"
           @submit="handleSubmitOther"
         >
@@ -56,6 +56,7 @@
   </div>
   <Modal
     v-model:visible="addBoxTransferVisible"
+    @cancel="addBoxTransferVisible = false"
     title=""
     size="heavy"
     key="AddBoxTransfer"
@@ -68,7 +69,7 @@
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addBoxData } from "api/warehouse/meterial";
 import { Modal } from "components";
-import Form from "components/Form/model";
+import Form from "components/Form";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
@@ -90,6 +91,7 @@ export default defineComponent({
         label: "类型",
         key: "departmentType",
         type: "select",
+        span: 12,
         options: [
           {
             label: "急救/重症",
@@ -157,9 +159,10 @@ export default defineComponent({
         required: true,
       },
       {
-        label: "货架",
+        label: "货架位置",
         key: "rackNumber",
         type: "select",
+        span: 6,
         options: [
           {
             label: "1号货架",
@@ -185,9 +188,10 @@ export default defineComponent({
         required: true,
       },
       {
-        label: "货架位置",
+        label: "",
         key: "rackPosition",
         type: "select",
+        span: 6,
         options: [
           {
             label: "未知",
@@ -210,12 +214,14 @@ export default defineComponent({
             key: "4",
           },
         ],
+        placeholder: "位置",
         required: true,
       },
       {
         label: "尺寸",
         key: "size",
         type: "select",
+        span: 12,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -240,12 +246,14 @@ export default defineComponent({
         label: "单位",
         key: "unit",
         required: true,
+        span: 12,
       },
       {
         label: "物资图片",
         key: "boxImages",
         type: "upload",
         required: false,
+        span: 24,
       },
     ]);
     const otherForm = ref([
@@ -253,17 +261,20 @@ export default defineComponent({
         label: "华西资产编码",
         key: "assetCode",
         required: true,
+        span: 12,
       },
       {
         label: "重量",
         key: "weight",
         required: false,
+        span: 12,
       },
       {
         label: "备注",
         key: "remark",
         type: "textArea",
         required: false,
+        span: 24,
       },
     ]);
     const initForm = ref([
