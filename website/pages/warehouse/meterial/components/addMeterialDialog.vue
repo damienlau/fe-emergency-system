@@ -3,7 +3,7 @@
     <a-tab-pane :key="'base'" tab="基本信息" class="overflow-y-auto">
       <Form
         :columns="baseForm"
-        :dataSource="dataSource"
+        :formData="formDataBase"
         @submit="handleSubmitBase"
       >
         <template #button>
@@ -14,7 +14,11 @@
       </Form>
     </a-tab-pane>
     <a-tab-pane :key="'other'" tab="其他信息" class="overflow-y-auto">
-      <Form :columns="otherForm" @submit="handleSubmitOther">
+      <Form
+        :formData="formDataOter"
+        :columns="otherForm"
+        @submit="handleSubmitOther"
+      >
         <template #button>
           <a-button type="primary" ghost class="mr-3" htmlType="submit"
             >保存</a-button
@@ -27,13 +31,15 @@
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addMeterialData } from "api/warehouse/meterial";
-import { Form } from "components";
+import Form from "components/Form/model";
 export default defineComponent({
   name: "addMeterialDialog",
   components: { Form },
   setup() {
     const state = reactive({
       activeKey: "base",
+      formDataBase: {},
+      formDataOter: {},
     });
     const baseForm = ref([
       {
@@ -53,65 +59,65 @@ export default defineComponent({
         options: [
           {
             label: "急救/重症",
-            key: 1,
+            key: "1",
           },
           {
             label: "门诊",
-            key: 2,
+            key: "2",
           },
           {
             label: "后勤",
-            key: 3,
+            key: "3",
           },
 
           {
             label: "指挥",
-            key: 4,
+            key: "4",
           },
           {
             label: "重症",
-            key: 5,
+            key: "5",
           },
 
           {
             label: "超声",
-            key: 6,
+            key: "6",
           },
           {
             label: "清创",
-            key: 7,
+            key: "7",
           },
           {
             label: "留观",
-            key: 8,
+            key: "8",
           },
           {
             label: "药房",
-            key: 9,
+            key: "9",
           },
           {
             label: "耗材",
-            key: 10,
+            key: "10",
           },
           {
             label: "手术",
-            key: 11,
+            key: "11",
           },
           {
             label: "防疫/隔离",
-            key: 12,
+            key: "12",
           },
           {
             label: "消毒",
-            key: 13,
+            key: "13",
           },
           {
             label: "住院",
-            key: 14,
+            key: "14",
           },
           {
             label: "检验",
-            key: 15,
+            key: "15",
           },
         ],
         required: true,
@@ -163,11 +169,11 @@ export default defineComponent({
         options: [
           {
             label: "无保质期",
-            key: 0,
+            key: "0",
           },
           {
             label: "有保质期",
-            key: 1,
+            key: "1",
           },
         ],
         required: false,
@@ -185,10 +191,12 @@ export default defineComponent({
       },
     ]);
     onMounted(() => {});
-    const handleSubmitBase = (data) => {
+    const handleSubmitBase = () => {
+      const data = { ...state.formDataBase, ...state.formDataOter };
       addMeterialData(data);
     };
-    const handleSubmitOther = (data) => {
+    const handleSubmitOther = () => {
+      const data = { ...state.formDataBase, ...state.formDataOter };
       addMeterialData(data);
     };
     return {

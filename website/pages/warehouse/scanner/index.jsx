@@ -36,15 +36,15 @@ export default defineComponent({
         label: "事件",
         type: "select",
 
-        key: "event",
+        key: "eventId",
         options: [          
         ]
         // option: store.dispatch(""),
       },
       {
         label: "借货人工号",
-        key: "number",
-        required: true,
+        key: "personnelJobNo",
+        //required: true,
       },
     ]);
     // 模态框表单数据
@@ -59,16 +59,11 @@ export default defineComponent({
     };
 
     // 监听模态框表单提交事件
-    const handleSubmitForm = () => {
-      console.log(formData.value)
+    const handleSubmitForm = (formdata) => {
+      sessionStorage.setItem("nameNo", JSON.stringify(formdata));
       router.push({
-        name: formData.value["key"],
-        params: {
-          id: formData.value["event"],
-          personnelJobNo: formData.value["number"]
-        }
+        name: formData.value["key"]
       });
-      //4254529082 id:2
       visible.value = !visible.value;
     };
 
@@ -101,7 +96,7 @@ export default defineComponent({
                 >
                   {/* 扫描菜单-卡片图标 */}
                   <img
-                    src={`assets/icon_scan_${menuItem.icon}.png`}
+                    src={`website/assets/icon_scan_${menuItem.icon}.png`}
                     alt={menuItem.label}
                   />
                   {/* 扫描菜单-卡片标题 */}
@@ -123,6 +118,7 @@ export default defineComponent({
           title="请填写信息"
         >
           {/* 扫描菜单-模态框表单 */}
+          <div class="flex-1 h-full overflow-hidden">
           <Form
             v-model={[formData.value, "model"]}
             columns={formColumn.value}
@@ -137,9 +133,14 @@ export default defineComponent({
               ),
             }}
           </Form>
+          </div>
         </Modal>
         <RouterView></RouterView>
       </>
     );
   },
 });
+
+
+
+
