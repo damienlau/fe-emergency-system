@@ -114,7 +114,7 @@ export default defineComponent({
     };
     //一级模态框右上角触发事件
     const handleCancel = () => {
-      visible.value = !visible.value;
+      //visible.value = !visible.value;
       closeSweepGate()
       sweepGateVisiable.value = true;
     }
