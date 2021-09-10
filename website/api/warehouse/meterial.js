@@ -14,7 +14,7 @@ export function deleteSpecifiedMeterialData(params) {
 
 // 删除指定数据- 物资 单独
 export function deleteMeterialInfoData(params) {
-  return request.get("/material/info/delete", params);
+  return request.get(`/material/info/delete?id=${params.id}`);
 }
 
 // 删除指定数据- 箱子 单独
