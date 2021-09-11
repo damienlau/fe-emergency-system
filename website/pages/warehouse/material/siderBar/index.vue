@@ -135,6 +135,7 @@
       <BoxDetailDialog
         :id="boxId"
         :boxCode="boxCode"
+        :materialRemainNumber="materialRemainNumber"
         @close="closeBoxDetailDialog"
       ></BoxDetailDialog>
     </Modal>
@@ -179,6 +180,7 @@ export default defineComponent({
       meterialId: "",
       boxId: "",
       boxCode: "",
+      materialRemainNumber: "",
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
       paginationMaterials: {
@@ -248,6 +250,7 @@ export default defineComponent({
 
       state.boxId = item.id;
       state.boxCode = item.boxCode;
+      state.materialRemainNumber = item.materialRemainNumber;
       state.boxDetailVisible = true;
       state.boxDetailDialogTitle = item.boxName + num;
     };
@@ -285,7 +288,9 @@ export default defineComponent({
       // 初始化数据
       state.materialsList = [];
       state.paginationMaterials.current = 1;
-      getMaterialsData();
+      if (state.materialsList.length === 0) {
+        getMaterialsData();
+      }
     };
     return {
       ...toRefs(state),
