@@ -194,7 +194,6 @@ export default defineComponent({
     });
     onMounted(() => {
       getFirstMaterialsData();
-      getMaterialsData();
     });
     const getMaterialsData = () => {
       const search = meterialSearchValue.value;
@@ -208,12 +207,7 @@ export default defineComponent({
         materialName: search,
       };
       findCriteriaPageData(params).then((res) => {
-        state.materialsList = res.data.content;
-        if (state.materialsList.length <= 0) {
-          state.materialsList = res.data.content;
-        } else {
-          state.materialsList = state.materialsList.concat(res.data.content);
-        }
+        state.materialsList = state.materialsList.concat(res.data.content);
         state.paginationMaterials.total = res.data.totalNum;
       });
     };
