@@ -38,11 +38,11 @@ const actions = {
         findShortcutData().then((response) => {
           reslove({
             pagination: {
-              current: response.currentPage,
-              total: response.totalNum,
-              pageSize: response.pageSize,
+              current: response.data.currentPage,
+              total: response.data.totalNum,
+              pageSize: response.data.pageSize,
             },
-            data: response.content.map((lists) => {
+            data: response.data.content.map((lists) => {
               switch (lists.resourceType) {
                 case 1:
                   return {

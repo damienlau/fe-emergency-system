@@ -151,7 +151,11 @@ export default defineComponent({
       store
         .dispatch("warehouseModule/shortcutModule/getLists")
         .then((response) => {
+          console.log(response);
+
           cardListsData.value = response;
+
+          console.log(cardListsData.value);
         });
     };
 
@@ -176,6 +180,15 @@ export default defineComponent({
     const handleDelete = (selected = cardListsData.value.data) => {
       !Array.isArray(selected) && (selected = Array.of(selected));
       store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
+      store
+        .dispatch("warehouseModule/shortcutModule/getLists")
+        .then((response) => {
+          console.log(response);
+
+          cardListsData.value = response;
+
+          console.log(cardListsData.value);
+        });
     };
 
     const handleSubmit = (formData) => {
