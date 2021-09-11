@@ -223,6 +223,7 @@ export default defineComponent({
         key: "boxCode",
         required: false,
         span: 12,
+        disabled: true,
       },
       {
         label: "类型",
