@@ -59,6 +59,21 @@ export default [
                 name: "Scanner",
                 component: () => import("pages/warehouse/scanner"),
               },
+              {
+                path: "pending",
+                name: "Pending",
+                component: () => import("pages/warehouse/scanner/pending"),
+              },
+              {
+                path: "belong",
+                name: "Belong",
+                component: () => import("pages/warehouse/scanner/belong"),
+              },
+              {
+                path: "emergency",
+                name: "Emergency",
+                component: () => import("pages/warehouse/scanner/emergency"),
+              },
             ],
           },
         ],

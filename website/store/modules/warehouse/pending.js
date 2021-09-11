@@ -7,7 +7,8 @@ import {
   sweepGateReader,
   sweepGateClose,
   allBoxinfoPending,
-  allmaterialPending
+  allmaterialPending,
+  scannerInfoall
 } from "api/warehouse/pending";
 
 const state = () => ({});
@@ -17,7 +18,7 @@ const actions = {
   findSpecifiedShortcutList: ({ dispatch },params) => {
     return new Promise((reslove) => {
       findSpecifiedShortcutData(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       });
     });
   },
@@ -26,7 +27,7 @@ const actions = {
   findDetailSpecifiedShortcutList: ({ dispatch },params) => {
     return new Promise((reslove) => {
       findDetailSpecifiedShortcutData(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       });
     });
   },
@@ -34,7 +35,7 @@ const actions = {
   saveSpecifiedShortcutSure: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       saveSpecifiedShortcutData(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -44,7 +45,7 @@ const actions = {
   returnSpecifiedShortcutList: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       returnSpecifiedShortcutData(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -53,7 +54,7 @@ const actions = {
   sweepGateOpenData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       sweepGateOpen(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -62,7 +63,7 @@ const actions = {
   sweepGateReaderData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       sweepGateReader(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -71,7 +72,7 @@ const actions = {
   sweepGateCloseData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       sweepGateClose(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -80,7 +81,7 @@ const actions = {
   allBoxinfoPendingData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       allBoxinfoPending(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
       })
     })
   },
@@ -89,7 +90,16 @@ const actions = {
   allmaterialPendingData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       allmaterialPending(params).then((res) => {
-        reslove(res);
+        reslove(res.data);
+      })
+    })
+  },
+
+  //全部仓库物资
+  scannerInfoallData: ({ dispatch }, params) => {
+    return new Promise((reslove) => {
+      scannerInfoall(params).then((res) => {
+        reslove(res.data);
       })
     })
   }
