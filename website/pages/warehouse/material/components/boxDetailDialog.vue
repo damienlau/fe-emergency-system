@@ -15,6 +15,11 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
+              v-if="
+                dataSource.inBatchPendingStatus === 1 ||
+                dataSource.inBatchPendingStatus === 2 ||
+                dataSource.inBatchPendingStatus === 3
+              "
             >
               <a-button
                 type="primary"
@@ -59,17 +64,17 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
+              v-if="
+                dataSource.inBatchPendingStatus === 1 ||
+                dataSource.inBatchPendingStatus === 2 ||
+                dataSource.inBatchPendingStatus === 3
+              "
             >
               <a-button
                 type="primary"
                 ghost
                 class="flex flex-row items-center p-0 mr-3"
                 danger
-                :disabled="
-                  dataSource.inBatchPendingStatus === 1 ||
-                  dataSource.inBatchPendingStatus === 2 ||
-                  dataSource.inBatchPendingStatus === 3
-                "
               >
                 删除
               </a-button>
@@ -120,6 +125,11 @@
             ok-text="确认"
             cancel-text="取消"
             @confirm="handDelete(dataSource)"
+            v-if="
+              dataSource.inBatchPendingStatus === 1 ||
+              dataSource.inBatchPendingStatus === 2 ||
+              dataSource.inBatchPendingStatus === 3
+            "
           >
             <a-button
               type="primary"
@@ -127,11 +137,6 @@
               v-if="isEditInit"
               class="flex flex-row items-center p-0 mr-3"
               danger
-              :disabled="
-                dataSource.inBatchPendingStatus === 1 ||
-                dataSource.inBatchPendingStatus === 2 ||
-                dataSource.inBatchPendingStatus === 3
-              "
             >
               删除
             </a-button>

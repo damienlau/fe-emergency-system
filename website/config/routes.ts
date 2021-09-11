@@ -20,11 +20,11 @@ export default [
                 name: "Material",
                 component: () => import("pages/warehouse/material/index.vue"),
               },
-              {
-                path: "shelf",
-                name: "Shelf",
-                component: () => import("pages/warehouse/material/shelf"),
-              },
+              // {
+              //   path: "shelf",
+              //   name: "Shelf",
+              //   component: () => import("pages/warehouse/material/shelf"),
+              // },
             ],
           },
           {
