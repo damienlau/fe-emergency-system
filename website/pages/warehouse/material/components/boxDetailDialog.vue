@@ -15,11 +15,7 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
-              v-if="
-                dataSource.inBatchPendingStatus === 1 ||
-                dataSource.inBatchPendingStatus === 2 ||
-                dataSource.inBatchPendingStatus === 3
-              "
+              v-if="dataSource.inBatchPendingStatus == 0"
             >
               <a-button
                 type="primary"
@@ -64,11 +60,7 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
-              v-if="
-                dataSource.inBatchPendingStatus === 1 ||
-                dataSource.inBatchPendingStatus === 2 ||
-                dataSource.inBatchPendingStatus === 3
-              "
+              v-if="dataSource.inBatchPendingStatus == 0"
             >
               <a-button
                 type="primary"
@@ -125,11 +117,7 @@
             ok-text="确认"
             cancel-text="取消"
             @confirm="handDelete(dataSource)"
-            v-if="
-              dataSource.inBatchPendingStatus === 1 ||
-              dataSource.inBatchPendingStatus === 2 ||
-              dataSource.inBatchPendingStatus === 3
-            "
+            v-if="dataSource.inBatchPendingStatus == 0"
           >
             <a-button
               type="primary"

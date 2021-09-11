@@ -14,17 +14,13 @@
             ok-text="确认"
             cancel-text="取消"
             @confirm="handDelete(dataSource)"
-            v-if="
-              dataSource.inBatchPendingStatus === 1 ||
-              dataSource.inBatchPendingStatus === 2 ||
-              dataSource.inBatchPendingStatus === 3
-            "
           >
             <a-button
               type="primary"
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
+              v-if="dataSource.inBatchPendingStatus == 0"
             >
               删除
             </a-button>
@@ -63,17 +59,13 @@
             ok-text="确认"
             cancel-text="取消"
             @confirm="handDelete(dataSource)"
-            v-if="
-              dataSource.inBatchPendingStatus === 1 ||
-              dataSource.inBatchPendingStatus === 2 ||
-              dataSource.inBatchPendingStatus === 3
-            "
           >
             <a-button
               type="primary"
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
+              v-if="dataSource.inBatchPendingStatus == 0"
             >
               删除
             </a-button>
@@ -116,6 +108,7 @@ export default defineComponent({
   components: { Form },
   props: {
     id: Number,
+    meterialInfo: Object,
   },
   setup(props, ctx) {
     const state = reactive({
@@ -342,7 +335,6 @@ export default defineComponent({
             item.url = item.fileUrl;
           });
         }
-        console.log(res, "reser");
         res.data.departmentType = String(res.data.departmentType);
         res.data.isExpiration = String(res.data.isExpiration);
         state.dataSource = res.data;
