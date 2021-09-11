@@ -5,13 +5,15 @@ import {
   Form,
   FormItem,
   Input,
+  InputPassword,
+  InputSearch,
   Row,
   Select,
   SelectOption,
   Textarea,
   Upload,
 } from "ant-design-vue";
-import { uploadData } from "api/utils";
+import { uploadData } from "api/utils/tools";
 
 export interface selectOptionProps {
   key: string | number;
@@ -44,15 +46,23 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    layout: {
+      type: String,
+      required: false,
+      default: "horizontal",
+      validator(layout: string) {
+        return ["horizontal", "vertical", "inline"].includes(layout);
+      },
+    },
   },
-  emits: ["onUpdate:dataSource", "submit"],
+  emits: ["update:dataSource", "search", "submit"],
   setup(props, { emit, slots }) {
     const { dataSource } = toRefs(props);
     const formData = ref<{ [prototypeName: string]: any }>(
       dataSource.value || {}
     );
 
-    const createFormComponentRender = ({
+    const formComponentNode = ({
       key,
       label,
       options,
@@ -61,7 +71,35 @@ export default defineComponent({
     }: formItemProps) => {
       switch (type) {
         case "date":
-          return <DatePicker />;
+          return (
+            <DatePicker
+              v-model={[formData.value[`${key}`], "value"]}
+              allowClear
+              disabled={props.disabled}
+              placeholder={`请输入${label || placeholder}`}
+            />
+          );
+
+        case "password":
+          return (
+            <InputPassword
+              v-model={[formData.value[`${key}`], "value"]}
+              allowClear
+              disabled={props.disabled}
+              placeholder={`请输入${label || placeholder}`}
+            ></InputPassword>
+          );
+
+        case "search":
+          return (
+            <InputSearch
+              v-model={[formData.value[`${key}`], "value"]}
+              allowClear
+              disabled={props.disabled}
+              placeholder={`请输入${label || placeholder}`}
+              onSearch={handleSubmit}
+            />
+          );
 
         case "select":
           return (
@@ -99,7 +137,7 @@ export default defineComponent({
             <Upload
               v-model={[formData.value[`${key}`], "fileList"]}
               customRequest={({ file }) => {
-                uploadData(file).then((response: any) => {
+                uploadData(file).then((response) => {
                   formData.value[`${key}`].map((image: any, index: number) => {
                     if (image.uid) {
                       formData.value[`${key}`].splice(index, 1);
@@ -128,13 +166,15 @@ export default defineComponent({
     };
 
     const handleSubmit = (parameter: { [prototypeName: string]: any }) => {
-      emit("onUpdate:dataSource", formData.value);
+      emit("update:dataSource", formData.value);
+      emit("search", formData.value);
       emit("submit", formData.value);
     };
 
     return () => (
       <Form
         hideRequiredMark={true}
+        layout={props.layout}
         model={formData.value}
         onFinish={handleSubmit}
       >
@@ -147,6 +187,7 @@ export default defineComponent({
                   name={formItem.key}
                   rules={[
                     {
+                      whitespace: true,
                       message: `${
                         formItem.label || formItem.placeholder
                       }为必填项`,
@@ -160,20 +201,24 @@ export default defineComponent({
                   ]}
                 >
                   {{
-                    default: () => createFormComponentRender(formItem),
-                    label: () => (
-                      <span class="text-16 text-white text-opacity-70">
-                        {formItem.label}
-                      </span>
-                    ),
+                    default: () => formComponentNode(formItem),
+                    label: () => {
+                      formItem.label && (
+                        <span class="text-16 text-white text-opacity-70">
+                          {formItem.label}
+                        </span>
+                      );
+                    },
                   }}
                 </FormItem>
               </Col>
             );
           })}
-          <Col span={24}>
-            <FormItem class="text-center">{slots.button?.()}</FormItem>
-          </Col>
+          {slots.button && (
+            <Col span={24}>
+              <FormItem class="text-center">{slots.button?.()}</FormItem>
+            </Col>
+          )}
         </Row>
       </Form>
     );

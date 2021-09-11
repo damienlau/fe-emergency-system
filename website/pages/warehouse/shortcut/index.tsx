@@ -8,18 +8,18 @@ import {
   Space,
 } from "ant-design-vue";
 import { useStore } from "vuex";
-import defaultConfig from "config/defaultSettings";
 import Form from "components/Form";
 import Icon from "components/Icon";
 import List from "components/List";
 import Modal from "components/Modal";
 import Tabs from "components/Tabs";
 
+import defaultSettings from "config/defaultSettings";
 import emptyImage from "assets/icon_empty_search.png";
 
 export default defineComponent({
   setup() {
-    const { departments } = defaultConfig;
+    const { departments } = defaultSettings;
     const store = useStore();
     const tabColumns = ref([
       {
@@ -34,30 +34,41 @@ export default defineComponent({
             label: "事件",
             key: "eventId",
             type: "select",
-            options: [],
-            required: true,
+            options: [{ label: "事件1", key: 1 }],
           },
           {
             label: "借货人",
             key: "personnelName",
-            required: true,
           },
           {
             label: "借货人工号",
             key: "personnelJobNo",
-            required: true,
           },
           {
             label: "联系电话",
             key: "personnelPhone",
-            required: true,
           },
           {
             label: "借货科室",
             key: "departmentType",
             type: "select",
-            options: departments,
-            required: true,
+            options: [
+              { key: 1, label: "急救/重症" },
+              { key: 2, label: "门诊" },
+              { key: 3, label: "后勤" },
+              { key: 4, label: "指挥" },
+              { key: 5, label: "重症" },
+              { key: 6, label: "超声" },
+              { key: 7, label: "清创" },
+              { key: 8, label: "留观" },
+              { key: 9, label: "药房" },
+              { key: 10, label: "耗材" },
+              { key: 11, label: "手术" },
+              { key: 12, label: "防疫/隔离" },
+              { key: 13, label: "消毒" },
+              { key: 14, label: "住院" },
+              { key: 15, label: "检验" },
+            ],
           },
         ],
       },
@@ -77,27 +88,22 @@ export default defineComponent({
               { label: "在库", key: "0" },
               { label: "出库", key: "1" },
             ],
-            required: true,
           },
           {
             label: "维修公司",
             key: "personnelCompany",
-            required: true,
           },
           {
             label: "维修人",
             key: "personnelName",
-            required: true,
           },
           {
             label: "联系电话",
             key: "personnelPhone",
-            required: true,
           },
           {
             label: "维修事由",
             key: "description",
-            required: true,
           },
         ],
       },
@@ -117,27 +123,22 @@ export default defineComponent({
               { label: "在库", key: "0" },
               { label: "出库", key: "1" },
             ],
-            required: true,
           },
           {
             label: "保养公司",
             key: "personnelCompany",
-            required: true,
           },
           {
             label: "保养人",
             key: "personnelName",
-            required: true,
           },
           {
             label: "联系电话",
             key: "personnelPhone",
-            required: true,
           },
           {
             label: "保养事由",
             key: "description",
-            required: true,
           },
         ],
       },

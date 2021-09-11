@@ -93,13 +93,13 @@ const actions = {
     return new Promise((reslove) => {
       if (formData.operationType) {
         addMaintainListsData(formData).then((response) => {
-          dispatch("getLists").then(() => {
+          dispatch("getLists", formData.operationType).then(() => {
             reslove(response);
           });
         });
       } else {
         addLendListsData(formData).then((response) => {
-          dispatch("getLists").then(() => {
+          dispatch("getLists", formData.operationType).then(() => {
             reslove(response);
           });
         });
