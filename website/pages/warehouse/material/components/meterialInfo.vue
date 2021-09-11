@@ -123,6 +123,8 @@ export default defineComponent({
     onMounted(() => {
       state.info = props.meterialInfo;
       state.img =
+        props.meterialInfo &&
+        props.meterialInfo.materialImages &&
         props.meterialInfo.materialImages.length > 0
           ? props.meterialInfo.materialImages[0].fileUrl
           : "www.test";

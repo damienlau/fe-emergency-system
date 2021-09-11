@@ -112,7 +112,9 @@ export default defineComponent({
     onMounted(() => {
       state.info = props.boxInfo;
       state.img =
-        props.boxInfo.boxImages && props.boxInfo.boxImages[0].fileUrl
+        props.boxInfo &&
+        props.boxInfo.boxImages &&
+        props.boxInfo.boxImages.length > 0
           ? props.boxInfo.boxImages[0].fileUrl
           : "www.test";
     });
