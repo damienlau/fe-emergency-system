@@ -147,7 +147,7 @@ export default defineComponent({
     const handlePendingSubmit = () => {
       var savependingall = menus.value[0].data.concat(menus.value[1].data);
       var asavefilter = savependingall.filter((a) => {
-        return (a.warehouseBoxInfo == null||''||undefined)
+        return (a.warehouseBoxInfo == null||undefined)
       })
       console.log(asavefilter)
       var asavependingall = asavefilter.map((item) => {       
@@ -160,7 +160,7 @@ export default defineComponent({
         }
       })
       var bsavefilter = savependingall.filter((a) => {
-        return (a.materialInfo == null||''||undefined)
+        return (a.materialInfo == null||undefined)
       })
       var bsavependingall = bsavefilter.map((item) => {       
         return {
@@ -416,7 +416,7 @@ export default defineComponent({
                             </div>
                             <div class="flex py-16 px-16">
                               <div class="h-modal-lightermin w-modal-lightermin ">
-                                {!listItem.url || typeof (listItem.url) ? (
+                                {!listItem.url? (
                                   <div class="flex items-center justify-center h-full">
                                   <div class="m-auto">
                                     
@@ -431,13 +431,13 @@ export default defineComponent({
                               </div>
                               <div
                                 class={
-                                  !listItem.warehouseBoxInfo||typeof(listItem.warehouseBoxInfo)==undefined
+                                  !listItem.warehouseBoxInfo
                                     ? "flex items-center"
                                     : ""
                                 }
                                 class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                               >
-                                {!listItem.warehouseBoxInfo||typeof(listItem.warehouseBoxInfo)==undefined ? (
+                                {!listItem.warehouseBoxInfo ? (
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
@@ -557,7 +557,7 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                    {!listItem.url || typeof (listItem.url) ? (
+                                    {!listItem.url ? (
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
@@ -572,13 +572,13 @@ export default defineComponent({
                                 </div>
                                 <div
                                   class={
-                                    !listItem.warehouseBoxInfo||typeof(listItem.warehouseBoxInfo)==undefined
+                                    !listItem.warehouseBoxInfo
                                       ? "flex items-center"
                                       : ""
                                   }
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
-                                  {!listItem.warehouseBoxInfo||typeof(listItem.warehouseBoxInfo)==undefined ? (
+                                  {!listItem.warehouseBoxInfo ? (
                                     <div class="m-auto">
                                       <a-empty
                                         description="空空如也"

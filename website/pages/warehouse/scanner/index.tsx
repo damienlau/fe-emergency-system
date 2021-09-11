@@ -35,12 +35,14 @@ export default defineComponent({
       {
         label: "事件",
         type: "select",
+        name:"eventId",
         key: "eventId",
         options: [          
         ]
       },
       {
         label: "借货人工号",
+        name:"personnelJobNo",
         key: "personnelJobNo",
       },
     ]);
@@ -54,10 +56,11 @@ export default defineComponent({
       visible.value = !visible.value;
       formData.value["key"] = activedItemKey;
     };
-
+    
     // 监听模态框表单提交事件
     const handleSubmitForm = (formdata) => {
       sessionStorage.setItem("nameNo", JSON.stringify(formdata));
+      console.log(formdata)
       router.push({
         name: formData.value["key"],
         params: 
@@ -66,10 +69,7 @@ export default defineComponent({
       visible.value = !visible.value;
     };
 
-    //模态框右上角按钮
-    const handleCancel = () => {
-      visible.value = !visible.value;
-    }
+    
 
     onMounted(() => {
       // 获取表单选择框选项
@@ -97,7 +97,7 @@ export default defineComponent({
                 >
                   {/* 扫描菜单-卡片图标 */}
                   <img
-                    src={`website/assets/icon_scan_${menuItem.icon}.png`}
+                    src={`/website/assets/icon_scan_${menuItem.icon}.png`}
                     alt={menuItem.label}
                   />
                   {/* 扫描菜单-卡片标题 */}
@@ -117,15 +117,16 @@ export default defineComponent({
           v-model={[visible.value, "visible"]}
           size="ultralight"
           title="请填写信息"
-          onCancel={handleCancel}
         >
           {/* 扫描菜单-模态框表单 */}
-          <div class="flex-1 h-full overflow-hidden justify-center">
+          <div class="flex-1 h-full overflow-hidden justify-center ">
+          {/* pr-80 pl-80 */}
           <Form
             v-model={[formData.value, "dataSource"]}
             columns={formColumn.value}
             onSubmit={handleSubmitForm}
-          >
+            
+            >
             {{
               button: () => (
                 <a-button ghost html-type="submit">

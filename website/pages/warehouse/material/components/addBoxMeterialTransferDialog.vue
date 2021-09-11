@@ -131,6 +131,7 @@ export default defineComponent({
         currentPage: state.pagination.current,
         pageSize: state.pagination.pageSize,
         isBox: 0,
+        status: 1,
         ...search,
       };
       state.leftList = [];
@@ -149,6 +150,11 @@ export default defineComponent({
       state.index === 0
         ? state.rightList.push(item)
         : message.warning("不能重复添加", 1);
+      // state.leftList.forEach((val, index) => {
+      //   if (val.id === item.id) {
+      //     state.leftList.splice(index, 1);
+      //   }
+      // });
     };
     const handDelete = (item) => {
       state.rightList.map((val, index) => {
