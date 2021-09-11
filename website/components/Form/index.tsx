@@ -105,7 +105,6 @@ export default defineComponent({
           return (
             <Select
               v-model={[formData.value[`${key}`], "value"]}
-              allowClear
               disabled={props.disabled}
               placeholder={`请选择${label || placeholder}`}
             >
@@ -179,7 +178,7 @@ export default defineComponent({
         onFinish={handleSubmit}
       >
         <Row>
-          {props.columns.map((formItem: formItemProps) => {
+          {props.columns.map((formItem) => {
             return (
               <Col span={formItem.span || 24}>
                 <FormItem
@@ -195,8 +194,7 @@ export default defineComponent({
                         (typeof formItem.required === "undefined"
                           ? !formItem.required
                           : formItem.required) && !formItem.disabled,
-                      trigger: "blur",
-                      // trigger: ["blur", "change"],
+                      trigger: ["blur", "change"],
                       type: "any",
                     },
                   ]}

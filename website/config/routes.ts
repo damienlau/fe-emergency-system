@@ -23,8 +23,7 @@ export default [
               {
                 path: "shelf",
                 name: "Shelf",
-                component: () =>
-                  import("pages/warehouse/material/shelf/index.vue"),
+                component: () => import("pages/warehouse/material/shelf"),
               },
             ],
           },
@@ -36,17 +35,6 @@ export default [
                 path: "",
                 name: "Record",
                 component: () => import("pages/warehouse/record"),
-              },
-            ],
-          },
-          {
-            path: "shortcut",
-            component: RouterView,
-            children: [
-              {
-                path: "",
-                name: "Shortcut",
-                component: () => import("pages/warehouse/shortcut"),
               },
             ],
           },
@@ -73,6 +61,17 @@ export default [
                 path: "emergency",
                 name: "Emergency",
                 component: () => import("pages/warehouse/scanner/emergency"),
+              },
+            ],
+          },
+          {
+            path: "shortcut",
+            component: RouterView,
+            children: [
+              {
+                path: "",
+                name: "Shortcut",
+                component: () => import("pages/warehouse/shortcut"),
               },
             ],
           },
