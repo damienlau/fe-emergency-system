@@ -148,14 +148,14 @@ export default defineComponent({
 
     const handleClickTabPane = ({ item }) => {
       tabExtraOptions.value = item;
+
       store
-        .dispatch("warehouseModule/shortcutModule/getLists")
+        .dispatch(
+          "warehouseModule/shortcutModule/getLists",
+          tabExtraOptions.value
+        )
         .then((response) => {
-          console.log(response);
-
           cardListsData.value = response;
-
-          console.log(cardListsData.value);
         });
     };
 
@@ -181,13 +181,12 @@ export default defineComponent({
       !Array.isArray(selected) && (selected = Array.of(selected));
       store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
       store
-        .dispatch("warehouseModule/shortcutModule/getLists")
+        .dispatch(
+          "warehouseModule/shortcutModule/getLists",
+          tabExtraOptions.value
+        )
         .then((response) => {
-          console.log(response);
-
           cardListsData.value = response;
-
-          console.log(cardListsData.value);
         });
     };
 
