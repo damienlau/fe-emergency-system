@@ -15,11 +15,11 @@ export const uploadData = (parameter: File) => {
         "Content-Type": "multipart/form-data",
       },
     })
-    .then((response: any) => {
+    .then((response) => {
       return {
         name: parameter.name,
-        url: response.join(),
-        fileUrl: response.join(),
+        url: response.data.join(),
+        fileUrl: response.data.join(),
       };
     });
 };
