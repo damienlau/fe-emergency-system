@@ -1,5 +1,6 @@
 import { signIn, userRequestProps } from "api/user";
 import { AxiosResponse } from "axios";
+import router from "router";
 import { Commit, Store } from "vuex";
 
 const state = () => ({
@@ -36,6 +37,11 @@ const mutations = {
     localStorage.getItem("token")
       ? (state.hasLogin = true)
       : (state.hasLogin = false);
+  },
+  SET_OFFLINE: (state: State) => {
+    localStorage.clear();
+    state.hasLogin = false;
+    router.push({ name: "Login" });
   },
 };
 

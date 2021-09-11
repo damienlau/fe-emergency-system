@@ -24,6 +24,8 @@ instance.interceptors.response.use(
         localStorage.setItem("token", response.headers["authorization"]);
       }
       return response.data;
+    } else {
+      store.commit("user/SET_OFFLINE");
     }
   },
   (error) => {
