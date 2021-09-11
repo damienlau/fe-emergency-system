@@ -59,7 +59,9 @@ export default defineComponent({
     const handleSubmitForm = (formdata) => {
       sessionStorage.setItem("nameNo", JSON.stringify(formdata));
       router.push({
-        name: formData.value["key"]
+        name: formData.value["key"],
+        params: 
+          { eventId: formdata.eventId ,personnelJobNo:formdata.personnelJobNo},        
       });
       visible.value = !visible.value;
     };

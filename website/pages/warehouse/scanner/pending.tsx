@@ -124,7 +124,6 @@ export default defineComponent({
     }
     //扫描出仓模态框控制
     const handleClickPendingItem = () => {
-      sweepGateVisiable.value = true;
       closeSweepGate()
       initPendingData();
       visible.value = !visible.value;
@@ -139,12 +138,10 @@ export default defineComponent({
     const handleSubmit = () => {
       visible.value = !visible.value;
       openSweepGate()
-      sweepGateVisiable.value = false;
     };
     const handleCancel = () => {
       visible.value = !visible.value;
       closeSweepGate()
-      sweepGateVisiable.value = true;
     }
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
@@ -342,27 +339,30 @@ export default defineComponent({
     }
     //开启扫描门
     const openSweepGate = () => {
+      sweepGateVisiable.value = false;
       store
         .dispatch("warehouseModule/pendingModule/sweepGateOpenData")
         
     }
     //关闭扫描门
     const closeSweepGate = () => {
+      sweepGateVisiable.value = true;
       store
         .dispatch('warehouseModule/pendingModule/sweepGateCloseData')
         
     }
     onMounted(() => {
       //获取待出仓物资 
+      console.log(router.currentRoute.value.params)
+      //JSON.parse(sessionStorage.getItem("nameNo"))
        store
-         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",JSON.parse(sessionStorage.getItem("nameNo")) )
+         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",router.currentRoute.value.params )
          .then((response) => {
           DetailSpecifiedShortcutList(response[0].id)
          });
       openSweepGate();
     });
     onUnmounted(() => {
-      sweepGateVisiable.value = true;
       closeSweepGate();
     })
 
