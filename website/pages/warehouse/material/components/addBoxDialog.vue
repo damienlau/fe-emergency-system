@@ -260,7 +260,7 @@ export default defineComponent({
       {
         label: "华西资产编码",
         key: "assetCode",
-        required: true,
+        required: false,
         span: 12,
       },
       {
