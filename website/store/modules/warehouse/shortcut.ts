@@ -32,54 +32,58 @@ const actions = {
   },
 
   // 获取待操作清单列表
-  getLists: ({ dispatch }) => {
+  getLists: ({ dispatch }, selectedTabPane) => {
     return new Promise((reslove) => {
       dispatch("getTotals").then(() => {
-        findShortcutData().then((response) => {
-          reslove({
-            pagination: {
-              current: response.data.currentPage,
-              total: response.data.totalNum,
-              pageSize: response.data.pageSize,
-            },
-            data: response.data.content.map((lists) => {
-              switch (lists.resourceType) {
-                case 1:
-                  return {
-                    id: lists.id,
-                    label:
-                      lists.warehouseMaterialInfo.materialName || "暂无数据",
-                    code: lists.warehouseMaterialInfo.materialCode,
-                    thumbnail: lists.warehouseMaterialInfo.materialImages,
-                    type: departments[
-                      lists.warehouseMaterialInfo.departmentType
-                    ],
-                    position: `${lists.warehouseMaterialInfo.rackNumber}号货架${
-                      shelf[lists.warehouseMaterialInfo.rackPosition]
-                    }`,
-                    boxName: lists.warehouseMaterialInfo.boxName,
-                  };
+        findShortcutData({ operationType: selectedTabPane.key }).then(
+          (response) => {
+            reslove({
+              pagination: {
+                current: response.data.currentPage,
+                total: response.data.totalNum,
+                pageSize: response.data.pageSize,
+              },
+              data: response.data.content.map((lists) => {
+                switch (lists.resourceType) {
+                  case 1:
+                    return {
+                      id: lists.id,
+                      label:
+                        lists.warehouseMaterialInfo.materialName || "暂无数据",
+                      code: lists.warehouseMaterialInfo.materialCode,
+                      thumbnail: lists.warehouseMaterialInfo.materialImages,
+                      type: departments[
+                        lists.warehouseMaterialInfo.departmentType
+                      ],
+                      position: `${
+                        lists.warehouseMaterialInfo.rackNumber
+                      }号货架${
+                        shelf[lists.warehouseMaterialInfo.rackPosition]
+                      }`,
+                      boxName: lists.warehouseMaterialInfo.boxName,
+                    };
 
-                case 2:
-                  return {
-                    id: lists.id,
-                    label: lists.warehouseBoxInfo.boxName || "暂无数据",
-                    code: lists.warehouseBoxInfo.boxCode,
-                    thumbnail: lists.warehouseBoxInfo.boxImages,
-                    quantity: {
-                      remain: lists.warehouseBoxInfo.materialRemainNumber,
-                      total: lists.warehouseBoxInfo.materialTotalNumber,
-                    },
-                    size: lists.warehouseBoxInfo.size,
-                    type: departments[lists.warehouseBoxInfo.departmentType],
-                    position: `${lists.warehouseBoxInfo.rackNumber}号货架${
-                      shelf[lists.warehouseBoxInfo.rackPosition]
-                    }`,
-                  };
-              }
-            }),
-          });
-        });
+                  case 2:
+                    return {
+                      id: lists.id,
+                      label: lists.warehouseBoxInfo.boxName || "暂无数据",
+                      code: lists.warehouseBoxInfo.boxCode,
+                      thumbnail: lists.warehouseBoxInfo.boxImages,
+                      quantity: {
+                        remain: lists.warehouseBoxInfo.materialRemainNumber,
+                        total: lists.warehouseBoxInfo.materialTotalNumber,
+                      },
+                      size: lists.warehouseBoxInfo.size,
+                      type: departments[lists.warehouseBoxInfo.departmentType],
+                      position: `${lists.warehouseBoxInfo.rackNumber}号货架${
+                        shelf[lists.warehouseBoxInfo.rackPosition]
+                      }`,
+                    };
+                }
+              }),
+            });
+          }
+        );
       });
     });
   },

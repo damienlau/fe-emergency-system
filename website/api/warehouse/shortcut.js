@@ -24,7 +24,7 @@ export const deleteShortcutData = (parameter) => {
 
 export const findShortcutData = (parameter) => {
   return request
-    .get(shortcutRequestUrls.find, { params: { parameter } })
+    .get(shortcutRequestUrls.find, { params: parameter })
     .then((response) => {
       return response;
     });
