@@ -95,7 +95,7 @@
       </a-tab-pane>
       <a-tab-pane
         :key="'init'"
-        :tab="'箱内物资' + ' (' + dataSource.materialTotalNumber + ')'"
+        :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
       >
         <div class="box">
           <div
@@ -198,6 +198,7 @@ export default defineComponent({
   props: {
     id: Number,
     boxCode: String,
+    materialRemainNumber: Number,
   },
   setup(props, ctx) {
     const state = reactive({
