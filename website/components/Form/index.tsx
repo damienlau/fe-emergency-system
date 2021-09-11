@@ -63,6 +63,7 @@ export default defineComponent({
     );
 
     const formComponentNode = ({
+      disabled,
       key,
       label,
       options,
@@ -75,7 +76,7 @@ export default defineComponent({
             <DatePicker
               v-model={[formData.value[`${key}`], "value"]}
               allowClear
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请输入${label || placeholder}`}
             />
           );
@@ -85,7 +86,7 @@ export default defineComponent({
             <InputPassword
               v-model={[formData.value[`${key}`], "value", ["trim"]]}
               allowClear
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></InputPassword>
           );
@@ -95,7 +96,7 @@ export default defineComponent({
             <InputSearch
               v-model={[formData.value[`${key}`], "value", ["trim"]]}
               allowClear
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请输入${label || placeholder}`}
               onSearch={handleSubmit}
             />
@@ -105,7 +106,7 @@ export default defineComponent({
           return (
             <Select
               v-model={[formData.value[`${key}`], "value"]}
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请选择${label || placeholder}`}
             >
               {options?.map((selectOption) => {
@@ -126,7 +127,7 @@ export default defineComponent({
             <Textarea
               v-model={[formData.value[`${key}`], "value", ["trim"]]}
               allowClear
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Textarea>
           );
@@ -157,7 +158,7 @@ export default defineComponent({
             <Input
               v-model={[formData.value[`${key}`], "value", ["trim"]]}
               allowClear
-              disabled={props.disabled}
+              disabled={disabled || props.disabled}
               placeholder={`请输入${label || placeholder}`}
             ></Input>
           );
