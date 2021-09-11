@@ -18,13 +18,13 @@ export default [
               {
                 path: "",
                 name: "Material",
-                component: () => import("pages/warehouse/material/index.vue"),
+                component: () => import("pages/warehouse/material"),
               },
-              // {
-              //   path: "shelf",
-              //   name: "Shelf",
-              //   component: () => import("pages/warehouse/material/shelf"),
-              // },
+              {
+                path: "shelf",
+                name: "Shelf",
+                component: () => import("pages/warehouse/material/shelf"),
+              },
             ],
           },
           {
@@ -46,32 +46,6 @@ export default [
                 path: "",
                 name: "Shortcut",
                 component: () => import("pages/warehouse/shortcut"),
-              },
-            ],
-          },
-          {
-            path: "scanner",
-            component: RouterView,
-            children: [
-              {
-                path: "",
-                name: "Scanner",
-                component: () => import("pages/warehouse/scanner"),
-              },
-              {
-                path: "pending",
-                name: "Pending",
-                component: () => import("pages/warehouse/scanner/pending"),
-              },
-              {
-                path: "belong",
-                name: "Belong",
-                component: () => import("pages/warehouse/scanner/belong"),
-              },
-              {
-                path: "emergency",
-                name: "Emergency",
-                component: () => import("pages/warehouse/scanner/emergency"),
               },
             ],
           },

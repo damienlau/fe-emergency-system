@@ -58,7 +58,9 @@
           ghost
           class="mr-3"
           :disabled="
-            info.inBatchPendingStatus === 2 || info.inBatchPendingStatus === 3
+            info.inBatchPendingStatus === 1 ||
+            info.inBatchPendingStatus === 2 ||
+            info.inBatchPendingStatus === 3
           "
           @click.stop="changeMaintain"
           >维修</a-button
@@ -67,7 +69,9 @@
           type="primary"
           ghost
           :disabled="
-            info.inBatchPendingStatus === 2 || info.inBatchPendingStatus === 3
+            info.inBatchPendingStatus === 1 ||
+            info.inBatchPendingStatus === 2 ||
+            info.inBatchPendingStatus === 3
           "
           @click.stop="changeRepair"
           >保养</a-button
