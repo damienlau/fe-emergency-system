@@ -73,10 +73,7 @@ export default defineComponent({
 
     onMounted(() => {
       // 获取表单选择框选项
-      
-      store
-        .dispatch("taskModule/eventModule/findTaskEvents")
-        .then((response) => {
+      store.dispatch("warehouseModule/pendingModule/scannerInfoallData").then((response) => {
           formColumn.value[0].options = response?.map((option) => {
             return {
               key: option.id,

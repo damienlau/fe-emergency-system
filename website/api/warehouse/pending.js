@@ -11,7 +11,8 @@ const shortcutRequestUrls = {
   sweepreader: "/scan/reader",
   sweepclose: "/scan/close",
   allBoxinfo: "/box/info/all",
-  material:"/material/info/all"
+  material: "/material/info/all",
+  infoall:"/event/info/all"
 };
 
 // 出仓待出仓列表
@@ -74,6 +75,13 @@ export const allBoxinfoPending = (params) => {
 //全部仓库物资
 export const allmaterialPending = (params) => {
   return request.get(shortcutRequestUrls.material, {params}).then((response) => {
+    return response;
+  })
+}
+
+//出归仓扫描工号信息
+export const scannerInfoall = (params) => {
+  return request.get(shortcutRequestUrls.infoall, params).then((response) => {
     return response;
   })
 }

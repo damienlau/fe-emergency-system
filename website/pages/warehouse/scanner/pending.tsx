@@ -324,7 +324,7 @@ export default defineComponent({
       } else {
         readerSweepGate();
       }      
-    }, 30000)
+    }, 5000)
     //轮询接口,读取扫描门
     const readerSweepGate = () => {
       store
