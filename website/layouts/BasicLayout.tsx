@@ -15,8 +15,8 @@ export default defineComponent({
     const menuColumns = ref([
       { label: "仓库", key: "Material" },
       { label: "借还记录", key: "Record" },
-      { label: "一键操作", key: "shortcut" },
-      { label: "出/归仓扫描", key: "scanner" },
+      { label: "一键操作", key: "Shortcut" },
+      { label: "出/归仓扫描", key: "Scanner" },
     ]);
     const router = useRouter();
 

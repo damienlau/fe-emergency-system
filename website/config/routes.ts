@@ -18,12 +18,13 @@ export default [
               {
                 path: "",
                 name: "Material",
-                component: () => import("pages/warehouse/material"),
+                component: () => import("pages/warehouse/material/index.vue"),
               },
               {
                 path: "shelf",
                 name: "Shelf",
-                component: () => import("pages/warehouse/material/shelf"),
+                component: () =>
+                  import("pages/warehouse/material/shelf/index.vue"),
               },
             ],
           },
@@ -46,6 +47,17 @@ export default [
                 path: "",
                 name: "Shortcut",
                 component: () => import("pages/warehouse/shortcut"),
+              },
+            ],
+          },
+          {
+            path: "scanner",
+            component: RouterView,
+            children: [
+              {
+                path: "",
+                name: "Scanner",
+                component: () => import("pages/warehouse/scanner"),
               },
             ],
           },
