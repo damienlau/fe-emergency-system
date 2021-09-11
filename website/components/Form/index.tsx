@@ -73,7 +73,7 @@ export default defineComponent({
         case "date":
           return (
             <DatePicker
-              v-model={[formData.value[`${key}`], "value", ["trim"]]}
+              v-model={[formData.value[`${key}`], "value"]}
               allowClear
               disabled={props.disabled}
               placeholder={`请输入${label || placeholder}`}
@@ -104,7 +104,7 @@ export default defineComponent({
         case "select":
           return (
             <Select
-              v-model={[formData.value[`${key}`], "value", ["trim"]]}
+              v-model={[formData.value[`${key}`], "value"]}
               allowClear
               disabled={props.disabled}
               placeholder={`请选择${label || placeholder}`}
