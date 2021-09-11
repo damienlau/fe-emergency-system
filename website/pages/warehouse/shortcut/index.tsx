@@ -34,7 +34,7 @@ export default defineComponent({
             label: "事件",
             key: "eventId",
             type: "select",
-            options: [{ label: "事件1", key: 1 }],
+            options: computed(() => store.state.task.events),
           },
           {
             label: "借货人",
@@ -198,6 +198,8 @@ export default defineComponent({
           handleVisibleDialog();
         });
     };
+
+    store.dispatch("task/getEvents");
 
     return () => (
       <>

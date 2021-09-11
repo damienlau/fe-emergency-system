@@ -1,4 +1,5 @@
 import { createStore, Store } from "vuex";
+import task from "./modules/task";
 import user from "./modules/user";
 import warehouseModule from "./modules/warehouse";
 
@@ -10,7 +11,7 @@ const actions = {};
 
 const mutations = {};
 
-const modules = { user, warehouseModule };
+const modules = { task, user, warehouseModule };
 
 export interface State {}
 
