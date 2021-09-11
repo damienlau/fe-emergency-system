@@ -47,7 +47,7 @@
         </div>
         <div class="row">
           <span class="label">物资编码:</span>
-          <span class="value">{{ info.assetCode || "--" }}</span>
+          <span class="value">{{ info.materialCode || "--" }}</span>
         </div>
       </div>
     </div>
