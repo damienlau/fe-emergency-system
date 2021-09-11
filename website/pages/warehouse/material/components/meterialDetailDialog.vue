@@ -20,6 +20,11 @@
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
+              :disabled="
+                dataSource.inBatchPendingStatus === 1 ||
+                dataSource.inBatchPendingStatus === 2 ||
+                dataSource.inBatchPendingStatus === 3
+              "
             >
               删除
             </a-button>
@@ -64,6 +69,11 @@
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
+              :disabled="
+                dataSource.inBatchPendingStatus === 1 ||
+                dataSource.inBatchPendingStatus === 2 ||
+                dataSource.inBatchPendingStatus === 3
+              "
             >
               删除
             </a-button>

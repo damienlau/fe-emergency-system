@@ -65,6 +65,11 @@
                 ghost
                 class="flex flex-row items-center p-0 mr-3"
                 danger
+                :disabled="
+                  dataSource.inBatchPendingStatus === 1 ||
+                  dataSource.inBatchPendingStatus === 2 ||
+                  dataSource.inBatchPendingStatus === 3
+                "
               >
                 删除
               </a-button>
@@ -122,6 +127,11 @@
               v-if="isEditInit"
               class="flex flex-row items-center p-0 mr-3"
               danger
+              :disabled="
+                dataSource.inBatchPendingStatus === 1 ||
+                dataSource.inBatchPendingStatus === 2 ||
+                dataSource.inBatchPendingStatus === 3
+              "
             >
               删除
             </a-button>
@@ -443,21 +453,22 @@ export default defineComponent({
         res.data.rackPosition = String(res.data.rackPosition);
         res.data.rackNumber = String(res.data.rackNumber);
         res.data.departmentType = String(res.data.departmentType);
-        state.dataSource = res;
+        state.dataSource = res.data;
         state.loading = true;
-        console.log(res, "resre");
       });
     };
     const initMaterialList = () => {
       state.materialList = [];
       findMaterialInfoAllData({ boxCode: props.boxCode }).then((res) => {
-        state.materialList = res;
+        state.materialList = res.data;
       });
     };
     const handDelete = (data) => {
       const id = data.id;
       deleteBoxInfoData(id).then((res) => {
-        ctx.emit("close");
+        if (res.data) {
+          ctx.emit("close");
+        }
       });
     };
     const showAddBoxTransfer = () => {
@@ -486,7 +497,9 @@ export default defineComponent({
         materialIds: idArr,
       };
       updateBoxData(params).then((res) => {
-        ctx.emit("close");
+        if (res.data) {
+          ctx.emit("close");
+        }
       });
     };
     return {
