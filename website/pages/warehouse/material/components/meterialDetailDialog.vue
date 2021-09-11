@@ -310,28 +310,32 @@ export default defineComponent({
     });
     const handleSubmitBase = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        state.isEditBase = true;
-        initData();
+        if (res.data) {
+          state.isEditBase = true;
+          initData();
+        }
       });
     };
     const handleSubmitOther = (data) => {
       updateSpecifiedMeterialData(data).then((res) => {
-        state.isEditOther = true;
-        initData();
+        if (res.data) {
+          state.isEditOther = true;
+          initData();
+        }
       });
     };
     const initData = () => {
       state.loading = false;
       findSpecifiedMeterialData({ id: props.id }).then((res) => {
-        if (res.materialImages.length > 0) {
-          res.materialImages.forEach((item) => {
+        if (res.data.materialImages.length > 0) {
+          res.data.materialImages.forEach((item) => {
             item.url = item.fileUrl;
           });
         }
         console.log(res, "reser");
-        res.departmentType = String(res.departmentType);
-        res.isExpiration = String(res.isExpiration);
-        state.dataSource = res;
+        res.data.departmentType = String(res.data.departmentType);
+        res.data.isExpiration = String(res.data.isExpiration);
+        state.dataSource = res.data;
         state.loading = true;
       });
     };
@@ -340,7 +344,9 @@ export default defineComponent({
         id: data.id,
       };
       deleteMeterialInfoData(params).then((res) => {
-        ctx.emit("close");
+        if (res.data) {
+          ctx.emit("close");
+        }
       });
     };
     return {

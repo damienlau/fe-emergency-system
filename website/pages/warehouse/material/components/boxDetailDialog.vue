@@ -416,29 +416,33 @@ export default defineComponent({
 
     const handleSubmitBase = () => {
       updateBoxData(data).then((res) => {
-        state.isEditBase = true;
-        initData();
+        if (res.data) {
+          state.isEditBase = true;
+          initData();
+        }
       });
     };
     const handleSubmitOther = (data) => {
       updateBoxData(data).then((res) => {
-        state.isEditOther = true;
-        initData();
+        if (res.data) {
+          state.isEditOther = true;
+          initData();
+        }
       });
     };
     const initData = () => {
       state.loading = false;
       findSpecifiedBoxData({ id: props.id }).then((res) => {
-        if (res.boxImages.length > 0) {
-          res.boxImages.forEach((item) => {
+        if (res.data.boxImages.length > 0) {
+          res.data.boxImages.forEach((item) => {
             item.url = item.fileUrl;
           });
         }
-        res.status = String(res.status);
-        res.size = String(res.size);
-        res.rackPosition = String(res.rackPosition);
-        res.rackNumber = String(res.rackNumber);
-        res.departmentType = String(res.departmentType);
+        res.data.status = String(res.data.status);
+        res.data.size = String(res.data.size);
+        res.data.rackPosition = String(res.data.rackPosition);
+        res.data.rackNumber = String(res.data.rackNumber);
+        res.data.departmentType = String(res.data.departmentType);
         state.dataSource = res;
         state.loading = true;
         console.log(res, "resre");

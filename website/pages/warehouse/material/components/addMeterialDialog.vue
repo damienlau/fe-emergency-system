@@ -205,13 +205,17 @@ export default defineComponent({
     const handleSubmitBase = () => {
       const data = { ...state.formDataBase, ...state.formDataOter };
       addMeterialData(data).then((res) => {
-        slot.emit("close");
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     const handleSubmitOther = () => {
       const data = { ...state.formDataBase, ...state.formDataOter };
       addMeterialData(data).then((res) => {
-        slot.emit("close");
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     return {

@@ -4,14 +4,13 @@
       <a-image class="pt-3" :width="100" :height="100" :src="img" />
       <div class="right ml-20">
         <div class="row">
-          <span class="title mr-3 mb-3">{{ info.materialName }}</span>
+          <span class="title mr-3 mb-3">{{ info.materialName || "--" }}</span>
           <a-tag
             size="mini"
             :color="info.status && returnStatus(info.status).color"
             >{{ info.status && returnStatus(info.status).text }}</a-tag
           >
         </div>
-
         <div class="row">
           <span class="label">货架位置:</span>
           <span class="value">{{
@@ -122,10 +121,6 @@ export default defineComponent({
       15: "检验",
     });
     onMounted(() => {
-      console.log(
-        props.meterialInfo.materialImages,
-        "props.meterialInfo.materialImages"
-      );
       state.info = props.meterialInfo;
       state.img =
         props.meterialInfo.materialImages.length > 0
@@ -139,7 +134,9 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const changeRepair = () => {
@@ -149,7 +146,9 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const changeDebit = () => {
@@ -159,7 +158,9 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const handCansel = () => {
@@ -169,7 +170,9 @@ export default defineComponent({
         materialId: props.meterialInfo.id,
       };
       deleteByFindData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const returnStatus = (status) => {
@@ -222,7 +225,7 @@ export default defineComponent({
     };
     const findDetail = () => {
       findSpecifiedMeterialData({ id: props.meterialInfo.id }).then((res) => {
-        state.info = JSON.parse(JSON.stringify(res));
+        state.info = JSON.parse(JSON.stringify(res.data));
       });
     };
     return {

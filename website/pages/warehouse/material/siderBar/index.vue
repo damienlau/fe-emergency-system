@@ -13,7 +13,7 @@
                 v-model:value="meterialSearchValue"
                 placeholder="物资搜索"
                 allowClear
-                @search="getMaterialsData"
+                @search="getFirstMaterialsData"
               ></a-input-search>
               <a-button type="primary" class="ml-20" @click="showMetarialDilog"
                 >物资入库</a-button
@@ -30,7 +30,7 @@
             class="BoxInfo mt-3"
             @click="showMeterialDetailDialog(item)"
           ></MeterialInfo>
-          <div style="height: 120px; width: 240px">
+          <div style="height: 120px; width: 240px" v-if="materialsList">
             <a-button
               type="link"
               v-if="paginationMaterials.total > materialsList.length"
@@ -64,7 +64,7 @@
                 v-model:value="boxSearchValue"
                 allowClear
                 placeholder="箱子搜索"
-                @search="getBoxData"
+                @search="getFirstBoxData"
               ></a-input-search>
               <a-button
                 type="primary"
@@ -194,6 +194,7 @@ export default defineComponent({
     });
     onMounted(() => {
       getFirstMaterialsData();
+      getMaterialsData();
     });
     const getMaterialsData = () => {
       const search = meterialSearchValue.value;
@@ -207,8 +208,13 @@ export default defineComponent({
         materialName: search,
       };
       findCriteriaPageData(params).then((res) => {
-        state.materialsList = state.materialsList.concat(res.content);
-        state.paginationMaterials.total = res.totalNum;
+        state.materialsList = res.data.content;
+        if (state.materialsList.length <= 0) {
+          state.materialsList = res.data.content;
+        } else {
+          state.materialsList = state.materialsList.concat(res.data.content);
+        }
+        state.paginationMaterials.total = res.data.totalNum;
       });
     };
     const getBoxData = () => {
@@ -223,8 +229,8 @@ export default defineComponent({
         boxName: search,
       };
       findBoxPageData(params).then((res) => {
-        state.boxList = state.boxList.concat(res.content);
-        state.paginationBox.total = res.totalNum;
+        state.boxList = state.boxList.concat(res.data.content);
+        state.paginationBox.total = res.data.totalNum;
       });
     };
     const tabClick = (tabs) => {

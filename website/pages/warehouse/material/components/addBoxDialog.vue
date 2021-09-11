@@ -289,7 +289,7 @@ export default defineComponent({
     const handleSubmitBase = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        if (res) {
+        if (res.data) {
           slot.emit("close");
         }
       });
@@ -297,7 +297,7 @@ export default defineComponent({
     const handleSubmitOther = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        if (res) {
+        if (res.data) {
           slot.emit("close");
         }
       });
@@ -305,7 +305,7 @@ export default defineComponent({
 
     const handleSubmitInit = () => {
       addBoxData(state.boxInfo).then((res) => {
-        if (res) {
+        if (res.data) {
           slot.emit("close");
         }
       });
@@ -330,7 +330,7 @@ export default defineComponent({
         ...state.formDataOter,
       };
       addBoxData(params).then((res) => {
-        if (res) {
+        if (res.data) {
           slot.emit("close");
         }
       });

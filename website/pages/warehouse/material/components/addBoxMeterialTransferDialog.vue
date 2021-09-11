@@ -135,8 +135,8 @@ export default defineComponent({
       };
       state.leftList = [];
       findMaterialListData(params).then((res) => {
-        state.pagination.total = res.totalNum;
-        state.leftList = res.content;
+        state.pagination.total = res.data.totalNum;
+        state.leftList = res.data.content;
       });
     };
     const handChoose = (item) => {

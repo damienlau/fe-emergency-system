@@ -171,7 +171,9 @@ export default defineComponent({
         boxId: props.boxInfo.id,
       };
       addBatchPendingData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const handCansel = () => {
@@ -181,12 +183,14 @@ export default defineComponent({
         boxId: props.boxInfo.id,
       };
       deleteByFindData(params).then((res) => {
-        findDetail();
+        if (res.data) {
+          findDetail();
+        }
       });
     };
     const findDetail = () => {
       findSpecifiedBoxData({ id: props.boxInfo.id }).then((res) => {
-        state.info = JSON.parse(JSON.stringify(res));
+        state.info = JSON.parse(JSON.stringify(res.data));
       });
     };
     return {
