@@ -419,7 +419,7 @@ export default defineComponent({
       initMaterialList();
     });
 
-    const handleSubmitBase = () => {
+    const handleSubmitBase = (data) => {
       updateBoxData(data).then((res) => {
         if (res.data) {
           state.isEditBase = true;
