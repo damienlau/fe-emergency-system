@@ -110,7 +110,7 @@ export default defineComponent({
     id: Number,
     meterialInfo: Object,
   },
-  setup(props, ctx) {
+  setup(props, slot) {
     const state = reactive({
       activeKey: "base",
       tabelData: [],
@@ -315,7 +315,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditBase = true;
-          initData();
+          slot.emit("close");
         }
       });
     };
@@ -323,7 +323,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditOther = true;
-          initData();
+          slot.emit("close");
         }
       });
     };
@@ -347,7 +347,7 @@ export default defineComponent({
       };
       deleteMeterialInfoData(params).then((res) => {
         if (res.data) {
-          ctx.emit("close");
+          slot.emit("close");
         }
       });
     };
