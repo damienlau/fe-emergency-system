@@ -252,7 +252,7 @@ export default defineComponent({
         label: "物资图片",
         key: "boxImages",
         type: "upload",
-        required: false,
+        required: true,
         span: 24,
       },
     ]);

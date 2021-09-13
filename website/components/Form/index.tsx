@@ -108,6 +108,9 @@ export default defineComponent({
               v-model={[formData.value[`${key}`], "value"]}
               disabled={disabled || props.disabled}
               placeholder={`请选择${label || placeholder}`}
+              onChange={(value, option) => {
+                formData.value[`eventName`] = "塌方事件";
+              }}
             >
               {options?.map((selectOption) => {
                 return (

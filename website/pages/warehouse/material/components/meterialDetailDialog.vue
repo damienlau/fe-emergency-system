@@ -246,7 +246,7 @@ export default defineComponent({
         label: "物资图片",
         key: "materialImages",
         type: "upload",
-        required: false,
+        required: true,
         span: 24,
       },
     ]);
