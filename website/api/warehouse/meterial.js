@@ -105,3 +105,8 @@ export function findMaterialListData(params) {
     params,
   });
 }
+
+// 查询货架中的箱子在库数据
+export function findBoxRackCount(params) {
+  return request.get("/box/info/rack/count", { params })
+}

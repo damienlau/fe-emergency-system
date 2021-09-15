@@ -30,7 +30,7 @@ export default defineConfig({
     open: true,
     proxy: {
       "/dev-api": {
-        target: "http://192.168.1.7:8090/warehouse",
+        target: "http://dottmed.vipgz1.idcfengye.com/warehouse/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/dev-api/, ""),
       },
