@@ -1,0 +1,59 @@
+.box {
+  position: relative;
+  width: 13.02vw;
+  height: 8.8536vw;
+  // min-width: 200px;
+  // min-height: 136px;
+  @apply relative text-16 bg-box bg-no-repeat bg-contain pt-40
+    pr-10 pb-10 pl-40;
+
+  &:hover {
+    @apply bg-box-hover;
+  }
+}
+.rack {
+  &-mark {
+    position: absolute;
+    top: 2.5vw;
+    left: 2.5vw;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 12px;
+  }
+ 
+  &-waiting {
+    @apply rack-mark;
+
+    background-color: #F08E3A;
+  }
+
+  &-out {
+    @apply rack-mark;
+
+    background-color: #FF6061;
+  }
+
+  &-remark {
+    position: absolute;
+    top: 2.5vw;
+    right: 0.83vw;
+  }
+
+  &-text {
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #F08E3A;
+    font-size: 12px;
+    border: 1px solid #F08E3A;
+    background-color: #fff;
+  }
+}

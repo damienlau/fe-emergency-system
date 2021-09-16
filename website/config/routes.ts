@@ -23,7 +23,7 @@ export default [
               {
                 path: "rack/:id",
                 name: "Rack",
-                component: () => import("pages/warehouse/rack/index.vue")
+                component: () => import("pages/warehouse/rack")
               }
               // {
               //   path: "shelf",

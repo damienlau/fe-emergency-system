@@ -30,7 +30,7 @@
             class="BoxInfo mt-3"
             @click="showMeterialDetailDialog(item)"
           ></MeterialInfo>
-          <div style="height: 120px; width: 240px" v-if="materialsList">
+          <div style="height: 120px; width: 100%; text-align: center" v-if="materialsList">
             <a-button
               type="link"
               v-if="paginationMaterials.total > materialsList.length"
@@ -84,7 +84,7 @@
             class="BoxInfo mt-3"
             @click="showBoxDetailDialog(item)"
           ></BoxInfo>
-          <div style="height: 120px; width: 240px">
+          <div style="height: 120px; width: 100%; text-align: center">
             <a-button
               type="link"
               v-if="paginationBox.total > boxList.length"
@@ -329,6 +329,7 @@ export default defineComponent({
     max-width: 460px;
     max-height: 220px;
     margin-right: 5px;
+    flex: 1;
   }
 }
 </style>

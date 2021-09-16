@@ -110,3 +110,8 @@ export function findMaterialListData(params) {
 export function findBoxRackCount(params) {
   return request.get("/box/info/rack/count", { params })
 }
+
+// 获取箱内物资清单-去重
+export function findBoxInfoDistinct(params) {
+  return request.get("/material/info/all/distinct", { params })
+}

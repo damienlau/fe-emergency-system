@@ -25,7 +25,8 @@
 
 <script>
 import { defineComponent } from 'vue'
-import BoxBgImage from 'assets/bg_box.png'
+import { findBoxInfoDistinct } from 'api/warehouse/meterial';
+
 export default defineComponent({
   name: 'RackBox',
   props: {
@@ -36,7 +37,7 @@ export default defineComponent({
   },
   data () {
     return {
-      BoxBg: BoxBgImage
+      distinct: {}
     }
   },
   methods: {
@@ -46,6 +47,11 @@ export default defineComponent({
         3: { className: 'rack-waiting', text: '待' }
       }
       return choices[status] || ''
+    },
+    initBoxInfoDistinct () {
+      findBoxInfoDistinct({ boxCode: this.box.boxCode }).then(({ data }) => {
+        this.distinct = data
+      })
     }
   }
 })

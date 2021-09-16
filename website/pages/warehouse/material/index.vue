@@ -11,6 +11,7 @@
       width="100%"
       :collapsible="true"
       :collapsedWidth="484"
+      style="overflow-y: auto"
     >
       <div class="h-full flex flex-col">
         <button
