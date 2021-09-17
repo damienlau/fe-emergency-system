@@ -23,7 +23,7 @@ export default defineComponent({
           size
         );
       },
-    },
+    }
   },
   emits: ["update:visible", "cancel"],
   setup(props, { emit, slots }) {
@@ -38,6 +38,13 @@ export default defineComponent({
       emit("update:visible", !visible.value);
       emit("cancel");
     };
+
+    // 插槽extra渲染模版
+    const renderExtra = (extra) => (
+      <div class="overflow-y-hidden" class={props.flex}>
+        { extra() }
+      </div>
+    )
 
     return () => (
       <Modal
@@ -70,8 +77,11 @@ export default defineComponent({
           </div>
           {/* Modal Header End */}
 
-          <div class="flex-1 overflow-y-auto">
-            {slots.default && slots.default()}
+          <div style="width: 100%" class="flex flex-row">
+            <div class="flex-1 overflow-y-auto">
+              {slots.default && slots.default()}
+            </div>
+            { slots.extra && renderExtra(slots.extra) }
           </div>
         </div>
       </Modal>

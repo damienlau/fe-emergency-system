@@ -56,7 +56,7 @@ module.exports = {
         "modal-lighter": "620px",
         "modal-light": "620px",
         "modal-heavy": "920px",
-        "modal-bold": "1416px",
+        "modal-bold": "1416px"
       },
       // 字体
       fontSize: {

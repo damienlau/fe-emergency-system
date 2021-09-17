@@ -4,6 +4,7 @@ import { boxRequestProps } from "api/warehouse/material/box";
 import { findGoodsData, goodsRequestProps, findBoxDistinct } from "api/warehouse/material/goods";
 import Images from "components/Images";
 import { boxSize, boxStatus, departments, shelfPosition } from "config/enums";
+import { emit } from "node:process";
 import { useStore } from "vuex";
 import classes from "./style.module.less";
 
@@ -15,7 +16,8 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  emits: ['click'],
+  setup(props, { emit }) {
     const popoverVisible = ref(false)
     const goodsList = ref<{inBoxMaterials: any, outBoxMaterials: any}>();
     const store = useStore();
@@ -31,6 +33,11 @@ export default defineComponent({
     const handleRemarkVisible = (val: boolean) => {
       popoverVisible.value = !val
     }
+    
+    // 打开箱子详情弹窗
+    const showRackBoxDetailDialog = () => {
+      emit('click', props.columns)
+    };
 
     return () => (
       <Popover
@@ -150,7 +157,7 @@ export default defineComponent({
           ),
           default: () => (
             // Box Start
-            <div class={classes.box}>
+            <div class={classes.box} onClick={showRackBoxDetailDialog}>
               {/* Badge */}
               {props.columns.status === boxStatus.out && (
                 <div class={classes['rack-out']}>
@@ -163,7 +170,7 @@ export default defineComponent({
                 </div>
               )}
 
-              <Tooltip placement="bottom" onVisibleChange={handleRemarkVisible}>
+              <Tooltip overlayClassName="box-tooltip" placement="bottom" onVisibleChange={handleRemarkVisible}>
                 {{
                   title: () => (
                     <span>{props.columns.remark}</span>

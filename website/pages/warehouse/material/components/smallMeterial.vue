@@ -1,11 +1,21 @@
 <template>
   <a-card
     hoverable
-    style="width: 330px; height: 180px; background: #144071; margin: 4px"
+    class="meterial-card"
     :headStyle="headStyle"
     :bodyStyle="bodyStyle"
-    :title="info.materialName"
   >
+    <template #title>
+      <div class="title row">
+        {{ info.materialName }}
+        <a-tag
+          size="mini"
+          :color="info.status && returnStatus(info.status).color"
+          style="height: 18px;line-height: 18px;border-radius: 9px;font-size: 12px"
+          >{{ info.status && returnStatus(info.status).text }}</a-tag
+        >
+      </div>
+    </template>
     <template #extra>
       <a-button v-if="showDelete" type="text" danger @click.stop="handDelete"
         >移除</a-button
@@ -21,32 +31,25 @@
     <div class="bottom flex flex-row w-fll pb-3">
       <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
-        <div class="row">
-          <a-tag
-            size="mini"
-            :color="info.status && returnStatus(info.status).color"
-            >{{ info.status && returnStatus(info.status).text }}</a-tag
-          >
-        </div>
 
         <div class="row">
-          <span class="label">货架位置:</span>
+          <span class="label">货架位置</span>
           <span class="value">{{
             positionInfo[info.rackPosition] || "- -"
           }}</span>
         </div>
         <div class="row">
-          <span class="label">类型:</span>
+          <span class="label">类型</span>
           <span class="value">{{
             info.departmentType && department[info.departmentType]
           }}</span>
         </div>
         <div class="row">
-          <span class="label">箱号:</span>
+          <span class="label">箱号</span>
           <span class="value">{{ info.boxCode || "--" }}</span>
         </div>
         <div class="row">
-          <span class="label">物资编码:</span>
+          <span class="label">物资编码</span>
           <span class="value">{{ info.materialCode || "--" }}</span>
         </div>
       </div>
@@ -71,8 +74,9 @@ export default defineComponent({
       info: {},
       img: "",
       headStyle: {
-        padding: "0 10px",
-        height: "40px",
+        padding: "4px 8px",
+        height: "32px",
+        minHeight: "32px",
         borderBottom: "1px solid #4280c4",
       },
       bodyStyle: {
@@ -184,15 +188,53 @@ export default defineComponent({
   margin: 5px;
 }
 .row {
+  display: flex;
+  align-items: center;
+
   .title {
     font-size: 14px;
   }
   .label {
+    position: relative;
+    width: 55px;
     margin-right: 10px;
     color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
+    font-size: 12px;
     font-family: PingFangSC-Regular, PingFang SC;
     line-height: 20px;
+    white-space: nowrap;
+    text-align-last: justify;
+    text-align: justify;
+
+    &::after {
+      position: absolute;
+      right: 0;
+      content: "：";
+      width: 1px;
+    }
+  }
+  .value {
+    width: 85px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.meterial {
+  &-card {
+    height: 137px; 
+    background: #144071;
+
+    /deep/ .ant-card-head-wrapper {
+
+      .ant-card-head-title {
+        padding: 0;
+      }
+
+      .ant-card-extra {
+        padding: 0;
+      }
+    }
   }
 }
 </style>

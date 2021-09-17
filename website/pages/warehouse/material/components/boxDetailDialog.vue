@@ -96,7 +96,7 @@
       >
         <div class="box">
           <div
-            class="addBox mt-8"
+            class="addBox"
             @click="showAddBoxTransfer"
             v-if="!isEditInit"
           >
@@ -108,6 +108,7 @@
             :key="index"
             :materialInfo="item"
             :showDelete="!isEditInit"
+            @delete="handDeleteMeterail(item)"
           >
           </SmallMeterial>
         </div>
@@ -179,6 +180,7 @@ import {
   updateBoxData,
   findSpecifiedBoxData,
   deleteBoxInfoData,
+  deleteMeterialInfoData,
   findMaterialInfoAllData,
 } from "api/warehouse/meterial";
 import SmallMeterial from "./smallMeterial.vue";
@@ -192,6 +194,7 @@ export default defineComponent({
     id: Number,
     boxCode: String,
     materialRemainNumber: Number,
+    status: Number|undefined
   },
   setup(props, ctx) {
     const state = reactive({
@@ -454,13 +457,23 @@ export default defineComponent({
     };
     const initMaterialList = () => {
       state.materialList = [];
-      findMaterialInfoAllData({ boxCode: props.boxCode }).then((res) => {
+      findMaterialInfoAllData({ boxCode: props.boxCode, status: props.status }).then((res) => {
         state.materialList = res.data;
       });
     };
-    const handDelete = (data) => {
-      const id = data.id;
+    // 删除箱子
+    const handDelete = ({ id }) => {
       deleteBoxInfoData(id).then((res) => {
+        if (res.data) {
+          ctx.emit("close");
+        }
+      });
+    };
+
+    // 删除物资
+    const handDeleteMeterail = ({ id }) => {
+      console.log('handDeleteMeterail')
+      deleteMeterialInfoData({ id }).then((res) => {
         if (res.data) {
           ctx.emit("close");
         }
@@ -512,6 +525,7 @@ export default defineComponent({
       handBack,
       handDeleteAll,
       addBoxMaterial,
+      handDeleteMeterail
     };
   },
 });
@@ -519,13 +533,13 @@ export default defineComponent({
 <style lang="less" scoped>
 .box {
   width: 100%;
-  height: 360px;
   overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-gap: 8px;
   .addBox {
-    width: 335px;
-    height: 180px;
+    // width: 335px;
+    height: 137px;
     background: #57799a;
     display: flex;
     flex-direction: column;
@@ -544,6 +558,28 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   position: relative;
+
+  /deep/ .ant-tabs-content {
+    padding: 16px 0;
+
+    .ant-form-item-control-input-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ant-btn {
+      width: 72px;
+      justify-content: center;
+    }
+
+    .ant-tabs-tabpane {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
   .btn {
     position: absolute;
     right: 20px;

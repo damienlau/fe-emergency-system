@@ -4,6 +4,9 @@ import { findBoxCountData, findBoxData } from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
+import BoxDetailDialog from "../material/components/boxDetailDialog.vue";
+import MeterialList from "./components/meterial.vue";
+import { Modal } from "components";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import classes from "./rackbox.module.less"
@@ -21,18 +24,39 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
 
+    const params = ref({
+      boxName: '',
+      rackNumber: ''
+    })
+
+    // 箱子详情弹窗标题
+    const boxDetailDialogTitle = ref('')
+
+    // 箱子id
+    const boxId = ref('')
+
+    // 箱编码
+    const boxCode = ref('')
+
+    // 物资编号
+    const materialRemainNumber = ref('')
+
+    // 显示箱子详情弹窗
+    const boxDetailVisible = ref(false)
+
     const formData = ref({});
 
     const rackCount = ref({
       boxInStockNum: 0,
-      boxInTotalNum: 0,
+      boxTotalNum: 0,
       materialInStockNum: 0,
       materialTotalNum: 0
     })
 
 
-    const handleSearch = () => {
-      console.log(formData.value);
+    const handleSearch = (keyword: any) => {
+      params.value.boxName = keyword.boxName
+      initBoxData()
     };
 
     const inStockNumFilter = (stockNum: string) => {
@@ -43,15 +67,42 @@ export default defineComponent({
       return stockNum && stockNum.split('/')[1] || 0
     }
 
-    onMounted(() => {
-      const rackNumber = route.params.id
-      findBoxData({ rackNumber: rackNumber } as any).then((response) => {
+    const getBoxDetail = (box: any) => {
+      console.log('getBoxDetail', box)
+      const num =
+        "(" + box.materialRemainNumber + "/" + box.materialTotalNumber + ")";
+      boxDetailVisible.value = true
+      boxId.value = box.id
+      boxCode.value = box.boxCode
+      materialRemainNumber.value = box.materialRemainNumber
+      boxDetailDialogTitle.value = box.boxName + num
+    }
+
+    const closeBoxDetailDialog = () => {
+      boxDetailVisible.value = false
+      initBoxData()
+      initBoxCountData()
+    }
+ 
+    // 初始化箱子数据
+    const initBoxData = () => {
+      findBoxData(params.value as any).then((response) => {
         boxColumn.value = response.content;
       });
+    }
 
+    // 初始化箱子数量和物资数量
+    const initBoxCountData = () => {
+      const rackNumber = params.value.rackNumber
       findBoxCountData(Number(rackNumber)).then((response) => {
         rackCount.value = response
       });
+    }
+
+    onMounted(() => {
+      params.value.rackNumber = route.params.id as string
+      initBoxData()
+      initBoxCountData()
     });
 
     return () => (
@@ -73,7 +124,7 @@ export default defineComponent({
             default: () => (
               <Space size={32}>
                 <p class="text-white text-opacity-70">
-                  箱子在库量：<span class="text-24 text-white">{ rackCount.value.boxInStockNum }</span>/{ rackCount.value.boxInTotalNum }
+                  箱子在库量：<span class="text-24 text-white">{ rackCount.value.boxInStockNum }</span>/{ rackCount.value.boxTotalNum }
                 </p>
                 <p class="text-white text-opacity-70">
                   物资在库量：<span class="text-24 text-white">{ rackCount.value.materialInStockNum }</span>/{ rackCount.value.materialTotalNum }
@@ -85,9 +136,31 @@ export default defineComponent({
         </PageHeader>
         <div class={classes['box-content']}>
           {boxColumn.value.map((columns) => {
-            return <Box columns={columns} />;
+            return <Box columns={columns} onClick={getBoxDetail} />;
           })}
         </div>
+        <Modal
+          v-model={[boxDetailVisible.value, "visible"]}
+          title={boxDetailDialogTitle.value}
+          size="bold"
+          key="box"
+          zIndex="1"
+        >
+          {{
+            default: () => (
+              <BoxDetailDialog
+                id={boxId.value}
+                boxCode={boxCode.value}
+                materialRemainNumber={materialRemainNumber.value}
+                status={1}
+                onClose={closeBoxDetailDialog}
+              ></BoxDetailDialog>
+            ),
+            extra: () => <div>
+              <MeterialList racknumber={route.params.id} boxcode={boxCode.value}></MeterialList>
+            </div>
+          }}
+        </Modal>
       </section>
     );
   },
