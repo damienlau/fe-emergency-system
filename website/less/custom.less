@@ -23,9 +23,11 @@
   background: rgba(6, 49, 93, 0.3) !important;
 }
 // 表头
-.ant-table-thead > tr > th {
-  background-color: #042546;
+.ant-table-hide-scrollbar {
+  overflow: auto !important;
+  background: rgba(14, 81, 143, 0.5) !important;
 }
+
 .eventList {
   .ant-table-tbody .ant-table-row {
     background-color: #0b4070 !important;
@@ -40,11 +42,18 @@
     background: rgba(6, 49, 93, 0.3) !important;
   }
 }
+.ant-table-thead > tr > th {
+  background-color: #042546;
+  border-bottom: 1px solid rgba(14, 81, 143, 0.5) !important;
+}
 // 给表格添加悬停样式和当前点击行添加选中样式
 .ant-table-row {
   &:hover > td {
     background-color: rgba(6, 49, 93, 1) !important;
   }
+}
+.ant-table-body {
+  overflow-y: auto !important;
 }
 .ant-table-tbody > tr > td {
   border-bottom: none !important;
@@ -55,4 +64,8 @@
 tr.ant-table-expanded-row,
 tr.ant-table-expanded-row:hover {
   background: rgba(6, 49, 93, 0) !important;
+}
+// 暂无数据
+.ant-table-placeholder {
+  border: none !important;
 }
