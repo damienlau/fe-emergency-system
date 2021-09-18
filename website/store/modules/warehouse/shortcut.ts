@@ -1,125 +1,68 @@
-import { addLendListsData } from "api/lists/lend";
-import { addMaintainListsData } from "api/lists/maintain";
 import {
   deleteShortcutData,
-  findShortcutData,
   findShortcutCountData,
+  findShortcutData,
+  shortcutCountRequestProps,
+  shortcutRequestProps,
 } from "api/warehouse/shortcut";
-import defaultConfig from "config/defaultSettings";
-
-const { departments, shelf } = defaultConfig;
+import { Commit, Dispatch, Store } from "vuex";
 
 const state = () => ({
-  total: { all: 0, maintain: 0, repair: 0, lend: 0 },
+  totalNum: 0,
+  outNum: 0,
+  weiXiuNum: 0,
+  baoYangNum: 0,
 });
 
 const getters = {};
 
 const actions = {
-  // 获取待操作清单数量
-  getTotals: ({ commit }) => {
+  getTotals: ({ commit }: Store<Commit>) => {
     return new Promise((reslove) => {
-      findShortcutCountData().then((total) => {
-        commit("SET_TOTAL", {
-          all: total.totalNum,
-          maintain: total.baoYangNum,
-          repair: total.weiXiuNum,
-          lend: total.outNum,
-        });
-        reslove();
+      findShortcutCountData().then((response) => {
+        commit("SET_COUNT", response?.data);
+        reslove(null);
       });
     });
   },
 
-  // 获取待操作清单列表
-  getLists: ({ dispatch }, selectedTabPane) => {
+  getLists: ({ dispatch }: Store<Dispatch>, listInfo: shortcutRequestProps) => {
     return new Promise((reslove) => {
       dispatch("getTotals").then(() => {
-        findShortcutData({ operationType: selectedTabPane.key }).then(
-          (response) => {
-            reslove({
-              pagination: {
-                current: response.data.currentPage,
-                total: response.data.totalNum,
-                pageSize: response.data.pageSize,
-              },
-              data: response.data.content.map((lists) => {
-                switch (lists.resourceType) {
-                  case 1:
-                    return {
-                      id: lists.id,
-                      label:
-                        lists.warehouseMaterialInfo.materialName || "暂无数据",
-                      code: lists.warehouseMaterialInfo.materialCode,
-                      thumbnail: lists.warehouseMaterialInfo.materialImages,
-                      type: departments[
-                        lists.warehouseMaterialInfo.departmentType
-                      ],
-                      position: `${
-                        lists.warehouseMaterialInfo.rackNumber
-                      }号货架${
-                        shelf[lists.warehouseMaterialInfo.rackPosition]
-                      }`,
-                      boxName: lists.warehouseMaterialInfo.boxName,
-                    };
-
-                  case 2:
-                    return {
-                      id: lists.id,
-                      label: lists.warehouseBoxInfo.boxName || "暂无数据",
-                      code: lists.warehouseBoxInfo.boxCode,
-                      thumbnail: lists.warehouseBoxInfo.boxImages,
-                      quantity: {
-                        remain: lists.warehouseBoxInfo.materialRemainNumber,
-                        total: lists.warehouseBoxInfo.materialTotalNumber,
-                      },
-                      size: lists.warehouseBoxInfo.size,
-                      type: departments[lists.warehouseBoxInfo.departmentType],
-                      position: `${lists.warehouseBoxInfo.rackNumber}号货架${
-                        shelf[lists.warehouseBoxInfo.rackPosition]
-                      }`,
-                    };
-                }
-              }),
-            });
-          }
-        );
+        findShortcutData(listInfo).then((response) => {
+          reslove(response);
+        });
       });
     });
   },
 
-  // 添加清单列表
-  setLists: ({ dispatch }, formData) => {
+  removeLists: (
+    { dispatch }: Store<Dispatch>,
+    listInfo: shortcutRequestProps[]
+  ) => {
     return new Promise((reslove) => {
-      if (formData.operationType) {
-        addMaintainListsData(formData).then((response) => {
-          dispatch("getLists", formData.operationType).then(() => {
-            reslove(response);
-          });
-        });
-      } else {
-        addLendListsData(formData).then((response) => {
-          dispatch("getLists", formData.operationType).then(() => {
-            reslove(response);
-          });
-        });
-      }
-    });
-  },
-
-  // 批量删除待操作清单列表
-  removeLists: ({ dispatch }, deleteLists) => {
-    deleteShortcutData(deleteLists).then(() => {
-      dispatch("getLists");
+      deleteShortcutData(listInfo).then(() => {
+        reslove(null);
+      });
     });
   },
 };
 
 const mutations = {
-  SET_TOTAL: (state, totals) => {
-    state.total = totals;
+  SET_COUNT: (state: State, totals: shortcutCountRequestProps) => {
+    state.totalNum = totals?.totalNum;
+    state.baoYangNum = totals?.baoYangNum;
+    state.outNum = totals?.outNum;
+    state.weiXiuNum = totals?.weiXiuNum;
   },
 };
+
+export interface State {
+  totalNum?: number;
+  outNum?: number;
+  weiXiuNum?: number;
+  baoYangNum?: number;
+}
 
 export default {
   namespaced: true,

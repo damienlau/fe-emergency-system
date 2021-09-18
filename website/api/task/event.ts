@@ -38,7 +38,7 @@ export const findEventData = (parameter?: eventRequestProps) => {
   return request
     .get(eventRequestUrls.find, { params: parameter })
     .then((response) => {
-      return response;
+      return response.data;
     });
 };
 

@@ -1,4 +1,4 @@
-export interface requestProps {
+export interface responseProps {
   currentPage?: number;
   pageSize?: number;
   pageTotal?: number;

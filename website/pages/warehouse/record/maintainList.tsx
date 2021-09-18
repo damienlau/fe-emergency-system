@@ -23,17 +23,18 @@ export default defineComponent({
       },
       { title: "所属箱子", dataIndex: "boxName", key: "boxName" },
       {
-        title: "保养公司",
+        title: props.menuActiveKey === "1" ? "保养公司" : "维修公司",
         dataIndex: "personnelCompany",
         key: "personnelCompany",
       },
       {
-        title: "保养人",
+        title: props.menuActiveKey === "1" ? "保养人" : "维修人",
         dataIndex: "personnelName",
         key: "personnelName",
       },
       {
-        title: "保养人联系方式",
+        title:
+          props.menuActiveKey === "1" ? "保养人联系方式" : "维修人联系方式",
         dataIndex: "personnelPhone",
         key: "personnelPhone",
       },
@@ -54,11 +55,15 @@ export default defineComponent({
         key: "description",
       },
       {
-        title: "保养开始时间",
+        title: props.menuActiveKey === "1" ? "保养开始时间" : "维修开始时间",
         dataIndex: "startTime",
         key: "startTime",
       },
-      { title: "保养完成时间", dataIndex: "endTime", key: "endTime" },
+      {
+        title: props.menuActiveKey === "1" ? "保养完成时间" : "维修完成时间",
+        dataIndex: "endTime",
+        key: "endTime",
+      },
       {
         title: "操作",
         key: "id",
@@ -73,7 +78,10 @@ export default defineComponent({
     const tableSelctColum = ref([
       {
         key: "personnelName",
-        placeholder: "保养公司/保养人搜索",
+        placeholder:
+          props.menuActiveKey === "1"
+            ? "保养公司/保养人搜索"
+            : "维修公司/维修人搜索",
       },
       {
         key: "materialName",
@@ -118,7 +126,7 @@ export default defineComponent({
             changeMaintainStatus(record);
           }}
         >
-          {props.menuActiveKey === "1" ? "维修完成" : "保养完成"}
+          {props.menuActiveKey === "1" ? "保养完成" : "维修完成"}
         </a-button>
       );
     };
@@ -137,7 +145,11 @@ export default defineComponent({
     const renderStatus = (status) => {
       return (
         <p style={status == 2 ? "color:green" : "color:red"}>
-          {status == 2 ? "已完成" : "维修中"}
+          {status == 2
+            ? "已完成"
+            : props.menuActiveKey === "1"
+            ? "保养中"
+            : "维修中"}
         </p>
       );
     };

@@ -1,6 +1,6 @@
 import axios from "axios";
 import store from "../store";
-
+import { message } from "ant-design-vue";
 const instance = axios.create({
   baseURL: import.meta.env.VITE_APP_REQUEST_URL,
 });
@@ -24,8 +24,10 @@ instance.interceptors.response.use(
         localStorage.setItem("token", response.headers["authorization"]);
       }
       return response.data;
+    } else if (response.data.code === 402 || response.data.code === 403) {
+      store.commit("userModule/SET_OFFLINE");
     } else {
-      store.commit("user/SET_OFFLINE");
+      message.info(response.data.message);
     }
   },
   (error) => {

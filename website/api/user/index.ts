@@ -17,7 +17,7 @@ export interface userRequestProps {
   loginPassword?: string;
   userType?: number;
   workNumber?: string;
-  createMan?: string;
+  createMan?: number;
   createTime?: string;
 }
 

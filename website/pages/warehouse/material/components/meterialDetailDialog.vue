@@ -20,7 +20,9 @@
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
-              v-if="dataSource.inBatchPendingStatus == 0"
+              v-if="
+                dataSource.status == 1 && dataSource.inBatchPendingStatus == 0
+              "
             >
               删除
             </a-button>
@@ -65,7 +67,9 @@
               ghost
               class="flex flex-row items-center p-0 mr-3"
               danger
-              v-if="dataSource.inBatchPendingStatus == 0"
+              v-if="
+                dataSource.status == 1 && dataSource.inBatchPendingStatus == 0
+              "
             >
               删除
             </a-button>
@@ -156,8 +160,9 @@ export default defineComponent({
       {
         label: "品牌",
         key: "brand",
-        required: false,
+        required: true,
         span: 12,
+        labelSpan: 4,
       },
       {
         label: "类型",
@@ -228,13 +233,14 @@ export default defineComponent({
             key: "15",
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "厂家批号",
         key: "productionBatch",
         required: true,
         span: 12,
+        labelSpan: 6,
       },
       {
         label: "厂家",
@@ -267,8 +273,8 @@ export default defineComponent({
         label: "生产日期",
         key: "productionDate",
         required: false,
-        span: 12,
         type: "date",
+        span: 12,
       },
       {
         label: "保质期限",
@@ -281,7 +287,7 @@ export default defineComponent({
         label: "有无质保",
         key: "isExpiration",
         type: "select",
-        span: 12,
+        span: 24,
         options: [
           {
             label: "无保质期",
@@ -298,14 +304,12 @@ export default defineComponent({
         label: "单位",
         key: "unit",
         required: false,
-        span: 12,
       },
       {
         label: "备注",
         key: "remark",
         type: "textArea",
         required: false,
-        span: 24,
       },
     ]);
     onMounted(() => {

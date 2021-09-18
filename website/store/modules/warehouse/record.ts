@@ -82,40 +82,47 @@ const getDepartmentName = (type) => {
   });
   return getDepartmentName;
 };
+
 const actions = {
   // 获取维修/保养记录列表
+
   getMaintainList: (context, { activeKey, search }) => {
     return new Promise((reslove) => {
-      findMaintenanceData({ operationType: activeKey, ...search }).then(
-        (res) => {
-          const maintainTableData = [];
-          if (res.data && res.data.content && res.data.content.length > 0) {
-            res.data.content.map((item) => {
-              item.detailList.map((val, index) => {
-                maintainTableData.push({
-                  materialName: val.materialInfo.materialName,
-                  boxName: val.materialInfo.boxName || "--",
-                  personnelCompany: item.personnelCompany,
-                  personnelName: item.personnelName,
-                  personnelPhone: item.personnelPhone,
-                  status: val.status,
-                  isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
-                  description: item.description,
-                  startTime: val.startTime || "--",
-                  endTime: val.endTime || "--",
-                  id: val.id,
-                  returnTime: val.returnTime || "--",
-                  time: val.outTime || "--",
-                  key: "" + val.id + index,
-                });
+      const pageOrdersJSON = encodeURIComponent(
+        `[{'direction':'desc','property':'id'}]`
+      );
+      findMaintenanceData({
+        operationType: activeKey,
+        pageOrdersJSON: pageOrdersJSON,
+        ...search,
+      }).then((res) => {
+        const maintainTableData = [];
+        if (res.data && res.data.content && res.data.content.length > 0) {
+          res.data.content.map((item) => {
+            item.detailList.map((val, index) => {
+              maintainTableData.push({
+                materialName: val.materialInfo.materialName,
+                boxName: val.materialInfo.boxName || "--",
+                personnelCompany: item.personnelCompany,
+                personnelName: item.personnelName,
+                personnelPhone: item.personnelPhone,
+                status: val.status,
+                isOutWarehouseText: item.isOutWarehouse ? "出库" : "在库",
+                description: item.description,
+                startTime: val.startTime || "--",
+                endTime: val.endTime || "--",
+                id: val.id,
+                returnTime: val.returnTime || "--",
+                time: val.outTime || "--",
+                key: "" + val.id + index,
               });
             });
-          }
-          reslove({
-            tableData: maintainTableData,
           });
         }
-      );
+        reslove({
+          tableData: maintainTableData,
+        });
+      });
     });
   },
   // 获取事件列表
@@ -137,7 +144,8 @@ const actions = {
                             ? (val.materialInfo &&
                                 val.materialInfo.materialName) ||
                               "--"
-                            : (val.materialInfo && val.materialInfo.boxName) ||
+                            : (val.warehouseBoxInfo &&
+                                val.warehouseBoxInfo.boxName) ||
                               "--",
                         boxName: val.materialInfo && val.materialInfo.boxName,
                         departmentName: getDepartmentName(item.departmentType),

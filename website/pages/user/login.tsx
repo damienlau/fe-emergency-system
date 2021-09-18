@@ -1,12 +1,12 @@
 import { defineComponent, ref } from "@vue/runtime-core";
 import { Button } from "ant-design-vue";
-import Form from "components/Form";
-import { useRoute, useRouter } from "vue-router";
+import Form, { formItemProps } from "components/Form";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
-    const formColumn = ref([
+    const formColumn = ref<formItemProps[]>([
       {
         key: "loginAccount",
         placeholder: "账号",
@@ -25,9 +25,11 @@ export default defineComponent({
         <Form
           columns={formColumn.value}
           onSubmit={(userInfo) => {
-            store.dispatch("user/setUserOnline", userInfo).then((response) => {
-              router.back();
-            });
+            store
+              .dispatch("userModule/setUserOnline", userInfo)
+              .then((response) => {
+                router.back();
+              });
           }}
         >
           {{

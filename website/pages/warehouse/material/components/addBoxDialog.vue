@@ -88,10 +88,25 @@ export default defineComponent({
     });
     const baseForm = ref([
       {
+        label: "箱子名称",
+        key: "boxName",
+        required: false,
+        span: 12,
+        disabled: true,
+      },
+      {
+        label: "箱子编码",
+        key: "boxCode",
+        required: false,
+        span: 12,
+        disabled: true,
+      },
+      {
         label: "类型",
         key: "departmentType",
         type: "select",
         span: 12,
+        labelSpan: 3,
         options: [
           {
             label: "急救/重症",
@@ -162,7 +177,8 @@ export default defineComponent({
         label: "货架位置",
         key: "rackNumber",
         type: "select",
-        span: 6,
+        span: 8,
+        labelSpan: 7,
         options: [
           {
             label: "1号货架",
@@ -191,7 +207,7 @@ export default defineComponent({
         label: "",
         key: "rackPosition",
         type: "select",
-        span: 6,
+        span: 4,
         options: [
           {
             label: "未知",
@@ -222,6 +238,7 @@ export default defineComponent({
         key: "size",
         type: "select",
         span: 12,
+        labelSpan: 3,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -247,6 +264,7 @@ export default defineComponent({
         key: "unit",
         required: true,
         span: 12,
+        labelSpan: 5,
       },
       {
         label: "物资图片",
@@ -268,6 +286,7 @@ export default defineComponent({
         key: "weight",
         required: false,
         span: 12,
+        labelSpan: 4,
       },
       {
         label: "备注",

@@ -18,9 +18,13 @@ export function deleteMeterialInfoData(params) {
 }
 
 // 删除指定数据- 箱子 单独
-export function deleteBoxInfoData(id) {
-  return request.get(`/box/info/delete?id=${id}`);
+export function deleteBoxInfoData(params) {
+  return request.get(`/box/info/delete`, { params });
 }
+// 删除指定数据- 箱子 单独
+// export function deleteBoxInfoData(id) {
+//   return request.get(`/box/info/delete?id=${id}`);
+// }
 // 查询全部数据
 export function findMeterialData(params) {
   return request.get("/box/info/page/criteria", {

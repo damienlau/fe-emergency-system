@@ -1,9 +1,13 @@
 // 出/归仓扫描
 
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref,watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { Form, Icon, Modal } from "components";
+import { message } from "ant-design-vue";
+import exportimg from "assets/icon_scan_export.png";
+import importimg from "assets/icon_scan_import.png";
+import emergencyimg from "assets/icon_scan_emergency.png";
 
 export default defineComponent({
   setup() {
@@ -14,19 +18,19 @@ export default defineComponent({
       {
         label: "出仓扫描",
         key: "Pending",
-        icon: "export",
+        icon: exportimg,
         badgeColor: "warning",
       },
       {
         label: "归仓扫描",
         key: "Belong",
-        icon: "import",
+        icon: importimg,
         badgeColor: "success",
       },
       {
         label: "紧急扫描",
         key: "Emergency",
-        icon: "emergency",
+        icon: emergencyimg,
         badgeColor: "danger",
       },
     ]);
@@ -34,17 +38,22 @@ export default defineComponent({
     const formColumn = ref([
       {
         label: "事件",
+        secondKey:"eventName",
         type: "select",
         name:"eventId",
-        key: "eventId",
+        key: "EventId",
         options: [          
-        ]
+        ],
+        labelSpan: 5,
+        wrapperSpan: 16
       },
       {
         label: "借货人工号",
         name:"personnelJobNo",
-        key: "personnelJobNo",
-      },
+        key: "PersonnelJobNo",
+        labelSpan: 5,
+        wrapperSpan:16
+      },      
     ]);
     // 模态框表单数据
     const formData = ref({});
@@ -59,17 +68,51 @@ export default defineComponent({
     
     // 监听模态框表单提交事件
     const handleSubmitForm = (formdata) => {
-      sessionStorage.setItem("nameNo", JSON.stringify(formdata));
-      console.log(formdata)
-      router.push({
-        name: formData.value["key"],
-        params: 
-          { eventId: formdata.eventId ,personnelJobNo:formdata.personnelJobNo},        
-      });
-      visible.value = !visible.value;
+      var fdata = formdata
+      if (!formdata.PersonnelJobNo || !formdata.EventId) {
+        message.info('事件或工号不能为空')
+        return
+      }
+      store
+        .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList"
+          , {
+            eventId: formdata.EventId,
+            personnelJobNo: formdata.PersonnelJobNo
+          })
+        .then((response) => {
+          if (response.length != 0) {
+            for (var resp = 0; resp < response.length; resp++){
+              DetailSpecifiedShortcutList(response[resp].id,fdata)
+            }              
+          } else {
+            message.info('无借货清单')
+          }
+      });             
     };
 
-    
+    //获取借货单明细
+    const DetailSpecifiedShortcutList = (id,fdata) => {
+      store
+        .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
+        .then((res) => {
+          if (res && res.length != 0) {
+            sessionStorage.setItem("nameNo", JSON.stringify(fdata));
+            visible.value = !visible.value;
+            router.push({
+              name: formData.value["key"]        
+            });
+            
+          } else {
+            message.info('无借货清单!')
+          }
+      })
+    }
+
+    watch(visible, (lists) => {
+      if (!lists) {        
+        formData.value = '';
+      }
+    });
 
     onMounted(() => {
       // 获取表单选择框选项
@@ -87,7 +130,7 @@ export default defineComponent({
       <>
         {/* 扫描菜单-容器 */}
         <section class="h-full flex flex-row items-center justify-center">
-          <div class="w-3/5 h-2/5 grid grid-cols-3 gap-x-62">
+          <div class="w-3/5 h-2/5 grid grid-cols-3 gap-x-60">
             {menus.value.map((menuItem) => {
               return (
                 // 扫描菜单-卡片
@@ -97,7 +140,7 @@ export default defineComponent({
                 >
                   {/* 扫描菜单-卡片图标 */}
                   <img
-                    src={`/website/assets/icon_scan_${menuItem.icon}.png`}
+                    src={menuItem.icon}
                     alt={menuItem.label}
                   />
                   {/* 扫描菜单-卡片标题 */}
@@ -143,7 +186,4 @@ export default defineComponent({
     );
   },
 });
-
-
-
 

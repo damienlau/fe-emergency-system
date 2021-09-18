@@ -1,56 +1,65 @@
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "@vue/runtime-core";
+import { Button, Modal as AntModal, Popconfirm, Space } from "ant-design-vue";
+import { responseProps } from "api/utils";
 import {
-  Button,
-  Image,
-  ImagePreviewGroup,
-  Modal as AModal,
-  Popconfirm,
-  Space,
-} from "ant-design-vue";
-import { useStore } from "vuex";
-import Form from "components/Form";
+  addLendOutData,
+  lendOutRequestProps,
+} from "api/warehouse/material/lendout";
+import { addMaintainData } from "api/warehouse/material/maintain";
+import { maintainRequestProps } from "api/warehouse/material/maintain";
+import { shortcutRequestProps } from "api/warehouse/shortcut";
+import Form, { formItemProps } from "components/Form";
 import Icon from "components/Icon";
+import Images from "components/Images";
 import List from "components/List";
 import Modal from "components/Modal";
-import Tabs from "components/Tabs";
-
-import defaultSettings from "config/defaultSettings";
-import emptyImage from "assets/icon_empty_search.png";
+import Tabs, { tabPaneClickEventProps, tabPaneProps } from "components/Tabs";
+import {
+  boxSize,
+  departments,
+  materialType,
+  shelfPosition,
+} from "config/enums";
+import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
-    const { departments } = defaultSettings;
-    const store = useStore();
     const tabColumns = ref([
       {
         label: "借货清单",
         key: "1",
         alias: "借出",
         count: computed(
-          () => store.state.warehouseModule.shortcutModule.total.lend
+          () => store.state.warehouseModule.shortcutModule.outNum
         ),
         form: [
           {
             label: "事件",
             key: "eventId",
+            labelSpan: 4,
+            secondKey: "eventName",
             type: "select",
-            options: computed(() => store.state.task.events),
+            options: computed(() => store.state.taskModule.events),
           },
           {
             label: "借货人",
             key: "personnelName",
+            labelSpan: 4,
           },
           {
             label: "借货人工号",
             key: "personnelJobNo",
+            labelSpan: 4,
           },
           {
             label: "联系电话",
             key: "personnelPhone",
+            labelSpan: 4,
           },
           {
             label: "借货科室",
             key: "departmentType",
+            labelSpan: 4,
             type: "select",
             options: [
               { key: 1, label: "急救/重症" },
@@ -77,32 +86,36 @@ export default defineComponent({
         key: "2",
         alias: "维修",
         count: computed(
-          () => store.state.warehouseModule.shortcutModule.total.repair
+          () => store.state.warehouseModule.shortcutModule.weiXiuNum
         ),
         form: [
           {
             label: "是否出仓",
-            key: "operationType",
+            key: "isOutWarehouse",
             type: "select",
             options: [
-              { label: "在库", key: "0" },
-              { label: "出库", key: "1" },
+              { label: "在库", key: 0 },
+              { label: "出库", key: 1 },
             ],
           },
           {
             label: "维修公司",
+            labelSpan: 4,
             key: "personnelCompany",
           },
           {
             label: "维修人",
+            labelSpan: 4,
             key: "personnelName",
           },
           {
             label: "联系电话",
+            labelSpan: 4,
             key: "personnelPhone",
           },
           {
-            label: "维修事由",
+            label: "问题描述",
+            labelSpan: 4,
             key: "description",
           },
         ],
@@ -112,221 +125,295 @@ export default defineComponent({
         key: "3",
         alias: "保养",
         count: computed(
-          () => store.state.warehouseModule.shortcutModule.total.maintain
+          () => store.state.warehouseModule.shortcutModule.baoYangNum
         ),
         form: [
           {
             label: "是否出仓",
-            key: "operationType",
+            key: "isOutWarehouse",
+            labelSpan: 4,
             type: "select",
             options: [
-              { label: "在库", key: "0" },
-              { label: "出库", key: "1" },
+              { label: "在库", key: 0 },
+              { label: "出库", key: 1 },
             ],
           },
           {
             label: "保养公司",
+            labelSpan: 4,
             key: "personnelCompany",
           },
           {
             label: "保养人",
+            labelSpan: 4,
             key: "personnelName",
           },
           {
             label: "联系电话",
+            labelSpan: 4,
             key: "personnelPhone",
           },
           {
-            label: "保养事由",
+            label: "问题描述",
+            labelSpan: 4,
             key: "description",
           },
         ],
       },
     ]);
-    const tabExtraOptions = ref({});
-    const cardListsData = ref({});
-    const modalVisible = ref(false);
+    const selectedTabPane = ref<tabPaneProps>({});
+    const shortcutData = ref<responseProps>({});
+    const visible = ref(false);
+    const store = useStore();
 
-    const handleClickTabPane = ({ item }) => {
-      tabExtraOptions.value = item;
+    // 点击标签页头
+    const handleClickTabPane = ({
+      activeKey,
+      item,
+    }: tabPaneClickEventProps) => {
+      selectedTabPane.value = item;
 
       store
-        .dispatch(
-          "warehouseModule/shortcutModule/getLists",
-          tabExtraOptions.value
-        )
+        .dispatch("warehouseModule/shortcutModule/getLists", {
+          operationType: activeKey,
+        })
         .then((response) => {
-          cardListsData.value = response;
+          shortcutData.value = response;
         });
     };
 
-    const handleConfirmOpertaion = () => {
-      AModal.confirm({
+    // 点击全部删除
+    const handleDelete = () => {
+      AntModal.confirm({
         centered: true,
         icon: <Icon type="shanjian" />,
-        title: `确定要清空${tabExtraOptions.value.label}吗？`,
-        content: `点击清空${tabExtraOptions.value.label}后，该清单内的物资将全部移出`,
+        title: `确定要清空${selectedTabPane.value?.label}吗？`,
+        content: `点击清空${selectedTabPane.value?.label}后，该清单内的物资将全部移出`,
         cancelText: "取消",
-        okText: `清空${tabExtraOptions.value.label}`,
+        okText: `清空${selectedTabPane.value?.label}`,
         onOk: () => {
-          handleDelete();
+          store
+            .dispatch(
+              "warehouseModule/shortcutModule/removeLists",
+              shortcutData.value?.content
+            )
+            .then(() => {
+              handleClickTabPane({
+                activeKey: selectedTabPane.value?.key,
+                item: selectedTabPane.value,
+              });
+            });
         },
       });
     };
 
-    const handleVisibleDialog = () => {
-      modalVisible.value = !modalVisible.value;
-    };
+    // 点击全部操作
+    const handleEditForm = (
+      formData: lendOutRequestProps | maintainRequestProps
+    ) => {
+      if (selectedTabPane.value?.key == 1) {
+        let params: lendOutRequestProps = {
+          ...formData,
+          batchPendingList: shortcutData.value
+            ?.content as shortcutRequestProps[],
+        };
 
-    const handleDelete = (selected = cardListsData.value.data) => {
-      !Array.isArray(selected) && (selected = Array.of(selected));
-      store.dispatch("warehouseModule/shortcutModule/removeLists", selected);
-      store
-        .dispatch(
-          "warehouseModule/shortcutModule/getLists",
-          tabExtraOptions.value
-        )
-        .then((response) => {
-          cardListsData.value = response;
+        addLendOutData(params).then((response) => {
+          visible.value = false;
+          handleClickTabPane({
+            activeKey: selectedTabPane.value?.key,
+            item: selectedTabPane.value,
+          });
         });
-    };
+      } else {
+        let params: maintainRequestProps = {
+          ...formData,
+          operationType: selectedTabPane.value?.key == 2 ? 2 : 1,
+          detailList: shortcutData.value?.content?.map(
+            (params: shortcutRequestProps) => {
+              return {
+                materialInfo: params.warehouseMaterialInfo,
+              };
+            }
+          ),
+        };
 
-    const handleSubmit = (formData) => {
-      store
-        .dispatch("warehouseModule/shortcutModule/setLists", formData)
-        .then(() => {
-          handleVisibleDialog();
+        addMaintainData(params).then((response) => {
+          visible.value = false;
+          handleClickTabPane({
+            activeKey: selectedTabPane.value?.key,
+            item: selectedTabPane.value,
+          });
         });
+      }
     };
 
-    store.dispatch("task/getEvents");
+    // 获取事件类型
+    store.dispatch("taskModule/getEvents");
 
     return () => (
       <>
-        <Tabs
-          class="dark:bg-navy-4"
-          columns={tabColumns.value}
-          onClick={handleClickTabPane}
-        >
+        <Tabs columns={tabColumns.value} onClick={handleClickTabPane}>
           {{
-            extra: () => {
-              return (
-                <Space>
-                  <Button danger ghost onClick={handleConfirmOpertaion}>
-                    清空{tabExtraOptions.value.label}
-                  </Button>
-                  <Button type="primary" onClick={handleVisibleDialog}>
-                    全部{tabExtraOptions.value.alias}
-                  </Button>
-                </Space>
-              );
-            },
             default: () => (
-              <List grid={5} class="h-full" dataSource={cardListsData.value}>
+              <List dataSource={shortcutData.value} grid={5}>
                 {{
-                  card: ({ item }) => (
-                    <>
-                      <section class="dark:bg-navy-2 dark:hover:bg-navy-3 rounded">
-                        {/* Card Header Start */}
-                        <div class="flex flex-row items-center justify-between py-8 border-b border-navy-1">
-                          {/* title */}
-                          <h3 class="flex flex-row text-16 pl-16 overflow-auto">
-                            <span class="truncate">{item.label}</span>
-                            {item.quantity && (
-                              <span
-                                class={
-                                  item.quantity.total == item.quantity.remain
-                                    ? "text-success"
-                                    : "text-danger"
-                                }
-                              >
-                                ({item.quantity.remain}/{item.quantity.total})
-                              </span>
-                            )}
-                          </h3>
-                          {/* extra */}
-                          <Popconfirm
-                            title={`移出${item.label}?`}
-                            placement="bottomRight"
-                            onConfirm={() => handleDelete(item)}
-                          >
-                            {{
-                              icon: () => <Icon type="shanjian" />,
-                              default: () => (
-                                <Button danger type="text">
-                                  <Icon class="align-baseline" type="delete" />
-                                  移出
-                                </Button>
-                              ),
-                            }}
-                          </Popconfirm>
-                        </div>
-                        {/* Card Header End */}
+                  card: ({
+                    item,
+                  }: {
+                    item: shortcutRequestProps | undefined;
+                  }) => (
+                    <section class="bg-navy-2 hover:bg-navy-3 rounded">
+                      {/* Card Header Start */}
+                      <div class="flex flex-row items-center justify-between py-8 border-b border-navy-1">
+                        {/* title */}
+                        <h3 class="flex flex-row text-16 pl-16 overflow-auto">
+                          <span class="truncate">
+                            {item?.resourceType === materialType.box
+                              ? item?.warehouseBoxInfo?.boxName
+                              : item?.warehouseMaterialInfo?.materialName}
+                          </span>
+                          {item?.resourceType === materialType.box && (
+                            <span
+                              class={
+                                (item?.warehouseBoxInfo?.materialTotalNumber ||
+                                  0) <
+                                (item?.warehouseBoxInfo?.materialRemainNumber ||
+                                  0)
+                                  ? "text-danger"
+                                  : "text-success"
+                              }
+                            >
+                              ({item?.warehouseBoxInfo?.materialRemainNumber}/
+                              {item?.warehouseBoxInfo?.materialTotalNumber})
+                            </span>
+                          )}
+                        </h3>
+                        {/* extra */}
+                        <Popconfirm
+                          title={`移出${
+                            item?.resourceType === materialType.box
+                              ? item?.warehouseBoxInfo?.boxName
+                              : item?.warehouseMaterialInfo?.materialName
+                          }?`}
+                          placement="bottomRight"
+                          onConfirm={() =>
+                            store
+                              .dispatch(
+                                "warehouseModule/shortcutModule/removeLists",
+                                Array.of(item)
+                              )
+                              .then((response) => {
+                                handleClickTabPane({
+                                  activeKey: selectedTabPane.value?.key,
+                                  item: selectedTabPane.value,
+                                });
+                              })
+                          }
+                        >
+                          {{
+                            icon: () => <Icon type="shanjian" />,
+                            default: () => (
+                              <Button danger type="text">
+                                <Icon class="align-baseline" type="delete" />
+                                移出
+                              </Button>
+                            ),
+                          }}
+                        </Popconfirm>
+                      </div>
+                      {/* Card Header End */}
 
-                        {/* Card Body Start */}
-                        <section class="flex flex-row p-16">
-                          {/* thumbnail */}
-                          <div class="mr-16">
-                            <ImagePreviewGroup>
-                              {item.thumbnail.map((image, key) => {
-                                return (
-                                  <div v-show={!key}>
-                                    <Image
-                                      class="w-full h-full object-cover rounded"
-                                      src={image.fileUrl}
-                                      fallback={emptyImage}
-                                      width={108}
-                                      height={108}
-                                    ></Image>
-                                  </div>
-                                );
-                              })}
-                            </ImagePreviewGroup>
-                          </div>
-                          <div class="overflow-hidden">
-                            <p class="truncate mb-4">
-                              <span class="text-white text-opacity-70">
-                                货架位置：
-                              </span>
-                              <span class="text-16">{item.position}</span>
-                            </p>
-                            <p class="truncate mb-4">
-                              <span class="text-white text-opacity-70">
-                                类型：
-                              </span>
-                              <span class="text-16">{item.type}</span>
-                            </p>
-                            <p class="truncate mb-4">
-                              <span class="text-white text-opacity-70">
-                                {item.quantity ? "尺寸" : "箱号"}：
-                              </span>
-                              <span class="text-16">
-                                {item.size || item.boxName}
-                              </span>
-                            </p>
-                            <p class="truncate">
-                              <span class="text-white text-opacity-70">
-                                {item.quantity ? "箱子" : "物资"}编码：
-                              </span>
-                              <span class="text-16">{item.code}</span>
-                            </p>
-                          </div>
-                          {/* descriptions */}
-                        </section>
-                        {/* Card Body End */}
+                      {/* Card Body Start */}
+                      <section class="flex flex-row p-16">
+                        {/* thumbnail */}
+                        <Images
+                          columns={
+                            item?.resourceType === materialType.box
+                              ? item?.warehouseBoxInfo?.boxImages || []
+                              : item?.warehouseMaterialInfo?.materialImages ||
+                                []
+                          }
+                          size={108}
+                        ></Images>
+                        {/* descriptions */}
+                        <div class="pl-16 overflow-hidden">
+                          <p class="truncate mb-4">
+                            货架位置：
+                            {item?.resourceType === materialType.box
+                              ? `${item?.warehouseBoxInfo?.rackNumber}号货架${
+                                  shelfPosition[
+                                    item?.warehouseBoxInfo?.rackPosition || 0
+                                  ]
+                                }`
+                              : `${
+                                  item?.warehouseMaterialInfo?.rackNumber
+                                }号货架${
+                                  shelfPosition[
+                                    item?.warehouseMaterialInfo?.rackPosition ||
+                                      0
+                                  ]
+                                }`}
+                          </p>
+                          <p class="truncate mb-4">
+                            类型：
+                            {item?.resourceType === materialType.box
+                              ? `${
+                                  departments[
+                                    item?.warehouseBoxInfo?.departmentType || 0
+                                  ]
+                                }`
+                              : `${
+                                  departments[
+                                    item?.warehouseMaterialInfo
+                                      ?.departmentType || 0
+                                  ]
+                                }`}
+                          </p>
+                          <p class="truncate mb-4">
+                            {item?.resourceType === materialType.box
+                              ? `尺寸：`
+                              : `箱号：`}
+                            {item?.resourceType === materialType.box
+                              ? `${boxSize[item?.warehouseBoxInfo?.size || 0]}`
+                              : `${item?.warehouseMaterialInfo?.boxName}`}
+                          </p>
+                          <p class="truncate">
+                            {item?.resourceType === materialType.box
+                              ? `箱子编码：`
+                              : `物资编码：`}
+                            {item?.resourceType === materialType.box
+                              ? item?.warehouseBoxInfo?.boxCode
+                              : item?.warehouseMaterialInfo?.materialCode}
+                          </p>
+                        </div>
                       </section>
-                    </>
+                      {/* Card Body End */}
+                    </section>
                   ),
                 }}
               </List>
             ),
+            extra: () => (
+              <Space>
+                <Button danger ghost onClick={handleDelete}>
+                  清空{selectedTabPane.value?.label}
+                </Button>
+                <Button type="primary" onClick={() => (visible.value = true)}>
+                  全部{selectedTabPane.value?.alias}
+                </Button>
+              </Space>
+            ),
           }}
         </Tabs>
         <Modal
-          v-model={[modalVisible.value, "visible"]}
-          title={`${tabExtraOptions.value.alias}信息`}
+          v-model={[visible.value, "visible"]}
+          title={`${selectedTabPane.value?.alias}信息`}
         >
-          <Form columns={tabExtraOptions.value.form} onSubmit={handleSubmit}>
+          <Form
+            columns={selectedTabPane?.value?.form}
+            onSubmit={handleEditForm}
+          >
             {{
               button: () => (
                 <Button type="primary" htmlType="submit">

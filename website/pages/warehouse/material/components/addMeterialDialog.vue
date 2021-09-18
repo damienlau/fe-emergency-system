@@ -53,6 +53,7 @@ export default defineComponent({
         key: "brand",
         required: true,
         span: 12,
+        labelSpan: 4,
       },
       {
         label: "类型",
@@ -130,6 +131,7 @@ export default defineComponent({
         key: "productionBatch",
         required: true,
         span: 12,
+        labelSpan: 6,
       },
       {
         label: "厂家",

@@ -1,6 +1,6 @@
 // 出/归仓扫描
 
-import { defineComponent, onMounted,onUnmounted, ref } from "vue";
+import { defineComponent, onMounted,onBeforeUnmount, ref,watch } from "vue";
 import { useStore } from "vuex";
 import {
   Modal as AntModal,
@@ -8,8 +8,10 @@ import {
   ImagePreviewGroup,
   Image,
 } from "ant-design-vue";
-import { Form, Icon, Modal, Tabs, Empty, Card } from "components";
+import { Form, Icon, Modal, Tabs, Empty,Card } from "components";
 import { useRouter } from "vue-router";
+import { read } from "fs";
+import { type } from "os";
 
 export default defineComponent({
   setup() {
@@ -20,36 +22,7 @@ export default defineComponent({
       label: "待出仓物资",
       type: "string",
       key: "pengding",
-      data: [
-        // {
-        //   id: 1,
-        //   resourceType:2,//1物资，2箱子
-        //   status: 1,//int 借货状态 1待借出 2已借出 3已归还
-        //   statusright:0,
-        //   title: "测试数据标题",
-        //   page: "（20/20）",
-        //   capacities: [20, 20],
-        //   url: "https://ss1.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/d833c895d143ad4b28a09c6c86025aafa50f0694.jpg",
-        //   warehouseBoxInfo: {
-        //     id: 50,//箱子id
-        //     status: 1,//箱子状态：1在库，2已出库，3待出库            
-        //   },
-        //   materialInfo: {
-        //     id: '',//物资id
-        //     status: ''//物资状态：1在库，2已出库，3待出库
-        //     //4损耗，5报废，6维修，7保养
-        //   },
-        //   outDetailList: [
-        //     {
-        //       id: 1,
-        //       status:1,
-        //       resourceType:1,
-        //     },
-        //   ],
-        //   content: [
-        //     "物资名称1",
-        //   ],
-        // },        
+      data: [       
       ],
     });
     // 已出仓标题及数据展示
@@ -62,8 +35,6 @@ export default defineComponent({
     });
     //扫描出仓模态框是否可见
     const visible = ref(false);
-    //轮询待出仓扫描事件按钮
-    const sweepGateVisiable = ref(false);
     //类型
     const departType = ref([
       { "1": "急救、重症" },
@@ -107,7 +78,9 @@ export default defineComponent({
     const initPendingData = () => {
       menus.value[0].data = []
       menus.value[1].data = []
-      menus.value[2].data = []      
+      menus.value[2].data = []
+      console.log('弹框输出')
+      console.log(finishedDelivery.value.data)
       finishedDelivery.value.data.forEach((index, item, arr) => {
         if (arr[item].statusright == 0) {
           menus.value[0].data.push(index);
@@ -124,28 +97,86 @@ export default defineComponent({
     }
     //扫描出仓模态框控制
     const handleClickPendingItem = () => {
-      closeSweepGate()
       initPendingData();
       visible.value = !visible.value;
     };
-    // 菜单列表空状态
-    const menuEmpty = ref(true);
     // 菜单列表当前激活值
     const menuActiveKey = ref(menus.value[0].key);
     // 卡片列表
     const cardData = ref([]);
     // 监听模态框关闭
     const handleSubmit = () => {
-      visible.value = !visible.value;
-      openSweepGate()
+      visible.value = !visible.value;      
     };
-    const handleCancel = () => {
-      visible.value = !visible.value;
-      closeSweepGate()
-    }
+    //获取借货单outFrom
+    const getOutFrom = ref();
+    //非法物资数据缓存
+    const getmenusArr = ref([]);
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
-      var savependingall = menus.value[0].data.concat(menus.value[1].data);
+      var newdata = menus.value[0].data.concat(menus.value[1].data)
+      if (newdata.length == 0) {
+        message.error("暂无出仓物资")
+        return
+      }
+      AntModal.confirm({
+        class: "bg-navy-3 rounded pb-0 border border-primary",
+        title: `确定出仓？`,
+        content: `出仓符合清单和未符合清单的全部物资`,
+        centered: true,
+        onOk: () => {
+          getBoxOrMetaril();
+        }
+      })
+    }
+    //获取非法物资或者箱子
+    const getBoxOrMetaril = () => {
+      var menusArr = [];
+      menus.value[1].data.map((item) => {
+        if (item.resourceType == 1) {
+          menusArr.push({
+            outFormId: item.outFormId,
+            resourceType: item.resourceType,
+            materialInfo: {
+              id:item.id
+            }
+          })
+        } else if (item.resourceType == 2) {
+          menusArr.push({
+            outFormId: item.outFormId,
+            resourceType: item.resourceType,
+            warehouseBoxInfo: {
+              id:item.id
+            },
+          })
+        }        
+      })
+      if (menusArr.length != 0) {
+        for (var na = 0; na < menusArr.length; na++){
+          store
+            .dispatch(
+              "warehouseModule/pendingModule/findoutformIdData",
+              menusArr[na]                
+            )
+            .then((res) => {
+              console.log(res)
+              if (res) {
+                getmenusArr.value.push(res);
+                console.log(getmenusArr.value)
+                menusArr = [];
+              }
+          });
+        }
+      }
+      setTimeout(readInform ,1000)
+    }
+    
+    //整理正常物资跟仓库物资
+    const readInform = () => {
+      console.log('111')
+      var savependingall = menus.value[0].data.concat(getmenusArr.value)
+      console.log(savependingall)
+
       var asavefilter = savependingall.filter((a) => {
         return (a.warehouseBoxInfo == null||undefined)
       })
@@ -172,42 +203,34 @@ export default defineComponent({
           outDetailList:item.outDetailList
         }
       })
-      var newdata = asavependingall.concat(bsavependingall)
-      AntModal.confirm({
-        class: "bg-navy-3 rounded pb-0 border border-primary",
-        title: `确定出仓？`,
-        content: `出仓符合清单和未符合清单的全部物资`,
-        centered: true,
-        onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
-              newdata                 
-            )
-            .then(() => {
-              finishedDelivery.value.data =[]
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });                
-        }
-      })
+      var newdatacommit = asavependingall.concat(bsavependingall)
+      console.log(newdatacommit)
+      store
+      .dispatch(
+        "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+        newdatacommit                 
+      )
+      .then(() => {
+        finishedDelivery.value.data =[]
+        visible.value = !visible.value;
+        //handleClickTabPane();
+      });   
     }
+
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
+      console.log(menus.value[2].data)
       menuActiveKey.value = activeKey;
       cardData.value = [];
       switch (activeKey) {
         case "1":
           cardData.value = menus.value[0].data;
-          menuEmpty.value = !cardData.value.length;
           break;
         case "2":
           cardData.value = menus.value[1].data;
-          menuEmpty.value = !cardData.value.length;
           break;
         case "3":
           cardData.value = menus.value[2].data;
-          menuEmpty.value = !cardData.value.length;
           break;
         default:
           break;
@@ -218,17 +241,6 @@ export default defineComponent({
       finishedDelivery.value.data.forEach((value, index, array) => {
         if (array[index].id == id) {
           finishedDelivery.value.data.splice(index, 1);
-        }
-      });
-    };
-    //扫描移动事件测试
-    const handleMovePending = () => {
-      pengdingDelivery.value.data.forEach((value, index, array) => {
-        if (array[index].id == '25') {
-          let addDeliveryData;
-          addDeliveryData = array[index];
-          pengdingDelivery.value.data.splice(index, 1);
-          finishedDelivery.value.data.unshift(addDeliveryData);
         }
       });
     };
@@ -261,12 +273,22 @@ export default defineComponent({
     }
     //获取借货单明细
     const DetailSpecifiedShortcutList = (id) => {
+      var outFromStatus = true;
       store
         .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
         .then((res) => {
-          pengdingDelivery.value.data = res.map((item) => {
-            return Object.assign(item,{statusright:0})
-          })
+          if (res && res.length != 0) {
+              if (outFromStatus == true) {
+                getOutFrom.value = id || '';
+                outFromStatus = false;
+              } 
+              res.map((item) => {              
+                pengdingDelivery.value.data.push(Object.assign(item,{statusright:0})) 
+              })
+            console.log(pengdingDelivery.value.data)
+          } else {
+            message.success('没有清单')
+          }
       })
     }
     //全部仓库物资
@@ -277,8 +299,9 @@ export default defineComponent({
           if (res.length == 0 || typeof (res) == undefined) {
             message.error("没有找到该编号对应的箱子或物资");
           } else {
-            res.statusright = 1;
-            finishedDelivery.value.data.unshift(res);
+            Object.assign(res[0],{statusright:1},{resourceType:1},{outFormId:getOutFrom.value})
+            finishedDelivery.value.data.unshift(res[0]);
+            console.log(finishedDelivery.value.data)
             console.log('在全部物资查找到该物资')
           }  
       })
@@ -286,84 +309,140 @@ export default defineComponent({
     //轮询比对数据
     const finddataready = (ready) => {
       var findready = ready;
+      var biduistatus = true;
       pengdingDelivery.value.data.forEach((value, index, array) => {
         let addDeliveryData = array[index];
         if (array[index].warehouseBoxInfo &&
           array[index].warehouseBoxInfo.boxCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
+          biduistatus = false;
           console.log('待出仓箱子对比成功')
         } else if (array[index].materialInfo &&
           array[index].materialInfo.materialCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
+          biduistatus = false;
+          console.log(finishedDelivery.value.data)
           console.log('待出仓物资对比成功')
         } else {
+          biduistatus = true;
           console.log('左侧待出仓没有找到对应的编号物资或箱子')
+          return;
         }
       });
+      if(!biduistatus){return}
+      console.log('继续扫描')
       store
-      .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })
-      .then((res) => {
-        if (res.length==0||typeof(res)==undefined) {
-          outDetailAll(findready);
-        } else {
-          res.statusright = 1;
-          //Object.assign(res,{statusright:1})
-          finishedDelivery.value.data.unshift(res);
-          console.log('在全部仓库查找到该箱子')
-        }                            
-      })
+        .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })
+        .then((res) => {
+          if (res.length==0||typeof(res)==undefined) {
+            outDetailAll(findready);
+          } else {
+            Object.assign(res[0],{statusright:1},{resourceType:2},{outFormId:getOutFrom.value})
+            finishedDelivery.value.data.unshift(res[0]);
+            console.log('在全部仓库查找到该箱子')
+          }                            
+        })
     }
     
     //轮询待出仓扫描事件
     const timeId = ref();
-    timeId.value = setInterval(() => {
-      if (sweepGateVisiable.value == true) {
-        clearInterval(timeId.value)
-      } else {
-        readerSweepGate();
-      }      
-    }, 5000)
+    const clearInter = () => {
+      clearInterval(timeId.value)
+    }
     //轮询接口,读取扫描门
+    const abcd = ref(true)
     const readerSweepGate = () => {
       store
         .dispatch("warehouseModule/pendingModule/sweepGateReaderData")
         .then((response) => {
-          console.log(response)
-          for (let i = 0; i < response.length; i++) {
-            console.log(response[i])
-             finddataready(response[i]) 
-          }
+          var readerdata = response;
+          var readerdataSession = sessionStorage.getItem("reader");
+          if (readerdata) {
+            if (readerdataSession&& !abcd.value) {
+              let listreader = readerdata.filter(items => {
+                if (!readerdataSession?.includes(items)) return items;
+              })
+              if (listreader.length != 0) {
+                console.log(readerdataSession)
+                readerdataSession = readerdataSession.concat(listreader)
+                sessionStorage.setItem('reader', readerdataSession)
+                console.log(listreader);
+                console.log(sessionStorage.getItem('reader'))
+                for (let i = 0; i < listreader.length; i++){
+                  finddataready(listreader[i])
+                }
+              } else {
+                message.success('没有新增数据')
+              }
+            } else if(abcd.value){              
+              for (let k = 0; k < readerdata.length; k++) {
+                sessionStorage.setItem('reader', readerdata)
+                  finddataready(readerdata[k])
+              }
+              abcd.value = false;
+            }
+          }       
         })
     }
     //开启扫描门
     const openSweepGate = () => {
-      sweepGateVisiable.value = false;
       store
         .dispatch("warehouseModule/pendingModule/sweepGateOpenData")
         
     }
     //关闭扫描门
     const closeSweepGate = () => {
-      sweepGateVisiable.value = true;
       store
         .dispatch('warehouseModule/pendingModule/sweepGateCloseData')
         
     }
+    //初始化借货清单
+    const initdata = () => {
+      openSweepGate();
+          timeId.value = setInterval(() => {
+            readerSweepGate();
+          }, 5000)
+      var nameNo = JSON.parse(sessionStorage.getItem("nameNo"))
+      console.log(nameNo)
+      if (nameNo) {
+        store
+          .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList"
+            , {
+              eventId: nameNo.EventId,
+              personnelJobNo: nameNo.PersonnelJobNo
+            })
+          .then((response) => {
+            if (response.length != 0) {
+              for (var resp = 0; resp < response.length; resp++){
+                DetailSpecifiedShortcutList(response[resp].id)
+              }              
+            } else {
+              console.log('借货清单数据outFormId为空')
+            }
+        });        
+      } else {
+        message.success('没有工号')
+      }
+    }
+    watch(visible, (lists) => {
+      console.log(lists)
+      if (lists == true) {        
+        clearInter()
+      } else if(lists == false){
+        timeId.value = setInterval(() => {
+          readerSweepGate();
+        }, 5000)
+      }
+    });
     onMounted(() => {
       //获取待出仓物资 
-      console.log(router.currentRoute.value.params)
-      //JSON.parse(sessionStorage.getItem("nameNo"))
-       store
-         .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList",router.currentRoute.value.params )
-         .then((response) => {
-          DetailSpecifiedShortcutList(response[0].id)
-         });
-      openSweepGate();
+      initdata();
     });
-    onUnmounted(() => {
-      closeSweepGate();
+    onBeforeUnmount(() => {
+      closeSweepGate()
+      clearInter();
     })
 
     return () => (
@@ -391,7 +470,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前待出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          image={`assets/icon_empty_scanner.png`}
                         ></a-empty>
                       </div>
                     ) : (
@@ -402,13 +481,13 @@ export default defineComponent({
                               <div class="flex items-center justify-center">
                                 <span class="text-20">
                                 {
-                                  listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
+                                  listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:''):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:'')
                                 }
                                 </span>
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber}                                      
+                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
                                     </span>
                                   ):''
                                 }                                
@@ -416,18 +495,19 @@ export default defineComponent({
                             </div>
                             <div class="flex py-16 px-16">
                               <div class="h-modal-lightermin w-modal-lightermin ">
-                                {!listItem.url? (
-                                  <div class="flex items-center justify-center h-full">
-                                  <div class="m-auto">
-                                    
-                                  <a-empty
-                                    description="空空如也"
-                                    image={`/website/assets/icon_empty_data.png`}
-                                  ></a-empty>
-                                  </div>
-                                  </div>
-                                ) :<img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>}
-                                
+                                {listItem.resourceType == 1 && listItem.materialInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                                    :(
+                                      <div class="flex items-center justify-center h-full">
+                                      <div class="m-auto">
+                                      <a-empty
+                                        description="空空如也"
+                                        image={`assets/icon_empty_data.png`}
+                                      ></a-empty>
+                                      </div>
+                                      </div>
+                                      ))
+                                }
                               </div>
                               <div
                                 class={
@@ -441,7 +521,7 @@ export default defineComponent({
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`/website/assets/icon_empty_data.png`}
+                                      image={`assets/icon_empty_data.png`}
                                     ></a-empty>
                                   </div>
                                 ) : (
@@ -450,7 +530,7 @@ export default defineComponent({
                                       <>
                                         <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:''}
                                           </span>
                                         </div>
                                       </>
@@ -480,9 +560,6 @@ export default defineComponent({
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
                 <div>{finishedDelivery.value.label}</div>
                 <div class="absolute right-5">
-                  <a-button type="primary" onClick={() => handleMovePending()}>
-                    扫描操作
-                  </a-button>                  
                   <a-button
                     type="primary"
                     onClick={() => handleClickPendingItem()}
@@ -506,7 +583,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前已出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          image={`assets/icon_empty_scanner.png`}
                         ></a-empty>
                       </div>
                     ) : (
@@ -519,19 +596,19 @@ export default defineComponent({
                                   ? "bg-red-400 border-danger border bg-opacity-10"
                                   : "bg-navy-2"
                               }
-                              class="mb-18 mr-8  h-modal-lightmin   ghost "
+                              class="mb-16 mr-8  h-modal-lightmin  ghost "
                             >
                               <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:listItem.materialName):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:listItem.boxName)
                                   }
                                   </span>
                                   {
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
-                                        {listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber}                                      
+                                        {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber/listItem.materialTotalNumber)}
                                       </span>
                                     ):''
                                   }
@@ -557,16 +634,19 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                    {!listItem.url ? (
+                                  {listItem.resourceType == 1 && listItem.materialInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:listItem.boxImages[0].fileUrl} />
+                                    :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={`assets/icon_empty_data.png`}
                                       ></a-empty>
                                       </div>
                                       </div>
-                                    ) :<img class="h-modal-lightermin w-modal-lightermin" src={listItem.url}/>}
+                                      ))
+                                    }
                                     
                                   </div>
                                 </div>
@@ -582,7 +662,7 @@ export default defineComponent({
                                     <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={`assets/icon_empty_data.png`}
                                       ></a-empty>
                                     </div>
                                   ) : (
@@ -591,7 +671,7 @@ export default defineComponent({
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                              {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:item.materialName}
                                             </span>
                                           </div>
                                         </>
@@ -622,7 +702,6 @@ export default defineComponent({
           v-model={[visible.value, "visible"]}
           size="heavy"
           title="出仓扫描清单"
-          onCancel={handleCancel}
         >
             <Tabs
               v-model={[menuActiveKey.value, "activeKey"]}
@@ -646,7 +725,7 @@ export default defineComponent({
               <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
                   <a-empty                   
                     description="空空如也"
-                    image={`/website/assets/icon_empty_data.png`}>
+                    image={`assets/icon_empty_data.png`}>
                   </a-empty>
                 </div>
               {cardData.value.map((listItem) => {
@@ -658,13 +737,13 @@ export default defineComponent({
                         <p class="text-16 font-medium">
                           <span>
                             {
-                              listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
+                              listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:listItem.materialName):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.materialName:listItem.materialName)
                             }
                             </span>
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber}                                      
+                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber/listItem.materialTotalNumber)}                                      
                                 </span>
                               ):''
                             }                          
@@ -695,7 +774,7 @@ export default defineComponent({
                               <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
-                                  src={listItem.url}
+                                  src={listItem.resourceType == 1?(listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl)}
                                   fallback="assets/icon_empty_search.png"
                                   width={88}
                                   height={88}
@@ -712,7 +791,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.rackPosition:listItem.warehouseBoxInfo.rackPosition
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.rackPosition:listItem.rackPosition):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.rackPosition:listItem.warehouseBoxInfo)
                                   }                                 
                                 </div>
                               </p>
@@ -720,14 +799,24 @@ export default defineComponent({
                                 <span class="text-white text-opacity-70">
                                   类型:
                                 </span>
-                                <div
+                                <div class={listItem.resourceType == 1?"":"hidden"}
                                   style="white-space: nowrap;overflow: hidden;"
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ?
-                                    departType[listItem.materialInfo.departmentType] :
-                                    departType[listItem.warehouseBoxInfo.departmentType]
+                                     (listItem.materialInfo
+                                      ? departType[listItem.materialInfo.departmentType] :
+                                      departType[listItem.departmentType])
+                                   }
+                                </div>
+                                <div class={listItem.resourceType == 2?"":"hidden"}
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  {
+                                    (listItem.warehouseBoxInfo
+                                      ? departType[listItem.warehouseBoxInfo.departmentType] :
+                                      departType[listItem.departmentType])
                                   }
                                 </div>
                               </p>
@@ -742,7 +831,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxName:listItem.warehouseBoxInfo.size
+                                    listItem.resourceType == 2 ? (listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.size:listItem.size):(listItem.materialInfo?listItem.materialInfo.boxName:listItem.boxName)
                                   }
                                 </div>
                               </p>
@@ -755,7 +844,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxCode:listItem.warehouseBoxInfo.boxCode
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:listItem.boxName)
                                   }
                                 </div>
                               </p>

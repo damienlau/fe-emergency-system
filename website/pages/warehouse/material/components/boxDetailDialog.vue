@@ -15,7 +15,11 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
-              v-if="dataSource.inBatchPendingStatus == 0"
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                !materialRemainNumber
+              "
             >
               <a-button
                 type="primary"
@@ -26,6 +30,20 @@
                 删除
               </a-button>
             </a-popconfirm>
+            <a-button
+              type="primary"
+              ghost
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                materialRemainNumber
+              "
+              class="flex flex-row items-center p-0 mr-3"
+              danger
+              @click="deleteBoxVisible = true"
+            >
+              删除
+            </a-button>
 
             <a-button
               type="primary"
@@ -60,7 +78,11 @@
               ok-text="确认"
               cancel-text="取消"
               @confirm="handDelete(dataSource)"
-              v-if="dataSource.inBatchPendingStatus == 0"
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                !materialRemainNumber
+              "
             >
               <a-button
                 type="primary"
@@ -71,6 +93,20 @@
                 删除
               </a-button>
             </a-popconfirm>
+            <a-button
+              type="primary"
+              ghost
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                materialRemainNumber
+              "
+              class="flex flex-row items-center p-0 mr-3"
+              danger
+              @click="deleteBoxVisible = true"
+            >
+              删除
+            </a-button>
             <a-button
               type="primary"
               ghost
@@ -96,7 +132,7 @@
       >
         <div class="box">
           <div
-            class="addBox"
+            class="addBox mt-8"
             @click="showAddBoxTransfer"
             v-if="!isEditInit"
           >
@@ -108,44 +144,61 @@
             :key="index"
             :materialInfo="item"
             :showDelete="!isEditInit"
-            @delete="handDeleteMeterail(item)"
+            @delete="deleteChoose"
           >
           </SmallMeterial>
-        </div>
-        <div class="footer">
-          <a-popconfirm
-            title="确认删除吗?"
-            ok-text="确认"
-            cancel-text="取消"
-            @confirm="handDelete(dataSource)"
-            v-if="dataSource.inBatchPendingStatus == 0"
-          >
+          <div class="footer">
+            <a-popconfirm
+              title="确认删除吗?"
+              ok-text="确认"
+              cancel-text="取消"
+              @confirm="handDelete(dataSource)"
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                !materialRemainNumber
+              "
+            >
+              <a-button
+                type="primary"
+                ghost
+                class="flex flex-row items-center p-0 mr-3"
+                danger
+              >
+                删除
+              </a-button>
+            </a-popconfirm>
             <a-button
               type="primary"
               ghost
-              v-if="isEditInit"
+              v-if="
+                dataSource.status == 1 &&
+                dataSource.inBatchPendingStatus == 0 &&
+                materialRemainNumber
+              "
               class="flex flex-row items-center p-0 mr-3"
               danger
+              @click="deleteBoxVisible = true"
             >
               删除
             </a-button>
-          </a-popconfirm>
-          <a-button
-            type="primary"
-            ghost
-            class="mr-3"
-            v-if="isEditInit"
-            @click="isEditInit = false"
-            >编辑</a-button
-          >
-          <a-button
-            type="primary"
-            ghost
-            class="mr-3"
-            v-if="!isEditInit"
-            @click="addBoxMaterial"
-            >保存</a-button
-          >
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3"
+              v-if="isEditInit"
+              @click="isEditInit = false"
+              >编辑</a-button
+            >
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3"
+              v-if="!isEditInit"
+              @click="addBoxMaterial"
+              >保存</a-button
+            >
+          </div>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -168,9 +221,69 @@
       title=""
       size="heavy"
       key="AddBoxTransfer"
-      :zIndex="999"
+      :zIndex="900"
     >
       <AddBoxTransfer @chooseMeterial="chooseMeterial"></AddBoxTransfer>
+    </Modal>
+    <Modal
+      v-model:visible="deleteBoxVisible"
+      @cancel="closeDeleteDialog"
+      title=""
+      size="ultralight"
+      key="deleteBox"
+      :zIndex="999"
+    >
+      <div class="text-34 flex flex-row items-center justify-start">
+        <Icon
+          style="font-size: 26px; color: #f25e68; cursor: pointer"
+          class="flex items-center justify-center mr-4"
+          type="tip"
+        />
+        <span>确定要删除这个箱子吗?</span>
+        <InfoCircleOutlined />
+      </div>
+      <a-radio-group
+        v-model:value="value"
+        class="text-white text-opacity-70 mt-16 px-11"
+      >
+        <a-radio :style="radioStyle" :value="1">删除箱子及箱内所有物资</a-radio>
+        <a-radio :style="radioStyle" :value="0">仅删除箱子</a-radio>
+      </a-radio-group>
+      <div class="mt-22 flex flex-row justify-end align-middle px-24">
+        <a-button class="mr-16" @click="closeDeleteDialog">取消</a-button>
+        <a-button
+          type="primary"
+          :disabled="!(value === 0 || value === 1)"
+          @click="handConfirmDelete"
+          >确定</a-button
+        >
+      </div>
+    </Modal>
+    <Modal
+      v-model:visible="removeMaterialVisible"
+      @cancel="removeMaterialVisible = false"
+      title=""
+      size="ultralight"
+      key="removeMaterialVisible"
+      :zIndex="900"
+    >
+      <div class="text-34 flex flex-row items-center justify-start">
+        <Icon
+          style="font-size: 26px; color: #f25e68; cursor: pointer"
+          class="flex items-center justify-center mr-4"
+          type="error"
+        />
+        <span>{{ tipsTitle }}</span>
+        <InfoCircleOutlined />
+      </div>
+      <div class="text-white text-opacity-70 px-40 py-20">
+        {{ tipsContent }}
+      </div>
+      <div class="mt-40 flex flex-row justify-end align-middle px-24">
+        <a-button type="primary" @click="removeMaterialVisible = false"
+          >确定</a-button
+        >
+      </div>
     </Modal>
   </div>
 </template>
@@ -180,21 +293,27 @@ import {
   updateBoxData,
   findSpecifiedBoxData,
   deleteBoxInfoData,
-  deleteMeterialInfoData,
   findMaterialInfoAllData,
 } from "api/warehouse/meterial";
 import SmallMeterial from "./smallMeterial.vue";
 import { Form, Modal } from "components";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
+import { Icon } from "components";
 export default defineComponent({
   name: "boxDetailDialog",
-  components: { Form, SmallMeterial, PlusOutlined, Modal, AddBoxTransfer },
+  components: {
+    Form,
+    SmallMeterial,
+    PlusOutlined,
+    Modal,
+    AddBoxTransfer,
+    Icon,
+  },
   props: {
     id: Number,
     boxCode: String,
     materialRemainNumber: Number,
-    status: Number|undefined
   },
   setup(props, ctx) {
     const state = reactive({
@@ -206,6 +325,16 @@ export default defineComponent({
       loading: true,
       materialList: [],
       addBoxTransferVisible: false,
+      deleteBoxVisible: false, // 删除箱子
+      removeMaterialVisible: false, // 移除箱子
+      radioStyle: {
+        display: "block",
+        height: "30px",
+        lineHeight: "30px",
+      },
+      value: null,
+      tipsTitle: "",
+      tipsContent: "",
     });
     const baseForm = ref([
       {
@@ -226,6 +355,7 @@ export default defineComponent({
         key: "departmentType",
         type: "select",
         span: 12,
+        labelSpan: 3,
         options: [
           {
             label: "急救/重症",
@@ -290,13 +420,14 @@ export default defineComponent({
             key: "15",
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "货架位置",
         key: "rackNumber",
         type: "select",
-        span: 6,
+        span: 8,
+        labelSpan: 7,
         options: [
           {
             label: "1号货架",
@@ -325,7 +456,7 @@ export default defineComponent({
         label: "",
         key: "rackPosition",
         type: "select",
-        span: 6,
+        span: 4,
         options: [
           {
             label: "未知",
@@ -355,6 +486,8 @@ export default defineComponent({
         label: "尺寸",
         key: "size",
         type: "select",
+        span: 12,
+        labelSpan: 3,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -373,13 +506,14 @@ export default defineComponent({
             key: "4",
           },
         ],
-        required: false,
+        required: true,
       },
       {
         label: "单位",
         key: "unit",
-        required: false,
+        required: true,
         span: 12,
+        labelSpan: 5,
       },
       {
         label: "物资图片",
@@ -401,6 +535,7 @@ export default defineComponent({
         key: "weight",
         required: false,
         span: 12,
+        labelSpan: 4,
       },
       {
         label: "备注",
@@ -457,26 +592,8 @@ export default defineComponent({
     };
     const initMaterialList = () => {
       state.materialList = [];
-      findMaterialInfoAllData({ boxCode: props.boxCode, status: props.status }).then((res) => {
+      findMaterialInfoAllData({ boxCode: props.boxCode }).then((res) => {
         state.materialList = res.data;
-      });
-    };
-    // 删除箱子
-    const handDelete = ({ id }) => {
-      deleteBoxInfoData(id).then((res) => {
-        if (res.data) {
-          ctx.emit("close");
-        }
-      });
-    };
-
-    // 删除物资
-    const handDeleteMeterail = ({ id }) => {
-      console.log('handDeleteMeterail')
-      deleteMeterialInfoData({ id }).then((res) => {
-        if (res.data) {
-          ctx.emit("close");
-        }
       });
     };
     const showAddBoxTransfer = () => {
@@ -491,7 +608,82 @@ export default defineComponent({
       initMaterialList();
     };
     const handDeleteAll = () => {
-      state.materialList = [];
+      let index = 0;
+      state.materialList.map((item) => {
+        if (item.status !== 1) {
+          index++;
+        }
+      });
+      if (index > 0) {
+        state.removeMaterialVisible = true;
+        state.tipsTitle = "无法批量移除";
+        state.tipsContent = "箱内物资存在不在库状态物资, 无法批量移除";
+      } else {
+        state.materialList = [];
+      }
+    };
+    const deleteChoose = (data) => {
+      if (data.status === 1) {
+        state.materialList.splice(
+          state.materialList.findIndex((item) => {
+            item.id === data.id;
+          }),
+          1
+        );
+      } else {
+        state.removeMaterialVisible = true;
+        state.tipsTitle = "该物资无法移除";
+        state.tipsContent =
+          "该物资" + returnStatus(data.status).text + "状态, 无法移除";
+      }
+    };
+    const returnStatus = (status) => {
+      let state = {};
+      switch (status) {
+        case 1:
+          state = {
+            color: "#26c159",
+            text: "在库",
+          };
+          break;
+        case 2:
+          state = {
+            color: "#fb5b69",
+            text: "已出库",
+          };
+          break;
+        case 3:
+          state = {
+            color: "#e98c40",
+            text: "待出库",
+          };
+          break;
+        case 4:
+          state = {
+            color: "#ccc",
+            text: "损耗",
+          };
+          break;
+        case 5:
+          state = {
+            color: "#ccc",
+            text: "报废",
+          };
+          break;
+        case 6:
+          state = {
+            color: "#ccc",
+            text: "维修",
+          };
+          break;
+        case 7:
+          state = {
+            color: "#ccc",
+            text: "保养",
+          };
+          break;
+      }
+      return state;
     };
     const addBoxMaterial = () => {
       const idArr = [];
@@ -506,6 +698,33 @@ export default defineComponent({
       };
       updateBoxData(params).then((res) => {
         if (res.data) {
+          ctx.emit("close");
+        }
+      });
+    };
+    const closeDeleteDialog = () => {
+      state.deleteBoxVisible = false;
+      state.value = null;
+    };
+    const handDelete = (data) => {
+      const params = {
+        id: data.id,
+        delMaterial: 0,
+      };
+      deleteBoxInfoData(params).then((res) => {
+        if (res.data) {
+          ctx.emit("close");
+        }
+      });
+    };
+    const handConfirmDelete = () => {
+      const params = {
+        id: state.dataSource.id,
+        delMaterial: state.value,
+      };
+      deleteBoxInfoData(params).then((res) => {
+        if (res.data) {
+          closeDeleteDialog();
           ctx.emit("close");
         }
       });
@@ -525,7 +744,10 @@ export default defineComponent({
       handBack,
       handDeleteAll,
       addBoxMaterial,
-      handDeleteMeterail
+      deleteChoose,
+      closeDeleteDialog,
+      handConfirmDelete,
+      returnStatus,
     };
   },
 });
@@ -533,13 +755,13 @@ export default defineComponent({
 <style lang="less" scoped>
 .box {
   width: 100%;
+  height: 360px;
   overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  grid-gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
   .addBox {
-    // width: 335px;
-    height: 137px;
+    width: 335px;
+    height: 180px;
     background: #57799a;
     display: flex;
     flex-direction: column;
@@ -558,28 +780,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   position: relative;
-
-  /deep/ .ant-tabs-content {
-    padding: 16px 0;
-
-    .ant-form-item-control-input-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ant-btn {
-      width: 72px;
-      justify-content: center;
-    }
-
-    .ant-tabs-tabpane {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-  }
-
   .btn {
     position: absolute;
     right: 20px;

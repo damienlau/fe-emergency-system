@@ -16,7 +16,8 @@ import {
 import { uploadData } from "api/utils/tools";
 
 export interface selectOptionProps {
-  key: string | number;
+  key?: string | number;
+  secondKey?: string | number;
   label?: string;
 }
 
@@ -27,6 +28,8 @@ export interface formItemProps extends selectOptionProps {
   placeholder?: string;
   required?: boolean;
   span?: number;
+  labelSpan?: number;
+  hasLabel?: boolean;
   type?: string;
 }
 
@@ -34,7 +37,7 @@ export default defineComponent({
   name: "Form",
   props: {
     columns: {
-      type: Array as PropType<formItemProps[]>,
+      type: Object as PropType<formItemProps[]>,
       required: true,
     },
     dataSource: {
@@ -65,6 +68,7 @@ export default defineComponent({
     const formComponentNode = ({
       disabled,
       key,
+      secondKey,
       label,
       options,
       placeholder,
@@ -108,8 +112,10 @@ export default defineComponent({
               v-model={[formData.value[`${key}`], "value"]}
               disabled={disabled || props.disabled}
               placeholder={`请选择${label || placeholder}`}
-              onChange={(value, option) => {
-                formData.value[`eventName`] = "塌方事件";
+              onSelect={(val, opt) => {
+                if (secondKey) {
+                  formData.value[`${secondKey}`] = opt.title;
+                }
               }}
             >
               {options?.map((selectOption) => {
@@ -188,6 +194,8 @@ export default defineComponent({
                 <FormItem
                   colon={!!formItem.colon}
                   name={formItem.key}
+                  labelCol={{ span: formItem.labelSpan }}
+                  wrapperCol={{ span: formItem.wrapperSpan }}
                   rules={[
                     {
                       whitespace: true,
@@ -206,11 +214,13 @@ export default defineComponent({
                   {{
                     default: () => formComponentNode(formItem),
                     label: () => {
-                      formItem.label && (
-                        <span class="text-16 text-white text-opacity-70">
-                          {formItem.label}
-                        </span>
-                      );
+                      if (formItem.label) {
+                        return (
+                          <span class="text-16 text-white text-opacity-70">
+                            {formItem.label}
+                          </span>
+                        );
+                      }
                     },
                   }}
                 </FormItem>

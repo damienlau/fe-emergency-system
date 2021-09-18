@@ -1,5 +1,5 @@
 import { eventRequestProps, findEventData } from "api/task/event";
-import { AxiosResponse } from "axios";
+import { responseProps } from "api/utils";
 import { selectOptionProps } from "components/Form";
 import { Commit, Store } from "vuex";
 
@@ -12,10 +12,10 @@ const getters = {};
 const actions = {
   // 获取所有事件
   getEvents: ({ commit }: Store<Commit>) => {
-    findEventData().then((response: AxiosResponse<eventRequestProps>) => {
+    findEventData().then((response: responseProps) => {
       commit(
         "SET_EVENTS",
-        response.data.content?.map((eventOptions: eventRequestProps) => {
+        response.content?.map((eventOptions: eventRequestProps) => {
           return {
             label: eventOptions.eventName,
             key: eventOptions.id,

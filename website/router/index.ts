@@ -8,9 +8,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  store.commit("user/GET_ONLINE");
+  store.commit("userModule/GET_ONLINE");
+  store.dispatch("warehouseModule/shortcutModule/getTotals");
 
-  if (to.name !== "Login" && !store.state.user.hasLogin)
+  if (to.name !== "Login" && !store.state.userModule.hasLogin)
     next({ name: "Login" });
   else next();
 });

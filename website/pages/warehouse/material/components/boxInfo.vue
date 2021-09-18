@@ -36,7 +36,7 @@
           <span class="value">{{ info.size && sizeType[info.size] }}</span>
         </div>
         <div class="row">
-          <span class="label">物资编码:</span>
+          <span class="label">箱子编码:</span>
           <span class="value">{{ info.boxCode }}</span>
         </div>
       </div>
@@ -49,6 +49,9 @@
           v-if="info.inBatchPendingStatus === 0"
           @click.stop="changeDebit"
           :disabled="info.status !== 1"
+        >
+          <template #icon>
+            <Icon class="align-baseline" :type="'lending'" /> </template
           >借货</a-button
         >
         <a-button
@@ -69,11 +72,13 @@ import {
   deleteByFindData,
   findSpecifiedBoxData,
 } from "api/warehouse/meterial";
+import { Icon } from "components";
 export default defineComponent({
   name: "boxInfo",
   props: {
     boxInfo: Object,
   },
+  components: { Icon },
   setup(props) {
     const state = reactive({
       info: {},

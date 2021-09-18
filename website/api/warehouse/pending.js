@@ -12,7 +12,8 @@ const shortcutRequestUrls = {
   sweepclose: "/scan/close",
   allBoxinfo: "/box/info/all",
   material: "/material/info/all",
-  infoall:"/event/info/all"
+  infoall: "/event/info/all",
+  findoutform:"/outDetail/add"
 };
 
 // 出仓待出仓列表
@@ -82,6 +83,13 @@ export const allmaterialPending = (params) => {
 //出归仓扫描工号信息
 export const scannerInfoall = (params) => {
   return request.get(shortcutRequestUrls.infoall, params).then((response) => {
+    return response;
+  })
+}
+
+//待出仓仓库物资或箱子获取父级ID
+export const findoutformId = (params) => {
+  return request.post(shortcutRequestUrls.findoutform,params).then((response) => {
     return response;
   })
 }

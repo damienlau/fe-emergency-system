@@ -156,9 +156,11 @@ export default defineComponent({
                 onClose={closeBoxDetailDialog}
               ></BoxDetailDialog>
             ),
-            extra: () => <div>
+            extra: () => (
+              <div>
               <MeterialList racknumber={route.params.id} boxcode={boxCode.value}></MeterialList>
             </div>
+            )
           }}
         </Modal>
       </section>

@@ -8,7 +8,8 @@ import {
   sweepGateClose,
   allBoxinfoPending,
   allmaterialPending,
-  scannerInfoall
+  scannerInfoall,
+  findoutformId
 } from "api/warehouse/pending";
 
 const state = () => ({});
@@ -99,6 +100,15 @@ const actions = {
   scannerInfoallData: ({ dispatch }, params) => {
     return new Promise((reslove) => {
       scannerInfoall(params).then((res) => {
+        reslove(res.data);
+      })
+    })
+  },
+
+  //待出仓仓库物资或箱子获取父级ID
+  findoutformIdData: ({ dispatch }, params) => {
+    return new Promise((reslove) => {
+      findoutformId(params).then((res) => {
         reslove(res.data);
       })
     })

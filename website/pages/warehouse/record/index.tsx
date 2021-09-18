@@ -26,11 +26,11 @@ export default defineComponent({
           <a-tab-pane key={"daily"} tab="日常记录">
             <DailyList></DailyList>
           </a-tab-pane>
-          <a-tab-pane key={"1"} tab="维修记录">
-            <MaintainList menuActiveKey={"1"}></MaintainList>
-          </a-tab-pane>
-          <a-tab-pane key={"2"} tab="保养记录">
+          <a-tab-pane key={"2"} tab="维修记录">
             <MaintainList menuActiveKey={"2"}></MaintainList>
+          </a-tab-pane>
+          <a-tab-pane key={"1"} tab="保养记录">
+            <MaintainList menuActiveKey={"1"}></MaintainList>
           </a-tab-pane>
         </a-tabs>
       </>

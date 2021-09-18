@@ -24,8 +24,8 @@
           }}</span>
         </div>
         <div class="row">
-          <span class="label">箱号:</span>
-          <span class="value">{{ info.boxCode }}</span>
+          <span class="label">箱子:</span>
+          <span class="value">{{ info.boxName }}</span>
         </div>
         <div class="row">
           <span class="label">物资编码:</span>
@@ -41,12 +41,16 @@
           v-if="info.inBatchPendingStatus === 0"
           @click.stop="changeDebit"
           :disabled="info.status !== 1"
-          >借货</a-button
+        >
+          <template #icon>
+            <Icon class="align-baseline" :type="'lending'" />
+          </template>
+          借货</a-button
         >
         <a-button
           danger
           v-if="info.inBatchPendingStatus === 1"
-          @click.stop="handCansel"
+          @click.stop="handCansel(1)"
           :disabled="info.status !== 1"
           >取消借货</a-button
         >
@@ -56,24 +60,49 @@
           type="primary"
           ghost
           class="mr-3"
+          v-if="info.inBatchPendingStatus !== 2"
           :disabled="
             info.inBatchPendingStatus === 1 ||
             info.inBatchPendingStatus === 2 ||
             info.inBatchPendingStatus === 3
           "
           @click.stop="changeMaintain"
-          >维修</a-button
+        >
+          <template #icon>
+            <Icon class="align-baseline" :type="'repair'" />
+          </template>
+          维修</a-button
+        >
+        <a-button
+          danger
+          class="mr-3"
+          v-if="info.inBatchPendingStatus === 2"
+          @click.stop="handCansel(2)"
+          :disabled="info.status !== 1"
+          >取消维修</a-button
         >
         <a-button
           type="primary"
           ghost
+          v-if="info.inBatchPendingStatus !== 3"
           :disabled="
             info.inBatchPendingStatus === 1 ||
             info.inBatchPendingStatus === 2 ||
             info.inBatchPendingStatus === 3
           "
           @click.stop="changeRepair"
+        >
+          <template #icon>
+            <Icon class="align-baseline" :type="'maintain'" /> </template
           >保养</a-button
+        >
+        <a-button
+          danger
+          class="mr-3"
+          v-if="info.inBatchPendingStatus === 3"
+          @click.stop="handCansel(3)"
+          :disabled="info.status !== 1"
+          >取消保养</a-button
         >
       </div>
     </div>
@@ -86,12 +115,14 @@ import {
   deleteByFindData,
   findSpecifiedMeterialData,
 } from "api/warehouse/meterial";
+import { Icon } from "components";
 export default defineComponent({
   name: "meterialInfo",
   props: {
     meterialInfo: Object,
   },
-  setup(props) {
+  components: { Icon },
+  setup(props, slot) {
     const state = reactive({
       info: {},
       img: "",
@@ -138,6 +169,7 @@ export default defineComponent({
       addBatchPendingData(params).then((res) => {
         if (res.data) {
           findDetail();
+          freshBoxList();
         }
       });
     };
@@ -150,6 +182,7 @@ export default defineComponent({
       addBatchPendingData(params).then((res) => {
         if (res.data) {
           findDetail();
+          freshBoxList();
         }
       });
     };
@@ -162,18 +195,20 @@ export default defineComponent({
       addBatchPendingData(params).then((res) => {
         if (res.data) {
           findDetail();
+          freshBoxList();
         }
       });
     };
-    const handCansel = () => {
+    const handCansel = (operationType) => {
       const params = {
-        operationType: 1,
+        operationType: operationType,
         resourceType: 1,
         materialId: props.meterialInfo.id,
       };
       deleteByFindData(params).then((res) => {
         if (res.data) {
           findDetail();
+          freshBoxList();
         }
       });
     };
@@ -229,6 +264,9 @@ export default defineComponent({
       findSpecifiedMeterialData({ id: props.meterialInfo.id }).then((res) => {
         state.info = JSON.parse(JSON.stringify(res.data));
       });
+    };
+    const freshBoxList = () => {
+      slot.emit("freshBoxList");
     };
     return {
       ...toRefs(state),
