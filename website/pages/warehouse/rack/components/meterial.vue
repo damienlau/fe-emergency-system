@@ -43,9 +43,10 @@
 </template>
 <script>
 import { defineComponent, ref, toRefs, onMounted, reactive } from "vue";
+import { message } from 'ant-design-vue'
 import MeterialInfo from "pages/warehouse/material/components/meterialInfo.vue";
 import { Tabs } from "components";
-import { findCriteriaInbox } from "api/warehouse/meterial";
+import { findCriteriaInbox, addBatchPendingData } from "api/warehouse/meterial";
 export default defineComponent({
   name: "MeterialList",
   components: {
@@ -92,7 +93,7 @@ export default defineComponent({
       });
     };
     const tabClick = (tabs) => {
-      
+
     };
     const getFirstMaterialsData = () => {
       // 初始化数据
@@ -104,7 +105,15 @@ export default defineComponent({
     };
 
     // 借出
-    const outForm = () => {}
+    const outForm = () => {
+      const params = {
+        boxCode: props.boxcode
+      }
+      addBatchPendingData(params).then(() => {
+        getMaterialsData()
+        message.success('借出成功')
+      })
+    }
 
     return {
       ...toRefs(state),
