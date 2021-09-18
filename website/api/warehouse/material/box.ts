@@ -7,6 +7,7 @@ const boxRequestUrls = {
   find: "box/info/page/criteria",
   findCount: "box/info/rack/count",
   update: "box/info/update",
+  pendingDataRack: "batchPending/add/rack"
 };
 
 export interface boxRequestProps {
@@ -63,4 +64,13 @@ export const updateBoxData = (parameter: boxRequestProps) => {
   return request.post(boxRequestUrls.update, parameter).then((response) => {
     return response;
   });
+};
+
+// 新增货架批量待处理清单
+export const addBatchPendingDataRack = (parameter?: string) => {
+  return request
+    .get(boxRequestUrls.pendingDataRack, { params: { rackNumber: parameter } })
+    .then((response) => {
+      return response.data;
+    });
 };

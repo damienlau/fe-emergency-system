@@ -1,6 +1,6 @@
 import { defineComponent, ref, onMounted } from "@vue/runtime-core";
-import { Button, Space } from "ant-design-vue";
-import { findBoxCountData, findBoxData } from "api/warehouse/material/box";
+import { Button, Space, message } from "ant-design-vue";
+import { findBoxCountData, findBoxData, addBatchPendingDataRack } from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
@@ -18,6 +18,7 @@ export default defineComponent({
         key: "boxName",
         placeholder: "物资或箱子名称",
         type: "search",
+        required: false
       },
     ]);
     const boxColumn = ref([]);
@@ -98,6 +99,14 @@ export default defineComponent({
       });
     };
 
+    const addOutFormRack = () => {
+      const rackNumber = params.value.rackNumber;
+      addBatchPendingDataRack(rackNumber).then(() => {
+        initBoxData()
+        message.success('借出成功')
+      })
+    }
+
     onMounted(() => {
       params.value.rackNumber = route.params.id as string;
       initBoxData();
@@ -138,7 +147,7 @@ export default defineComponent({
                 </p>
               </Space>
             ),
-            extra: () => <Button type="primary">整架借出</Button>,
+            extra: () => <Button type="primary" onClick={addOutFormRack}>整架借出</Button>,
           }}
         </PageHeader>
         <div class={classes["box-content"]}>
