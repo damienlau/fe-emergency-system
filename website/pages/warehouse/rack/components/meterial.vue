@@ -45,7 +45,7 @@
 import { defineComponent, ref, toRefs, onMounted, reactive } from "vue";
 import MeterialInfo from "pages/warehouse/material/components/meterialInfo.vue";
 import { Tabs } from "components";
-import { findCriteriaPageData } from "api/warehouse/meterial";
+import { findCriteriaInbox } from "api/warehouse/meterial";
 export default defineComponent({
   name: "MeterialList",
   components: {
@@ -86,7 +86,7 @@ export default defineComponent({
         pageOrdersJSON: pageOrdersJSON,
         materialName: state.keyword,
       };
-      findCriteriaPageData(params).then((res) => {
+      findCriteriaInbox(params).then((res) => {
         state.materialsList = state.materialsList.concat(res.data.content);
         state.pagination.total = res.data.totalNum;
       });

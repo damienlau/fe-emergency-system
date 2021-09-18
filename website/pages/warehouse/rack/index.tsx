@@ -18,6 +18,7 @@ export default defineComponent({
         key: "boxName",
         placeholder: "物资或箱子名称",
         type: "search",
+        required: false
       },
     ]);
     const boxColumn = ref([]);
