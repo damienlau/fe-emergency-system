@@ -7,7 +7,9 @@
         @submit="handleSubmitBase"
       >
         <template #button>
-          <a-button type="primary" ghost class="mr-3" htmlType="submit"
+          <a-button type="primary" ghost class="mr-3" htmlType="submit">
+            <template #icon>
+              <Icon class="align-baseline" :type="'save'" /> </template
             >保存</a-button
           >
         </template>
@@ -20,7 +22,9 @@
         @submit="handleSubmitOther"
       >
         <template #button>
-          <a-button type="primary" ghost class="mr-3" htmlType="submit"
+          <a-button type="primary" ghost class="mr-3" htmlType="submit">
+            <template #icon>
+              <Icon class="align-baseline" :type="'save'" /> </template
             >保存</a-button
           >
         </template>
@@ -32,9 +36,10 @@
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { addMeterialData } from "api/warehouse/meterial";
 import Form from "components/Form";
+import { Icon } from "components";
 export default defineComponent({
   name: "addMeterialDialog",
-  components: { Form },
+  components: { Form, Icon },
   setup(props, slot) {
     const state = reactive({
       activeKey: "base",
@@ -53,7 +58,6 @@ export default defineComponent({
         key: "brand",
         required: true,
         span: 12,
-        labelSpan: 4,
       },
       {
         label: "类型",
@@ -131,7 +135,6 @@ export default defineComponent({
         key: "productionBatch",
         required: true,
         span: 12,
-        labelSpan: 6,
       },
       {
         label: "厂家",
@@ -230,4 +233,8 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.ant-form-item-label) {
+  width: 100px;
+}
+</style>

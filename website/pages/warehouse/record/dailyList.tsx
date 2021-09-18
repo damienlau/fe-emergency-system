@@ -55,6 +55,7 @@ export default defineComponent({
       {
         dataIndex: "outTime",
         key: "outTime",
+        width: "180px",
         slots: { title: "customTitle", customRender: "dailyTime" },
       },
       {
@@ -85,6 +86,7 @@ export default defineComponent({
         key: "departmentType",
         label: "借货科室",
         placeholder: "全部",
+        width: "200px",
         options: [
           { key: 1, label: "急救/重症" },
           { key: 2, label: "门诊" },
@@ -108,6 +110,7 @@ export default defineComponent({
         key: "status",
         label: "状态",
         placeholder: "全部",
+        width: "100px",
         options: [
           {
             label: "待借出",
@@ -166,6 +169,8 @@ export default defineComponent({
               ? "color:orange"
               : status == 2
               ? "color:red"
+              : status == 4
+              ? "color:grey"
               : "color:green"
           }
         >
@@ -175,6 +180,8 @@ export default defineComponent({
             ? "已出仓"
             : status == 3
             ? "已归还"
+            : status == 4
+            ? "已撤销"
             : "--"}
         </p>
       );
@@ -204,7 +211,6 @@ export default defineComponent({
           onSearch={handSearch}
         ></TableSelct>
         <a-table
-          class="text-white"
           dataSource={tableData.value}
           columns={tableColumn.value}
           scroll={{ y: 600 }}

@@ -92,6 +92,7 @@ export default defineComponent({
         key: "isOutWarehouse",
         label: "是否出仓库",
         placeholder: "全部",
+        width: "100px",
         options: [
           {
             label: "是",

@@ -1,7 +1,19 @@
 <template>
-  <a-card hoverable style="width: 100%">
+  <a-card
+    hoverable
+    style="width: 100%"
+    :bodyStyle="{
+      background: '#0B4070',
+    }"
+  >
     <div class="top flex flex-row w-fll pb-3">
-      <a-image class="pt-3" :width="100" :height="100" :src="img" />
+      <a-image
+        class="pt-3"
+        :width="100"
+        :height="100"
+        :src="img"
+        @click.stop="unshowBoxDialog"
+      />
       <div class="right ml-20">
         <div class="row">
           <span class="title mr-3 mb-3">{{ info.boxName }}</span>
@@ -46,9 +58,17 @@
         <a-button
           type="primary"
           class="mr-3"
-          v-if="info.inBatchPendingStatus === 0"
+          v-if="
+            info.inBatchPendingStatus === 0 ||
+            info.inBatchPendingStatus === 2 ||
+            info.inBatchPendingStatus === 3
+          "
           @click.stop="changeDebit"
-          :disabled="info.status !== 1"
+          :disabled="
+            info.status !== 1 ||
+            info.inBatchPendingStatus === 2 ||
+            info.inBatchPendingStatus === 3
+          "
         >
           <template #icon>
             <Icon class="align-baseline" :type="'lending'" /> </template
@@ -79,7 +99,7 @@ export default defineComponent({
     boxInfo: Object,
   },
   components: { Icon },
-  setup(props) {
+  setup(props, slot) {
     const state = reactive({
       info: {},
       img: "",
@@ -141,7 +161,7 @@ export default defineComponent({
         case 3:
           state = {
             color: "#e98c40",
-            text: "待出库",
+            text: "待出仓",
           };
           break;
         case 4:
@@ -200,6 +220,9 @@ export default defineComponent({
         state.info = JSON.parse(JSON.stringify(res.data));
       });
     };
+    const unshowBoxDialog = () => {
+      slot.emit("unshowBoxDialog");
+    };
     return {
       ...toRefs(state),
       positionInfo,
@@ -209,13 +232,32 @@ export default defineComponent({
       changeDebit,
       handCansel,
       findDetail,
+      unshowBoxDialog,
     };
   },
 });
 </script>
 <style lang="less" scoped>
+:deep(.ant-form-item-label) {
+  width: 100px;
+}
+:deep(.ant-btn[disabled], .ant-btn[disabled]:hover, .ant-btn[disabled]:focus, .ant-btn[disabled]:active) {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+:deep(.ant-card-body) {
+  border: none;
+  &:hover {
+    border: 1px solid #3a9beb;
+    box-shadow: 0px 0px 16px 0px rgba(0, 102, 245, 0.5),
+      0px 0px 12px 0px rgba(51, 153, 255, 0.5);
+  }
+}
+:deep(.ant-btn-background-ghost) {
+  border: 1px solid #fff;
+}
 .top {
-  border-bottom: 1px solid #4280c4;
+  border-bottom: 1px solid #0e518f;
 }
 .row {
   .title {
