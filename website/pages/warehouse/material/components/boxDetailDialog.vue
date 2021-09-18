@@ -27,6 +27,9 @@
                 class="flex flex-row items-center p-0 mr-3"
                 danger
               >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'delete'" />
+                </template>
                 删除
               </a-button>
             </a-popconfirm>
@@ -42,6 +45,9 @@
               danger
               @click="deleteBoxVisible = true"
             >
+              <template #icon>
+                <Icon class="align-baseline" :type="'delete'" />
+              </template>
               删除
             </a-button>
 
@@ -51,6 +57,9 @@
               class="mr-3"
               v-if="isEditBase"
               @click="isEditBase = false"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'edit'" /> </template
               >编辑</a-button
             >
             <a-button
@@ -59,6 +68,9 @@
               class="flex flex-row items-center p-0 mr-3"
               htmlType="submit"
               v-if="!isEditBase"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
             >
           </template>
@@ -90,6 +102,9 @@
                 class="flex flex-row items-center p-0 mr-3"
                 danger
               >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'delete'" />
+                </template>
                 删除
               </a-button>
             </a-popconfirm>
@@ -105,6 +120,9 @@
               danger
               @click="deleteBoxVisible = true"
             >
+              <template #icon>
+                <Icon class="align-baseline" :type="'delete'" />
+              </template>
               删除
             </a-button>
             <a-button
@@ -113,6 +131,9 @@
               class="mr-3"
               v-if="isEditOther"
               @click="isEditOther = false"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'edit'" /> </template
               >编辑</a-button
             >
             <a-button
@@ -121,6 +142,9 @@
               class="mr-3"
               htmlType="submit"
               v-if="!isEditOther"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
             >
           </template>
@@ -165,7 +189,9 @@
                 class="flex flex-row items-center p-0 mr-3"
                 danger
               >
-                删除
+                <template #icon>
+                  <Icon class="align-baseline" :type="'delete'" /> </template
+                >删除
               </a-button>
             </a-popconfirm>
             <a-button
@@ -180,7 +206,9 @@
               danger
               @click="deleteBoxVisible = true"
             >
-              删除
+              <template #icon>
+                <Icon class="align-baseline" :type="'delete'" /> </template
+              >删除
             </a-button>
             <a-button
               type="primary"
@@ -188,6 +216,9 @@
               class="mr-3"
               v-if="isEditInit"
               @click="isEditInit = false"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'edit'" /> </template
               >编辑</a-button
             >
             <a-button
@@ -196,6 +227,9 @@
               class="mr-3"
               v-if="!isEditInit"
               @click="addBoxMaterial"
+            >
+              <template #icon>
+                <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
             >
           </div>
@@ -355,7 +389,6 @@ export default defineComponent({
         key: "departmentType",
         type: "select",
         span: 12,
-        labelSpan: 3,
         options: [
           {
             label: "急救/重症",
@@ -427,7 +460,7 @@ export default defineComponent({
         key: "rackNumber",
         type: "select",
         span: 8,
-        labelSpan: 7,
+        labelSpan: 9,
         options: [
           {
             label: "1号货架",
@@ -457,6 +490,7 @@ export default defineComponent({
         key: "rackPosition",
         type: "select",
         span: 4,
+        labelSpan: 3,
         options: [
           {
             label: "未知",
@@ -487,7 +521,6 @@ export default defineComponent({
         key: "size",
         type: "select",
         span: 12,
-        labelSpan: 3,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -513,7 +546,6 @@ export default defineComponent({
         key: "unit",
         required: true,
         span: 12,
-        labelSpan: 5,
       },
       {
         label: "物资图片",
@@ -535,7 +567,6 @@ export default defineComponent({
         key: "weight",
         required: false,
         span: 12,
-        labelSpan: 4,
       },
       {
         label: "备注",
@@ -655,7 +686,7 @@ export default defineComponent({
         case 3:
           state = {
             color: "#e98c40",
-            text: "待出库",
+            text: "待出仓",
           };
           break;
         case 4:
@@ -753,6 +784,9 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
+:deep(.ant-form-item-label) {
+  width: 100px;
+}
 .box {
   width: 100%;
   height: 360px;

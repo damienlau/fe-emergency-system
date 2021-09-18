@@ -9,7 +9,7 @@ import MeterialList from "./components/meterial.vue";
 import { Modal } from "components";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import classes from "./rackbox.module.less"
+import classes from "./rackbox.module.less";
 
 export default defineComponent({
   setup() {
@@ -25,24 +25,24 @@ export default defineComponent({
     const store = useStore();
 
     const params = ref({
-      boxName: '',
-      rackNumber: ''
-    })
+      boxName: "",
+      rackNumber: "",
+    });
 
     // 箱子详情弹窗标题
-    const boxDetailDialogTitle = ref('')
+    const boxDetailDialogTitle = ref("");
 
     // 箱子id
-    const boxId = ref('')
+    const boxId = ref("");
 
     // 箱编码
-    const boxCode = ref('')
+    const boxCode = ref("");
 
     // 物资编号
-    const materialRemainNumber = ref('')
+    const materialRemainNumber = ref("");
 
     // 显示箱子详情弹窗
-    const boxDetailVisible = ref(false)
+    const boxDetailVisible = ref(false);
 
     const formData = ref({});
 
@@ -50,59 +50,58 @@ export default defineComponent({
       boxInStockNum: 0,
       boxTotalNum: 0,
       materialInStockNum: 0,
-      materialTotalNum: 0
-    })
-
+      materialTotalNum: 0,
+    });
 
     const handleSearch = (keyword: any) => {
-      params.value.boxName = keyword.boxName
-      initBoxData()
+      params.value.boxName = keyword.boxName;
+      initBoxData();
     };
 
     const inStockNumFilter = (stockNum: string) => {
-      return stockNum && stockNum.split('/')[0] || 0
+      return (stockNum && stockNum.split("/")[0]) || 0;
     };
 
     const totalStockNumFilter = (stockNum: string) => {
-      return stockNum && stockNum.split('/')[1] || 0
-    }
+      return (stockNum && stockNum.split("/")[1]) || 0;
+    };
 
     const getBoxDetail = (box: any) => {
-      console.log('getBoxDetail', box)
+      console.log("getBoxDetail", box);
       const num =
         "(" + box.materialRemainNumber + "/" + box.materialTotalNumber + ")";
-      boxDetailVisible.value = true
-      boxId.value = box.id
-      boxCode.value = box.boxCode
-      materialRemainNumber.value = box.materialRemainNumber
-      boxDetailDialogTitle.value = box.boxName + num
-    }
+      boxDetailVisible.value = true;
+      boxId.value = box.id;
+      boxCode.value = box.boxCode;
+      materialRemainNumber.value = box.materialRemainNumber;
+      boxDetailDialogTitle.value = box.boxName + num;
+    };
 
     const closeBoxDetailDialog = () => {
-      boxDetailVisible.value = false
-      initBoxData()
-      initBoxCountData()
-    }
- 
+      boxDetailVisible.value = false;
+      initBoxData();
+      initBoxCountData();
+    };
+
     // 初始化箱子数据
     const initBoxData = () => {
       findBoxData(params.value as any).then((response) => {
         boxColumn.value = response.content;
       });
-    }
+    };
 
     // 初始化箱子数量和物资数量
     const initBoxCountData = () => {
-      const rackNumber = params.value.rackNumber
+      const rackNumber = params.value.rackNumber;
       findBoxCountData(Number(rackNumber)).then((response) => {
-        rackCount.value = response
+        rackCount.value = response;
       });
-    }
+    };
 
     onMounted(() => {
-      params.value.rackNumber = route.params.id as string
-      initBoxData()
-      initBoxCountData()
+      params.value.rackNumber = route.params.id as string;
+      initBoxData();
+      initBoxCountData();
     });
 
     return () => (
@@ -124,17 +123,25 @@ export default defineComponent({
             default: () => (
               <Space size={32}>
                 <p class="text-white text-opacity-70">
-                  箱子在库量：<span class="text-24 text-white">{ rackCount.value.boxInStockNum }</span>/{ rackCount.value.boxTotalNum }
+                  箱子在库量：
+                  <span class="text-24 text-white">
+                    {rackCount.value.boxInStockNum}
+                  </span>
+                  /{rackCount.value.boxTotalNum}
                 </p>
                 <p class="text-white text-opacity-70">
-                  物资在库量：<span class="text-24 text-white">{ rackCount.value.materialInStockNum }</span>/{ rackCount.value.materialTotalNum }
+                  物资在库量：
+                  <span class="text-24 text-white">
+                    {rackCount.value.materialInStockNum}
+                  </span>
+                  /{rackCount.value.materialTotalNum}
                 </p>
               </Space>
             ),
             extra: () => <Button type="primary">整架借出</Button>,
           }}
         </PageHeader>
-        <div class={classes['box-content']}>
+        <div class={classes["box-content"]}>
           {boxColumn.value.map((columns) => {
             return <Box columns={columns} onClick={getBoxDetail} />;
           })}
@@ -144,7 +151,7 @@ export default defineComponent({
           title={boxDetailDialogTitle.value}
           size="bold"
           key="box"
-          zIndex="1"
+          // zIndex={1}
         >
           {{
             default: () => (
@@ -158,9 +165,12 @@ export default defineComponent({
             ),
             extra: () => (
               <div>
-              <MeterialList racknumber={route.params.id} boxcode={boxCode.value}></MeterialList>
-            </div>
-            )
+                <MeterialList
+                  racknumber={route.params.id}
+                  boxcode={boxCode.value}
+                ></MeterialList>
+              </div>
+            ),
           }}
         </Modal>
       </section>

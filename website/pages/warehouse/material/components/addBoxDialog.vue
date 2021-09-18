@@ -8,7 +8,9 @@
           @submit="handleSubmitBase"
         >
           <template #button>
-            <a-button type="primary" ghost class="mr-3" htmlType="submit"
+            <a-button type="primary" ghost class="mr-3" htmlType="submit">
+              <template #icon>
+                <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
             >
           </template>
@@ -21,7 +23,9 @@
           @submit="handleSubmitOther"
         >
           <template #button>
-            <a-button type="primary" ghost class="mr-3" htmlType="submit"
+            <a-button type="primary" ghost class="mr-3" htmlType="submit">
+              <template #icon>
+                <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
             >
           </template>
@@ -48,7 +52,9 @@
         class="flex flex-row justify-center align-middle"
         v-if="activeKey === 'init'"
       >
-        <a-button type="primary" ghost class="mr-3" @click="addBoxMaterial"
+        <a-button type="primary" ghost class="mr-3" @click="addBoxMaterial">
+          <template #icon>
+            <Icon class="align-baseline" :type="'save'" /> </template
           >保存</a-button
         >
       </div>
@@ -73,9 +79,17 @@ import Form from "components/Form";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import AddBoxTransfer from "./addBoxMeterialTransferDialog.vue";
 import SmallMeterial from "./smallMeterial.vue";
+import { Icon } from "components";
 export default defineComponent({
   name: "addBoxDialog",
-  components: { Form, PlusOutlined, AddBoxTransfer, SmallMeterial, Modal },
+  components: {
+    Form,
+    PlusOutlined,
+    AddBoxTransfer,
+    SmallMeterial,
+    Modal,
+    Icon,
+  },
   emits: ["close"],
   setup(props, slot) {
     const state = reactive({
@@ -106,7 +120,6 @@ export default defineComponent({
         key: "departmentType",
         type: "select",
         span: 12,
-        labelSpan: 3,
         options: [
           {
             label: "急救/重症",
@@ -178,7 +191,7 @@ export default defineComponent({
         key: "rackNumber",
         type: "select",
         span: 8,
-        labelSpan: 7,
+        labelSpan: 9,
         options: [
           {
             label: "1号货架",
@@ -208,6 +221,7 @@ export default defineComponent({
         key: "rackPosition",
         type: "select",
         span: 4,
+        labelSpan: 3,
         options: [
           {
             label: "未知",
@@ -238,7 +252,6 @@ export default defineComponent({
         key: "size",
         type: "select",
         span: 12,
-        labelSpan: 3,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -264,7 +277,6 @@ export default defineComponent({
         key: "unit",
         required: true,
         span: 12,
-        labelSpan: 5,
       },
       {
         label: "物资图片",
@@ -286,7 +298,6 @@ export default defineComponent({
         key: "weight",
         required: false,
         span: 12,
-        labelSpan: 4,
       },
       {
         label: "备注",
@@ -379,5 +390,8 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+:deep(.ant-form-item-label) {
+  width: 100px;
 }
 </style>

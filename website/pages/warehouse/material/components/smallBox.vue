@@ -134,7 +134,7 @@ export default defineComponent({
         case 3:
           state = {
             color: "#e98c40",
-            text: "待出库",
+            text: "待出仓",
           };
           break;
         case 4:

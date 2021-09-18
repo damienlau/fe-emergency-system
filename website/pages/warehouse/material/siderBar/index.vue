@@ -29,9 +29,14 @@
             :meterialInfo="item"
             class="BoxInfo mt-3"
             @freshBoxList="getFirstBoxData"
+            @unshowMeterialDialog="unshowMeterialDialog"
             @click="showMeterialDetailDialog(item)"
           ></MeterialInfo>
-          <div style="height: 120px; width: 240px" v-if="materialsList">
+          <div
+            class="mt-3"
+            style="height: 120px; width: 240px"
+            v-if="materialsList"
+          >
             <a-button
               type="link"
               v-if="paginationMaterials.total > materialsList.length"
@@ -84,6 +89,7 @@
             :boxInfo="item"
             class="BoxInfo mt-3"
             @click="showBoxDetailDialog(item)"
+            @unshowBoxDialog="unshowBoxDialog"
           ></BoxInfo>
           <div style="height: 120px; width: 240px">
             <a-button
@@ -293,6 +299,12 @@ export default defineComponent({
         getMaterialsData();
       }
     };
+    const unshowMeterialDialog = () => {
+      state.meterialDetailVisible = false;
+    };
+    const unshowBoxDialog = () => {
+      state.boxDetailVisible = false;
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -311,6 +323,8 @@ export default defineComponent({
       handAddMoreBox,
       getFirstBoxData,
       getFirstMaterialsData,
+      unshowMeterialDialog,
+      unshowBoxDialog,
     };
   },
 });
@@ -319,7 +333,7 @@ export default defineComponent({
 .ant-tabs-top-content {
   height: 76vh;
 }
-/deep/ .ant-tabs-content {
+:deep(.ant-tabs-content) {
   height: 74vh;
 }
 .box {

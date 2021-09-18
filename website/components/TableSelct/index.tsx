@@ -1,7 +1,6 @@
 // 组件- table上面的搜索框
 
 import { defineComponent, toRefs } from "vue";
-
 export default defineComponent({
   name: "TableSelct",
   props: {
@@ -49,7 +48,7 @@ export default defineComponent({
                           size="default"
                           placeholder={formItem.placeholder || ""}
                           onChange={handleSearch}
-                          style="width: 100%"
+                          style={{ width: formItem.width }}
                         >
                           {formItem.options &&
                             formItem.options.map((option) => {

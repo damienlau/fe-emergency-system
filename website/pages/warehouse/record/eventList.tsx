@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { TableSelct } from "components";
-
 export default defineComponent({
   setup() {
     const store = useStore();
@@ -79,6 +78,7 @@ export default defineComponent({
       {
         dataIndex: "outTime",
         key: "outTime",
+        width: "180px",
         slots: { title: "customTitle", customRender: "outTime" },
       },
       {
@@ -181,12 +181,12 @@ export default defineComponent({
     const rendEventExpandTable = (record) => {
       return (
         <a-table
+          class="eventRenderList"
           dataSource={record.eventExpandTableData}
           columns={maintainExpandTableColumn.value}
           pagination={false}
           align={"left"}
           size="small"
-          class="text-white"
           scroll={{ y: 500 }}
           rowKey={(record) => record.key}
         >
@@ -213,7 +213,9 @@ export default defineComponent({
             status == 1
               ? "color:orange"
               : status == 2
-              ? "color:red "
+              ? "color:red"
+              : status == 4
+              ? "color:grey"
               : "color:green"
           }
         >
@@ -223,6 +225,8 @@ export default defineComponent({
             ? "已出仓"
             : status == 3
             ? "已归还"
+            : status == 4
+            ? "已撤销"
             : "--"}
         </p>
       );
@@ -251,7 +255,7 @@ export default defineComponent({
           onSearch={handSearch}
         ></TableSelct>
         <a-table
-          class="text-white"
+          class="eventList"
           dataSource={tableData.value}
           columns={tableColumn.value}
           pagination={false}

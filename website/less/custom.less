@@ -1,0 +1,58 @@
+// 全屏图片时,图片居中
+.ant-image-preview-img-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+// 暂无数据图片居中
+
+.ant-empty-image {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+// 表格样式
+//隔行变色
+.ant-table-tbody .ant-table-row:nth-child(odd) {
+  background-color: rgba(6, 49, 93, 0.7) !important;
+}
+.ant-table-tbody .ant-table-row:nth-child(even) {
+  background: rgba(6, 49, 93, 0.3) !important;
+}
+// 表头
+.ant-table-thead > tr > th {
+  background-color: #042546;
+}
+.eventList {
+  .ant-table-tbody .ant-table-row {
+    background-color: #0b4070 !important;
+    border-bottom: 1px solid #0e518f !important;
+  }
+}
+.eventRenderList {
+  .ant-table-tbody .ant-table-row:nth-child(odd) {
+    background-color: rgba(6, 49, 93, 0.7) !important;
+  }
+  .ant-table-tbody .ant-table-row:nth-child(even) {
+    background: rgba(6, 49, 93, 0.3) !important;
+  }
+}
+// 给表格添加悬停样式和当前点击行添加选中样式
+.ant-table-row {
+  &:hover > td {
+    background-color: rgba(6, 49, 93, 1) !important;
+  }
+}
+.ant-table-tbody > tr > td {
+  border-bottom: none !important;
+}
+.ant-table-expanded-row {
+  background: #042546;
+}
+tr.ant-table-expanded-row,
+tr.ant-table-expanded-row:hover {
+  background: rgba(6, 49, 93, 0) !important;
+}

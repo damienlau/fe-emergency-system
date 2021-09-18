@@ -24,6 +24,9 @@
                 dataSource.status == 1 && dataSource.inBatchPendingStatus == 0
               "
             >
+              <template #icon>
+                <Icon class="align-baseline" :type="'delete'" />
+              </template>
               删除
             </a-button>
           </a-popconfirm>
@@ -34,6 +37,9 @@
             class="mr-3"
             v-if="isEditBase"
             @click="isEditBase = false"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'edit'" /> </template
             >编辑</a-button
           >
           <a-button
@@ -42,6 +48,9 @@
             class="flex flex-row items-center p-0 mr-3"
             htmlType="submit"
             v-if="!isEditBase"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'save'" /> </template
             >保存</a-button
           >
         </template>
@@ -71,6 +80,9 @@
                 dataSource.status == 1 && dataSource.inBatchPendingStatus == 0
               "
             >
+              <template #icon>
+                <Icon class="align-baseline" :type="'delete'" />
+              </template>
               删除
             </a-button>
           </a-popconfirm>
@@ -80,6 +92,9 @@
             class="mr-3"
             v-if="isEditOther"
             @click="isEditOther = false"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'edit'" /> </template
             >编辑</a-button
           >
           <a-button
@@ -88,6 +103,9 @@
             class="mr-3"
             htmlType="submit"
             v-if="!isEditOther"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'save'" /> </template
             >保存</a-button
           >
         </template>
@@ -101,6 +119,7 @@
 <script>
 import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import { Form } from "components";
+import { Icon } from "components";
 import {
   findSpecifiedMeterialData,
   updateSpecifiedMeterialData,
@@ -109,7 +128,7 @@ import {
 
 export default defineComponent({
   name: "meterialDetailDialog",
-  components: { Form },
+  components: { Form, Icon },
   props: {
     id: Number,
     meterialInfo: Object,
@@ -162,7 +181,6 @@ export default defineComponent({
         key: "brand",
         required: true,
         span: 12,
-        labelSpan: 4,
       },
       {
         label: "类型",
@@ -240,7 +258,6 @@ export default defineComponent({
         key: "productionBatch",
         required: true,
         span: 12,
-        labelSpan: 6,
       },
       {
         label: "厂家",
@@ -368,4 +385,8 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.ant-form-item-label) {
+  width: 100px;
+}
+</style>

@@ -114,23 +114,6 @@ export default defineComponent({
     const getmenusArr = ref([]);
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
-      var newdata = menus.value[0].data.concat(menus.value[1].data)
-      if (newdata.length == 0) {
-        message.error("暂无出仓物资")
-        return
-      }
-      AntModal.confirm({
-        class: "bg-navy-3 rounded pb-0 border border-primary",
-        title: `确定出仓？`,
-        content: `出仓符合清单和未符合清单的全部物资`,
-        centered: true,
-        onOk: () => {
-          getBoxOrMetaril();
-        }
-      })
-    }
-    //获取非法物资或者箱子
-    const getBoxOrMetaril = () => {
       var menusArr = [];
       menus.value[1].data.map((item) => {
         if (item.resourceType == 1) {
@@ -168,15 +151,14 @@ export default defineComponent({
           });
         }
       }
-      setTimeout(readInform ,1000)
-    }
-    
-    //整理正常物资跟仓库物资
-    const readInform = () => {
-      console.log('111')
+      console.log(getmenusArr.value)
+      console.log('123')
+      var savependingall = menus.value[0].data
+      console.log(savependingall)
+      console.log('456')
       var savependingall = menus.value[0].data.concat(getmenusArr.value)
       console.log(savependingall)
-
+      return
       var asavefilter = savependingall.filter((a) => {
         return (a.warehouseBoxInfo == null||undefined)
       })
@@ -203,20 +185,31 @@ export default defineComponent({
           outDetailList:item.outDetailList
         }
       })
-      var newdatacommit = asavependingall.concat(bsavependingall)
-      console.log(newdatacommit)
-      store
-      .dispatch(
-        "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
-        newdatacommit                 
-      )
-      .then(() => {
-        finishedDelivery.value.data =[]
-        visible.value = !visible.value;
-        //handleClickTabPane();
-      });   
+      var newdata = asavependingall.concat(bsavependingall)
+      console.log(newdata)
+      if (newdata.length == 0) {
+        message.error("暂无出仓物资")
+        return
+      }
+      AntModal.confirm({
+        class: "bg-navy-3 rounded pb-0 border border-primary",
+        title: `确定出仓？`,
+        content: `出仓符合清单和未符合清单的全部物资`,
+        centered: true,
+        onOk: () => {
+          store
+            .dispatch(
+              "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+              newdata                 
+            )
+            .then(() => {
+              finishedDelivery.value.data =[]
+              visible.value = !visible.value;
+              //handleClickTabPane();
+            });                
+        }
+      })
     }
-
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
       console.log(menus.value[2].data)
