@@ -45,6 +45,9 @@ export default defineComponent({
     // 显示箱子详情弹窗
     const boxDetailVisible = ref(false);
 
+    // 箱子状态
+    const boxStatus = ref(0)
+
     const formData = ref({});
 
     const rackCount = ref({
@@ -76,6 +79,7 @@ export default defineComponent({
       boxCode.value = box.boxCode;
       materialRemainNumber.value = box.materialRemainNumber;
       boxDetailDialogTitle.value = box.boxName + num;
+      boxStatus.value = box.status
     };
 
     const closeBoxDetailDialog = () => {
@@ -158,6 +162,7 @@ export default defineComponent({
         <Modal
           v-model={[boxDetailVisible.value, "visible"]}
           title={boxDetailDialogTitle.value}
+          status={boxStatus.value}
           size="bold"
           key="box"
           // zIndex={1}

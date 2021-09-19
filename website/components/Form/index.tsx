@@ -156,6 +156,7 @@ export default defineComponent({
                 });
               }}
               listType="picture-card"
+              accept="image/*"
               multiple={true}
             >
               <span>上传图片</span>

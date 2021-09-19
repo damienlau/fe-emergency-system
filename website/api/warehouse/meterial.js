@@ -51,7 +51,7 @@ export function updateSpecifiedMeterialData(params) {
 
 // 查询箱子中的全部物资
 export function findCriteriaInbox(params) {
-  return request.get("/page/criteria/inbox", { params })
+  return request.get("/material/info/page/criteria/inbox", { params })
 }
 
 // 全部仓库物资信息-分页-复杂条件
