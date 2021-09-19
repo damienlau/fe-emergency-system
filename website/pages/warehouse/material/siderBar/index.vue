@@ -218,7 +218,7 @@ export default defineComponent({
       findCriteriaPageData(params).then((res) => {
         state.materialsList = state.materialsList.concat(res.data.content);
         state.paginationMaterials.total = res.data.totalNum;
-        state.paginationMaterials.current = res.data.current.currentPage;
+        state.paginationMaterials.current = res.data.currentPage;
       });
     };
     const getBoxData = () => {
@@ -235,7 +235,7 @@ export default defineComponent({
       findBoxPageData(params).then((res) => {
         state.boxList = state.boxList.concat(res.data.content);
         state.paginationBox.total = res.data.totalNum;
-        state.paginationBox.current = res.data.current.currentPage;
+        state.paginationBox.current = res.data.currentPage;
       });
     };
     const tabClick = (tabs) => {
