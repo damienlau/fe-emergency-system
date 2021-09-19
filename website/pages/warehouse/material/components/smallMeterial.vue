@@ -11,7 +11,7 @@
         <a-tag
           size="mini"
           :color="info.status && returnStatus(info.status).color"
-          style="height: 18px;line-height: 18px;border-radius: 9px;font-size: 12px"
+          style="margin-left: 8px;height: 18px;line-height: 18px;border-radius: 9px;font-size: 12px"
           >{{ info.status && returnStatus(info.status).text }}</a-tag
         >
       </div>
@@ -218,23 +218,6 @@ export default defineComponent({
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-}
-.meterial {
-  &-card {
-    height: 137px;
-    background: #144071;
-
-    /deep/ .ant-card-head-wrapper {
-
-      .ant-card-head-title {
-        padding: 0;
-      }
-
-      .ant-card-extra {
-        padding: 0;
-      }
-    }
   }
 }
 .meterial {

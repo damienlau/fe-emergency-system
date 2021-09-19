@@ -152,7 +152,7 @@
         :key="'init'"
         :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
       >
-        <div class="box">
+        <div class="box" :style="{ height: boxHeight + 'px' }">
           <div class="addBox" @click="showAddBoxTransfer" v-if="!isEditInit">
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
@@ -342,6 +342,10 @@ export default defineComponent({
     boxCode: String,
     materialRemainNumber: Number,
     status: Number | undefined,
+    boxHeight: {
+      type: Number,
+      default: 320
+    }
   },
   setup(props, ctx) {
     const state = reactive({
@@ -798,6 +802,8 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 8px;
+  align-content: flex-start;
+
   .addBox {
     // width: 335px;
     height: 137px;
@@ -817,7 +823,6 @@ export default defineComponent({
 }
 .content {
   width: 100%;
-  height: 100%;
   position: relative;
 
   /deep/ .ant-tabs-content {
@@ -837,7 +842,6 @@ export default defineComponent({
     .ant-tabs-tabpane {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
   }
 

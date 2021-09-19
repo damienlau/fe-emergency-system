@@ -173,6 +173,7 @@ export default defineComponent({
                 id={boxId.value}
                 boxCode={boxCode.value}
                 materialRemainNumber={materialRemainNumber.value}
+                boxHeight={500}
                 status={1}
                 onClose={closeBoxDetailDialog}
               ></BoxDetailDialog>
