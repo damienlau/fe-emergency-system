@@ -176,14 +176,15 @@ export default defineComponent({
           });
         }
       }
-      console.log(getmenusArr.value)
-      console.log('123')
-      var savependingall = menus.value[0].data
-      console.log(savependingall)
-      console.log('456')
+      setTimeout(readInform ,1000)     
+    }
+
+    //整理正常物资跟仓库物资
+    const readInform = () => {
+      console.log('111')
       var savependingall = menus.value[0].data.concat(getmenusArr.value)
       console.log(savependingall)
-      return
+
       var asavefilter = savependingall.filter((a) => {
         return (a.warehouseBoxInfo == null||undefined)
       })
@@ -210,30 +211,18 @@ export default defineComponent({
           outDetailList:item.outDetailList
         }
       })
-      var newdata = asavependingall.concat(bsavependingall)
-      console.log(newdata)
-      if (newdata.length == 0) {
-        message.error("暂无出仓物资")
-        return
-      }
-      AntModal.confirm({
-        class: "bg-navy-3 rounded pb-0 border border-primary",
-        title: `确定出仓？`,
-        content: `出仓符合清单和未符合清单的全部物资`,
-        centered: true,
-        onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
-              newdata                 
-            )
-            .then(() => {
-              finishedDelivery.value.data =[]
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });                
-        }
-      })
+      var newdatacommit = asavependingall.concat(bsavependingall)
+      console.log(newdatacommit)
+      store
+      .dispatch(
+        "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+        newdatacommit                 
+      )
+      .then(() => {
+        finishedDelivery.value.data =[]
+        visible.value = !visible.value;
+        //handleClickTabPane();
+      });   
     }
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
@@ -242,13 +231,27 @@ export default defineComponent({
       cardData.value = [];
       switch (activeKey) {
         case "1":
-          cardData.value = menus.value[0].data;
+          if (menus.value[0].data) {
+            cardData.value = menus.value[0].data;
+          } else {
+            cardData.value = [];
+          }
           break;
         case "2":
-          cardData.value = menus.value[1].data;
+          if (menus.value[1].data) {
+            cardData.value = menus.value[1].data;
+          } else {
+            cardData.value = [];
+          }
+          
           break;
         case "3":
-          cardData.value = menus.value[2].data;
+          if (menus.value[2].data) {
+            cardData.value = menus.value[2].data;
+          } else {
+            cardData.value = [];
+          }
+          
           break;
         default:
           break;
@@ -828,8 +831,8 @@ export default defineComponent({
                                 >
                                   {
                                      (listItem.materialInfo
-                                      ? departType[listItem.materialInfo.departmentType] :
-                                      departType[listItem.departmentType])
+                                      ? departType.value[listItem.materialInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
                                    }
                                 </div>
                                 <div class={listItem.resourceType == 2?"":"hidden"}
@@ -838,8 +841,8 @@ export default defineComponent({
                                 >
                                   {
                                     (listItem.warehouseBoxInfo
-                                      ? departType[listItem.warehouseBoxInfo.departmentType] :
-                                      departType[listItem.departmentType])
+                                      ? departType.value[listItem.warehouseBoxInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
                                   }
                                 </div>
                               </p>
@@ -867,7 +870,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:listItem.boxName)
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:listItem.boxCode)
                                   }
                                 </div>
                               </p>
