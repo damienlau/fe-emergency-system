@@ -18,7 +18,7 @@ export default defineComponent({
         <a-tabs
           v-model={menuActiveKey.value}
           animated={false}
-          class="dark:bg-navy-4"
+          class="dark:bg-navy-4 record"
         >
           <a-tab-pane key={"event"} tab="事件记录">
             <EventList></EventList>

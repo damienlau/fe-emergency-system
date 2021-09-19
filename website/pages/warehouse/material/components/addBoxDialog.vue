@@ -319,25 +319,25 @@ export default defineComponent({
     const handleSubmitBase = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        if (res.data) {
-          slot.emit("close");
-        }
+        // if (res.data) {
+        //   slot.emit("close");
+        // }
       });
     };
     const handleSubmitOther = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        if (res.data) {
-          slot.emit("close");
-        }
+        // if (res.data) {
+        //   slot.emit("close");
+        // }
       });
     };
 
     const handleSubmitInit = () => {
       addBoxData(state.boxInfo).then((res) => {
-        if (res.data) {
-          slot.emit("close");
-        }
+        // if (res.data) {
+        //   slot.emit("close");
+        // }
       });
     };
     const showAddBoxTransfer = () => {
@@ -360,9 +360,9 @@ export default defineComponent({
         ...state.formDataOter,
       };
       addBoxData(params).then((res) => {
-        if (res.data) {
-          slot.emit("close");
-        }
+        // if (res.data) {
+        //   slot.emit("close");
+        // }
       });
     };
     return {
