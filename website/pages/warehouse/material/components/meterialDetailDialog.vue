@@ -299,7 +299,7 @@ export default defineComponent({
         label: "有无质保",
         key: "isExpiration",
         type: "select",
-        span: 24,
+        span: 12,
         options: [
           {
             label: "无保质期",
@@ -315,6 +315,7 @@ export default defineComponent({
       {
         label: "单位",
         key: "unit",
+        span: 12,
         required: false,
       },
       {
