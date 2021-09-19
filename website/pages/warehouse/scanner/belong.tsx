@@ -34,23 +34,39 @@ export default defineComponent({
     //扫描归仓模态框是否可见
     const visible = ref(false);
     //类型
-    const departType = ref([
-      { "1": "急救、重症" },
-      { "2": "门诊" },
-      { "3": "后勤" },
-      { "4": "指挥" },
-      { "5": "重症" },
-      { "6": "超声" },
-      { "7": "清创" },
-      { "8": "留观" },
-      { "9": "药房" },
-      { "10": "耗材" },
-      { "11": "手术" },
-      { "12": "防疫/隔离" },
-      { "13": "消毒" },
-      { "14": "住院" },
-      { "15": "检验" },
-    ])
+    const departType = ref(
+      {
+        1: "急救、重症",
+        2: "门诊",
+        3: "后勤",
+        4: "指挥",
+        5: "重症",
+        6: "超声",
+        7: "清创",
+        8: "留观",
+        9: "药房",
+        10: "耗材",
+        11: "手术",
+        12: "防疫/隔离",
+        13: "消毒",
+        14: "住院",
+        15: "检验",
+      })
+    //货架位置
+    const departRack = ref(
+      { 0: "未知" ,
+       1: "一层（下）" ,
+       2: "二层（中）" ,
+       3: "三层（上）" ,
+       4: "四层（顶）" }
+    )
+    //尺寸
+    const departSize = ref(
+      { 1: "一箱一桌(800x600x600)" ,
+       2: "一箱两柜(1200x800x800)" ,
+       3: "一箱一柜(1200x800x400)" ,
+       4: " 其它箱子" }
+    )
     //归仓列表
     const menus = ref([
       {
@@ -72,6 +88,8 @@ export default defineComponent({
         data: [],
       },
     ]);
+    //归仓信息
+    const goBackData = ref({});
     //扫描归仓模态框数据初始化
     const initPendingData = () => {
       menus.value[0].data = []
@@ -104,9 +122,82 @@ export default defineComponent({
     const handleSubmit = () => {
       visible.value = !visible.value;
     };
+    //获取借货单outFrom
+    const getOutFrom = ref();
+    //非法物资数据缓存
+    const getmenusArr = ref([]);
     //监听模态框归仓事件
     const handlePendingSubmit = () => {
-      var savependingall = menus.value[0].data.concat(menus.value[1].data);
+      var newdata = menus.value[0].data.concat(menus.value[1].data)
+      if (newdata.length == 0) {
+        message.error("暂无出仓物资")
+        return
+      }
+      var firready = '';
+      if (menus.value[0].data.length != 0 && menus.value[1].data.length != 0) {
+        firready = menus.value[0].label + '和' + menus.value[1].label;
+      }else if (menus.value[0].data.length != 0) {
+        firready = menus.value[0].label;
+      } else if(menus.value[1].data.length != 0){
+        firready = menus.value[1].label;
+      }
+      AntModal.confirm({
+        class: "bg-navy-3 rounded pb-0 border border-primary",
+        title: `确定归仓？`,
+        content: `归仓${firready}的全部物资`,
+        centered: true,
+        onOk: () => {
+          getBoxOrMetaril();
+        }
+      })
+    }
+    //获取非法物资或者箱子
+    const getBoxOrMetaril = () => {
+      var menusArr = [];
+      menus.value[1].data.map((item) => {
+        if (item.resourceType == 1) {
+          menusArr.push({
+            outFormId: item.outFormId,
+            resourceType: item.resourceType,
+            materialInfo: {
+              id:item.id
+            }
+          })
+        } else if (item.resourceType == 2) {
+          menusArr.push({
+            outFormId: item.outFormId,
+            resourceType: item.resourceType,
+            warehouseBoxInfo: {
+              id:item.id
+            },
+          })
+        }        
+      })
+      if (menusArr.length != 0) {
+        for (var na = 0; na < menusArr.length; na++){
+          store
+            .dispatch(
+              "warehouseModule/pendingModule/findoutformIdData",
+              menusArr[na]                
+            )
+            .then((res) => {
+              console.log(res)
+              if (res) {
+                getmenusArr.value.push(res);
+                console.log(getmenusArr.value)
+                menusArr = [];
+              }
+          });
+        }
+      }
+      setTimeout(readInform ,1000)     
+    }
+    //整理正常物资跟仓库物资
+    const readInform = () => {
+      console.log('111')
+      var savependingall = menus.value[0].data.concat(getmenusArr.value)
+      console.log(savependingall)
+
       var asavefilter = savependingall.filter((a) => {
         return (a.warehouseBoxInfo == null||undefined)
       })
@@ -133,43 +224,34 @@ export default defineComponent({
           outDetailList:item.outDetailList
         }
       })
-      var newdata = asavependingall.concat(bsavependingall)
-      if (newdata.length == 0) {
-        message.error("暂无归仓物资")
-        return
-      }
-      AntModal.confirm({
-        class: "bg-navy-3 rounded pb-0 border border-primary",
-        title: `确定归仓？`,
-        content: `归仓符合清单和未符合清单的全部物资`,
-        centered: true,
-        onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/returnSpecifiedShortcutList",
-              newdata                 
-            )
-            .then(() => {
-              finishedDelivery.value.data =[]
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });                
-        }
-      })
+      var newdatacommit = asavependingall.concat(bsavependingall)
+      goBackData.value.data = newdatacommit;
+      console.log(newdatacommit)
+      store
+      .dispatch(
+        "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+        goBackData.value                 
+      )
+      .then(() => {
+        finishedDelivery.value.data =[]
+        visible.value = !visible.value;
+        //handleClickTabPane();
+      });   
     }
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
+      console.log(menus.value[2].data)
       menuActiveKey.value = activeKey;
       cardData.value = [];
       switch (activeKey) {
         case "1":
-          cardData.value = menus.value[0].data;
+            cardData.value = menus.value[0].data;
           break;
         case "2":
-          cardData.value = menus.value[1].data;
+            cardData.value = menus.value[1].data;
           break;
         case "3":
-          cardData.value = menus.value[2].data;
+            cardData.value = menus.value[2].data;
           break;
         default:
           break;
@@ -212,20 +294,22 @@ export default defineComponent({
     }
     //获取借货单明细
     const DetailSpecifiedShortcutList = (id) => {
+      var outFromStatus = true;
       store
         .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:2 })
         .then((res) => {
           if (res && res.length != 0) {
-            var pendingdata;
+            if (outFromStatus == true) {
+              getOutFrom.value = id || '';
+              outFromStatus = false;
+            } 
             res.map((item) => {              
-              pendingdata.push(Object.assign(item,{statusright:0})) 
+              pengdingDelivery.value.data.push(Object.assign(item,{statusright:0})) 
             })
-            console.log(pendingdata)
-            console.log(pengdingDelivery.value.data)
-            pengdingDelivery.value.data.push(pendingdata)
-          } else {
-            message.success('没有清单')
-          }
+          console.log(pengdingDelivery.value.data)
+        } else {
+          message.success('没有清单')
+        }
       })
     }
     //全部仓库物资
@@ -236,8 +320,9 @@ export default defineComponent({
           if (res.length == 0 || typeof (res) == undefined) {
             message.error("没有找到该编号对应的箱子或物资");
           } else {
-            Object.assign(res,{statusright:1})
-            finishedDelivery.value.data.unshift(res);
+            Object.assign(res[0],{statusright:1},{resourceType:1},{outFormId:getOutFrom.value})
+            finishedDelivery.value.data.unshift(res[0]);
+            console.log(finishedDelivery.value.data)
             console.log('在全部物资查找到该物资')
           }  
       })
@@ -245,34 +330,39 @@ export default defineComponent({
     //轮询比对数据
     const finddataready = (ready) => {
       var findready = ready;
+      var biduistatus = true;
       pengdingDelivery.value.data.forEach((value, index, array) => {
         let addDeliveryData = array[index];
         if (array[index].warehouseBoxInfo &&
           array[index].warehouseBoxInfo.boxCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
+          biduistatus = false;
           console.log('待归仓箱子对比成功')
         } else if (array[index].materialInfo &&
           array[index].materialInfo.materialCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
+          biduistatus = false;
           console.log('待归仓物资对比成功')
         } else {
+          biduistatus = true;
           console.log('左侧待出仓没有找到对应的编号物资或箱子')
           return
         }
       });
+      if(!biduistatus){return}
+      console.log('继续扫描')
       store
         .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })
         .then((res) => {
           if (res.length==0||typeof(res)==undefined) {
             outDetailAll(findready);
           } else {
-            res.statusright = 1;
-            //Object.assign(res,{statusright:1})
-            finishedDelivery.value.data.unshift(res);
+            Object.assign(res[0],{statusright:1},{resourceType:2},{outFormId:getOutFrom.value})
+            finishedDelivery.value.data.unshift(res[0]);
             console.log('在全部仓库查找到该箱子')
-          }                            
+          }                               
         })
 
     }
@@ -392,7 +482,8 @@ export default defineComponent({
     };
     // 监听模态框表单提交事件
     const handleSubmitForm = (formData) => {
-      handlePendingSubmit(formData);
+      goBackData.value = formData;
+      handlePendingSubmit();
     };
     onMounted(() => {
       //获取待归仓物资 
@@ -405,9 +496,9 @@ export default defineComponent({
 
     return () => (
       <>
-        {/* 归仓扫描 */}
+        {/* 出仓扫描 */}
         <div class="h-full flex">
-          {/* 归仓扫描-待归仓物资 */}
+          {/* 出仓扫描-待出仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1">
@@ -427,8 +518,8 @@ export default defineComponent({
                     {pengdingDelivery.value.data.length == 0 ? (
                       <div class="m-auto">
                         <a-empty
-                          description="当前待归仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          description="当前待出仓扫描，无'申请清单'"
+                          image={`assets/icon_empty_scanner.png`}
                         ></a-empty>
                       </div>
                     ) : (
@@ -439,13 +530,13 @@ export default defineComponent({
                               <div class="flex items-center justify-center">
                                 <span class="text-20">
                                 {
-                                  listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.boxName
+                                  listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:''):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:'')
                                 }
                                 </span>
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo.materialRemainNumber?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
                                     </span>
                                   ):''
                                 }                                
@@ -453,14 +544,14 @@ export default defineComponent({
                             </div>
                             <div class="flex py-16 px-16">
                               <div class="h-modal-lightermin w-modal-lightermin ">
-                                {listItem.resourceType == 1 && listItem.materialInfo.materialImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                                {listItem.resourceType == 1 && listItem.materialInfo.materialImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={`assets/icon_empty_data.png`}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -479,7 +570,7 @@ export default defineComponent({
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`/website/assets/icon_empty_data.png`}
+                                      image={`assets/icon_empty_data.png`}
                                     ></a-empty>
                                   </div>
                                 ) : (
@@ -488,7 +579,7 @@ export default defineComponent({
                                       <>
                                         <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:''}
                                           </span>
                                         </div>
                                       </>
@@ -506,13 +597,13 @@ export default defineComponent({
               </a-layout-content>
             </a-layout>
           </div>
-          {/* 归仓扫描-图标箭头 */}
+          {/* 出仓扫描-图标箭头 */}
           <Icon
             style="font-size:76px;color:#0e518f;width:140px;"
             class="flex items-center justify-center"
             type="arrow-right-filling"
           />
-          {/* 归仓归描-已归仓物资 */}
+          {/* 出仓归描-已归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
@@ -540,8 +631,8 @@ export default defineComponent({
                     {finishedDelivery.value.data.length == 0 ? (
                       <div class="m-auto">
                         <a-empty
-                          description="当前已归仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          description="当前已出仓扫描，无'申请清单'"
+                          image={`assets/icon_empty_scanner.png`}
                         ></a-empty>
                       </div>
                     ) : (
@@ -560,13 +651,18 @@ export default defineComponent({
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.boxName
-                                  }
+                                      listItem.resourceType == 1 ?
+                                        (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) :
+                                        (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)
+                                    }
                                   </span>
                                   {
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
-                                        {listItem.warehouseBoxInfo.materialRemainNumber?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                        {listItem.warehouseBoxInfo ?
+                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          (listItem.materialRemainNumber ?
+                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
                                       </span>
                                     ):''
                                   }
@@ -592,14 +688,14 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                  {listItem.resourceType == 1 && listItem.materialInfo.materialImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                                  {listItem.resourceType == 1  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:(listItem.materialImages?listItem.materialImages[0].fileUrl:'')} />
+                                  : (listItem.resourceType == 2  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:(listItem.boxImages?listItem.boxImages[0].fileUrl:'')} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={`assets/icon_empty_data.png`}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -610,31 +706,31 @@ export default defineComponent({
                                 </div>
                                 <div
                                   class={
-                                    !listItem.warehouseBoxInfo
+                                    listItem.resourceType == 1
                                       ? "flex items-center"
                                       : ""
                                   }
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
-                                  {!listItem.warehouseBoxInfo ? (
-                                    <div class="m-auto">
-                                      <a-empty
-                                        description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
-                                      ></a-empty>
-                                    </div>
-                                  ) : (
+                                  {listItem.resourceType == 2&& listItem.outDetailList ? (
                                     listItem.outDetailList.map((item, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                              {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
                                             </span>
                                           </div>
                                         </>
                                       );
                                     })
+                                  ) : (
+                                    <div class="m-auto">
+                                      <a-empty
+                                        description="空空如也"
+                                        image={`assets/icon_empty_data.png`}
+                                      ></a-empty>
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -655,11 +751,11 @@ export default defineComponent({
             </a-layout>
           </div>
         </div>
-        {/* 扫描归仓模态框 */}
+        {/* 扫描出仓模态框 */}
         <Modal
           v-model={[visible.value, "visible"]}
           size="heavy"
-          title="归仓扫描清单"
+          title="出仓扫描清单"
         >
             <Tabs
               v-model={[menuActiveKey.value, "activeKey"]}
@@ -683,7 +779,7 @@ export default defineComponent({
               <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
                   <a-empty                   
                     description="空空如也"
-                    image={`/website/assets/icon_empty_data.png`}>
+                    image={`assets/icon_empty_data.png`}>
                   </a-empty>
                 </div>
               {cardData.value.map((listItem) => {
@@ -695,13 +791,13 @@ export default defineComponent({
                         <p class="text-16 font-medium">
                           <span>
                             {
-                              listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
+                              listItem.resourceType == 1 ? (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) : (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)                              
                             }
                             </span>
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber}                                      
+                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
                                 </span>
                               ):''
                             }                          
@@ -732,7 +828,11 @@ export default defineComponent({
                               <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
-                                  src={listItem.url}
+                                  src={listItem.resourceType == 1 ? (listItem.materialInfo ?
+                                    listItem.materialInfo.materialImages[0].fileUrl :
+                                    (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
+                                    (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
+                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}
                                   fallback="assets/icon_empty_search.png"
                                   width={88}
                                   height={88}
@@ -749,7 +849,11 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.rackPosition:listItem.warehouseBoxInfo.rackPosition
+                                    listItem.resourceType == 1 ?
+                                      (listItem.materialInfo ? departRack.value[listItem.materialInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : '')) :
+                                      (listItem.warehouseBoxInfo ? departRack.value[listItem.warehouseBoxInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : ''))
                                   }                                 
                                 </div>
                               </p>
@@ -757,21 +861,31 @@ export default defineComponent({
                                 <span class="text-white text-opacity-70">
                                   类型:
                                 </span>
-                                <div
+                                <div class={listItem.resourceType == 1?"":"hidden"}
                                   style="white-space: nowrap;overflow: hidden;"
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ?
-                                    departType[listItem.materialInfo.departmentType] :
-                                    departType[listItem.warehouseBoxInfo.departmentType]
+                                     (listItem.materialInfo
+                                      ? departType.value[listItem.materialInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
+                                   }
+                                </div>
+                                <div class={listItem.resourceType == 2?"":"hidden"}
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  {
+                                    (listItem.warehouseBoxInfo
+                                      ? departType.value[listItem.warehouseBoxInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
                                   }
                                 </div>
                               </p>
                               <p class="flex">
                                 <span class="text-white text-opacity-70">
                                   {
-                                    listItem.resourceType == 1 ?"箱号:":"尺寸"
+                                    listItem.resourceType == 1 ?"箱号:":"尺寸:"
                                   }
                                 </span>
                                 <div
@@ -779,7 +893,9 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxName:listItem.warehouseBoxInfo.size
+                                    listItem.resourceType == 2 ?
+                                      (listItem.warehouseBoxInfo ? departSize.value[listItem.warehouseBoxInfo.size] : (listItem.size?departSize.value[listItem.size]:'')) :
+                                      (listItem.materialInfo ? listItem.materialInfo.boxName : listItem.boxName)
                                   }
                                 </div>
                               </p>
@@ -792,7 +908,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxCode:listItem.warehouseBoxInfo.boxCode
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:listItem.boxCode)
                                   }
                                 </div>
                               </p>
@@ -811,10 +927,10 @@ export default defineComponent({
               返回扫描
             </a-button>
             <a-button ghost html-type="submit" onClick={handleClickMenuItem}>
-              确定归仓
+              确定出仓
             </a-button>
           </div>
-        </Modal>
+        </Modal> 
         <Modal
           v-model={[visiblesecond.value, "visible"]}
           size="lighter"

@@ -91,22 +91,41 @@ export default defineComponent({
     };
 
     //获取借货单明细
-    const DetailSpecifiedShortcutList = (id,fdata) => {
-      store
-        .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
-        .then((res) => {
-          if (res && res.length != 0) {
-            sessionStorage.setItem("nameNo", JSON.stringify(fdata));
-            visible.value = !visible.value;
-            router.push({
-              name: formData.value["key"]        
-            });
-            
-          } else {
-            message.info('无借货清单!')
-          }
-      })
+    const DetailSpecifiedShortcutList = (id, fdata) => {
+      console.log(formData.value["key"])
+      if (formData.value["key"] == "Pending") {
+        store
+          .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
+          .then((res) => {
+            if (res && res.length != 0) {
+              sessionStorage.setItem("nameNo", JSON.stringify(fdata));
+              visible.value = !visible.value;
+              router.push({
+                name: formData.value["key"]        
+              });
+            } else {
+              message.info('无借货清单!')
+            }
+        })
+      } else if (formData.value["key"] == "Belong") {
+        store
+          .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:2 })
+          .then((res) => {
+            if (res && res.length != 0) {
+              sessionStorage.setItem("nameNo", JSON.stringify(fdata));
+              visible.value = !visible.value;
+              router.push({
+                name: formData.value["key"]        
+              });
+            } else {
+              message.info('无借货清单!')
+            }
+        })
+      } else {
+        message.info('紧急出仓入口')
+      }
     }
+
 
     watch(visible, (lists) => {
       if (!lists) {        
