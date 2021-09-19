@@ -10,69 +10,67 @@
           @submit="handleSubmitBase"
         >
           <template #button>
-            <a-popconfirm
-              title="确认删除吗?"
-              ok-text="确认"
-              cancel-text="取消"
-              @confirm="handDelete(dataSource)"
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                !materialRemainNumber
-              "
-            >
+            <div class="flex flex-row items-center justify-center">
+              <a-popconfirm
+                title="确认删除吗?"
+                ok-text="确认"
+                cancel-text="取消"
+                @confirm="handDelete(dataSource)"
+                v-if="
+                  dataSource.status == 1 &&
+                  dataSource.inBatchPendingStatus == 0 &&
+                  !materialRemainNumber
+                "
+              >
+                <a-button
+                  type="primary"
+                  ghost
+                  class="flex flex-row items-center mr-3"
+                  danger
+                >
+                  <template #icon>
+                    <Icon class="align-baseline" :type="'delete'" />
+                  </template>
+                  删除
+                </a-button>
+              </a-popconfirm>
               <a-button
                 type="primary"
                 ghost
-                class="flex flex-row items-center p-0 mr-3"
+                v-if="
+                  dataSource.status == 1 &&
+                  dataSource.inBatchPendingStatus == 0 &&
+                  materialRemainNumber
+                "
+                class="flex flex-row items-center mr-3"
                 danger
+                @click="deleteBoxVisible = true"
               >
                 <template #icon>
                   <Icon class="align-baseline" :type="'delete'" />
                 </template>
                 删除
               </a-button>
-            </a-popconfirm>
-            <a-button
-              type="primary"
-              ghost
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                materialRemainNumber
-              "
-              class="flex flex-row items-center p-0 mr-3"
-              danger
-              @click="deleteBoxVisible = true"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'delete'" />
-              </template>
-              删除
-            </a-button>
 
-            <a-button
-              type="primary"
-              ghost
-              class="mr-3"
-              v-if="isEditBase"
-              @click="isEditBase = false"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'edit'" /> </template
-              >编辑</a-button
-            >
-            <a-button
-              type="primary"
-              ghost
-              class="flex flex-row items-center p-0 mr-3"
-              htmlType="submit"
-              v-if="!isEditBase"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'save'" /> </template
-              >保存</a-button
-            >
+              <a-button
+                class="mr-3"
+                v-if="isEditBase && dataSource.status == 1"
+                @click="isEditBase = false"
+              >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'edit'" /> </template
+                >编辑</a-button
+              >
+              <a-button
+                class="flex flex-row items-center mr-3"
+                htmlType="submit"
+                v-if="!isEditBase"
+              >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'save'" /> </template
+                >保存</a-button
+              >
+            </div>
           </template>
         </Form>
       </a-tab-pane>
@@ -85,68 +83,68 @@
           @submit="handleSubmitOther"
         >
           <template #button>
-            <a-popconfirm
-              title="确认删除吗?"
-              ok-text="确认"
-              cancel-text="取消"
-              @confirm="handDelete(dataSource)"
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                !materialRemainNumber
-              "
-            >
+            <div class="flex flex-row items-center justify-center">
+              <a-popconfirm
+                title="确认删除吗?"
+                ok-text="确认"
+                cancel-text="取消"
+                @confirm="handDelete(dataSource)"
+                v-if="
+                  dataSource.status == 1 &&
+                  dataSource.inBatchPendingStatus == 0 &&
+                  !materialRemainNumber
+                "
+              >
+                <a-button
+                  type="primary"
+                  ghost
+                  class="flex flex-row items-center mr-3"
+                  danger
+                >
+                  <template #icon>
+                    <Icon class="align-baseline" :type="'delete'" />
+                  </template>
+                  删除
+                </a-button>
+              </a-popconfirm>
               <a-button
                 type="primary"
                 ghost
-                class="flex flex-row items-center p-0 mr-3"
+                v-if="
+                  dataSource.status == 1 &&
+                  dataSource.inBatchPendingStatus == 0 &&
+                  materialRemainNumber
+                "
+                class="flex flex-row items-center mr-3"
                 danger
+                @click="deleteBoxVisible = true"
               >
                 <template #icon>
                   <Icon class="align-baseline" :type="'delete'" />
                 </template>
                 删除
               </a-button>
-            </a-popconfirm>
-            <a-button
-              type="primary"
-              ghost
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                materialRemainNumber
-              "
-              class="flex flex-row items-center p-0 mr-3"
-              danger
-              @click="deleteBoxVisible = true"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'delete'" />
-              </template>
-              删除
-            </a-button>
-            <a-button
-              type="primary"
-              ghost
-              class="mr-3"
-              v-if="isEditOther"
-              @click="isEditOther = false"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'edit'" /> </template
-              >编辑</a-button
-            >
-            <a-button
-              type="primary"
-              ghost
-              class="mr-3"
-              htmlType="submit"
-              v-if="!isEditOther"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'save'" /> </template
-              >保存</a-button
-            >
+              <a-button
+                ghost
+                class="mr-3"
+                v-if="isEditOther && dataSource.status == 1"
+                @click="isEditOther = false"
+              >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'edit'" /> </template
+                >编辑</a-button
+              >
+              <a-button
+                ghost
+                class="mr-3"
+                htmlType="submit"
+                v-if="!isEditOther"
+              >
+                <template #icon>
+                  <Icon class="align-baseline" :type="'save'" /> </template
+                >保存</a-button
+              >
+            </div>
           </template>
         </Form>
       </a-tab-pane>
@@ -186,7 +184,7 @@
               <a-button
                 type="primary"
                 ghost
-                class="flex flex-row items-center p-0 mr-3"
+                class="flex flex-row items-center mr-3"
                 danger
               >
                 <template #icon>
@@ -202,7 +200,7 @@
                 dataSource.inBatchPendingStatus == 0 &&
                 materialRemainNumber
               "
-              class="flex flex-row items-center p-0 mr-3"
+              class="flex flex-row items-center mr-3"
               danger
               @click="deleteBoxVisible = true"
             >
@@ -211,10 +209,9 @@
               >删除
             </a-button>
             <a-button
-              type="primary"
               ghost
               class="mr-3"
-              v-if="isEditInit"
+              v-if="dataSource.status == 1 && isEditInit"
               @click="isEditInit = false"
             >
               <template #icon>
@@ -222,7 +219,6 @@
               >编辑</a-button
             >
             <a-button
-              type="primary"
               ghost
               class="mr-3"
               v-if="!isEditInit"
@@ -728,9 +724,9 @@ export default defineComponent({
         materialIds: idArr,
       };
       updateBoxData(params).then((res) => {
-        if (res.data) {
-          ctx.emit("close");
-        }
+        // if (res.data) {
+        //   ctx.emit("close");
+        // }
       });
     };
     const closeDeleteDialog = () => {

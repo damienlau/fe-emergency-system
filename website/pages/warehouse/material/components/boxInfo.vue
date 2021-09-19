@@ -253,9 +253,7 @@ export default defineComponent({
       0px 0px 12px 0px rgba(51, 153, 255, 0.5);
   }
 }
-:deep(.ant-btn-background-ghost) {
-  border: 1px solid #fff;
-}
+
 .top {
   border-bottom: 1px solid #0e518f;
 }

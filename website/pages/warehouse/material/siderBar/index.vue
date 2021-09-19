@@ -333,10 +333,10 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .ant-tabs-top-content {
-  height: 76vh;
+  height: 78vh;
 }
 :deep(.ant-tabs-content) {
-  height: 74vh;
+  height: 78vh;
 }
 .box {
   display: flex;
