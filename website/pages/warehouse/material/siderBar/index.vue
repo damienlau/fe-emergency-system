@@ -122,6 +122,7 @@
     <Modal
       v-model:visible="meterialDetailVisible"
       :title="meterialDetailDialogTitle"
+      :status="meterialDetailDialogStatus"
       @cancel="meterialDetailVisible = false"
       size="heavy"
       key="box"
@@ -190,6 +191,7 @@ export default defineComponent({
       materialRemainNumber: "",
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
+      meterialDetailDialogStatus: "",
       paginationMaterials: {
         current: 1,
         pageSize: 10,
@@ -251,7 +253,11 @@ export default defineComponent({
     const showMeterialDetailDialog = (item) => {
       state.meterialId = item.id;
       state.meterialDetailVisible = true;
-      state.meterialDetailDialogTitle = item.materialName;
+      state.meterialDetailDialogTitle = item.boxName
+        ? item.materialName + "(" + item.boxName + ")"
+        : item.materialName;
+
+      state.meterialDetailDialogStatus = item.status;
     };
     const showBoxDetailDialog = (item) => {
       const num =
