@@ -135,6 +135,7 @@
     <Modal
       v-model:visible="boxDetailVisible"
       :title="boxDetailDialogTitle"
+      :status="boxDetailDialogStatus"
       @cancel="boxDetailVisible = false"
       size="heavy"
       key="box"
@@ -192,6 +193,7 @@ export default defineComponent({
       meterialDetailDialogTitle: "",
       boxDetailDialogTitle: "",
       meterialDetailDialogStatus: "",
+      boxDetailDialogStatus: "",
       paginationMaterials: {
         current: 1,
         pageSize: 10,
@@ -268,6 +270,7 @@ export default defineComponent({
       state.materialRemainNumber = item.materialRemainNumber;
       state.boxDetailVisible = true;
       state.boxDetailDialogTitle = item.boxName + num;
+      state.boxDetailDialogStatus = item.status;
     };
     const closeMeterialDetailDialog = () => {
       state.meterialDetailVisible = false;
