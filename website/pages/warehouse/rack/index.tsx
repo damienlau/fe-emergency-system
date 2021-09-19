@@ -1,6 +1,6 @@
 import { defineComponent, ref, onMounted } from "@vue/runtime-core";
 import { Button, Space, message } from "ant-design-vue";
-import { findBoxCountData, findBoxData, addBatchPendingDataRack } from "api/warehouse/material/box";
+import { findBoxCountData, findBoxData, findBoxAllData, addBatchPendingDataRack } from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
@@ -90,8 +90,8 @@ export default defineComponent({
 
     // 初始化箱子数据
     const initBoxData = () => {
-      findBoxData(params.value as any).then((response) => {
-        boxColumn.value = response.content;
+      findBoxAllData(params.value as any).then((response) => {
+        boxColumn.value = response
       });
     };
 
@@ -165,7 +165,7 @@ export default defineComponent({
           status={boxStatus.value}
           size="bold"
           key="box"
-          // zIndex={1}
+          zIndex="1"
         >
           {{
             default: () => (
