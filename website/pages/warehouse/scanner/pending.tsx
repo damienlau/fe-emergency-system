@@ -114,6 +114,31 @@ export default defineComponent({
     const getmenusArr = ref([]);
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
+      var newdata = menus.value[0].data.concat(menus.value[1].data)
+      if (newdata.length == 0) {
+        message.error("暂无出仓物资")
+        return
+      }
+      var firready = '';
+      if (menus.value[0].data.length != 0 && menus.value[1].data.length != 0) {
+        firready = menus.value[0].label + '和' + menus.value[1].label;
+      }else if (menus.value[0].data.length != 0) {
+        firready = menus.value[0].label;
+      } else if(menus.value[1].data.length != 0){
+        firready = menus.value[1].label;
+      }
+      AntModal.confirm({
+        class: "bg-navy-3 rounded pb-0 border border-primary",
+        title: `确定出仓？`,
+        content: `出仓${firready}的全部物资`,
+        centered: true,
+        onOk: () => {
+          getBoxOrMetaril();
+        }
+      })
+    }
+    //获取非法物资或者箱子
+    const getBoxOrMetaril = () => {
       var menusArr = [];
       menus.value[1].data.map((item) => {
         if (item.resourceType == 1) {
@@ -595,13 +620,18 @@ export default defineComponent({
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">
                                   {
-                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:listItem.materialName):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:listItem.boxName)
-                                  }
+                                      listItem.resourceType == 1 ?
+                                        (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) :
+                                        (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)
+                                    }
                                   </span>
                                   {
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
-                                        {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber/listItem.materialTotalNumber)}
+                                        {listItem.warehouseBoxInfo ?
+                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          (listItem.materialRemainNumber ?
+                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
                                       </span>
                                     ):''
                                   }
@@ -627,8 +657,8 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                  {listItem.resourceType == 1 && listItem.materialInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:listItem.boxImages[0].fileUrl} />
+                                  {listItem.resourceType == 1  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:listItem.boxImages[0].fileUrl} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
@@ -645,31 +675,31 @@ export default defineComponent({
                                 </div>
                                 <div
                                   class={
-                                    !listItem.warehouseBoxInfo
+                                    listItem.resourceType == 1
                                       ? "flex items-center"
                                       : ""
                                   }
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
-                                  {!listItem.warehouseBoxInfo ? (
+                                  {listItem.resourceType == 2&& listItem.outDetailList ? (
+                                    listItem.outDetailList.map((item, index) => {
+                                      return (
+                                        <>
+                                          <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                            <span class="text-14 w-full overflow-hidden h-22">
+                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
+                                            </span>
+                                          </div>
+                                        </>
+                                      );
+                                    })
+                                  ) : (
                                     <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
                                         image={`assets/icon_empty_data.png`}
                                       ></a-empty>
                                     </div>
-                                  ) : (
-                                    listItem.outDetailList.map((item, index) => {
-                                      return (
-                                        <>
-                                          <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
-                                            <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:item.materialName}
-                                            </span>
-                                          </div>
-                                        </>
-                                      );
-                                    })
                                   )}
                                 </div>
                               </div>
@@ -730,13 +760,13 @@ export default defineComponent({
                         <p class="text-16 font-medium">
                           <span>
                             {
-                              listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:listItem.materialName):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.materialName:listItem.materialName)
+                              listItem.resourceType == 1 ? (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) : (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)                              
                             }
                             </span>
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber/listItem.materialTotalNumber)}                                      
+                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
                                 </span>
                               ):''
                             }                          
