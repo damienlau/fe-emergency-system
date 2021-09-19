@@ -33,7 +33,6 @@
             </a-popconfirm>
 
             <a-button
-              type="primary"
               ghost
               class="mr-3"
               v-if="isEditBase && dataSource.status == 1"
@@ -44,7 +43,6 @@
               >编辑</a-button
             >
             <a-button
-              type="primary"
               ghost
               class="flex flex-row items-center mr-3"
               htmlType="submit"
@@ -90,7 +88,6 @@
               </a-button>
             </a-popconfirm>
             <a-button
-              type="primary"
               ghost
               class="mr-3"
               v-if="isEditOther && dataSource.status == 1"
@@ -100,13 +97,7 @@
                 <Icon class="align-baseline" :type="'edit'" /> </template
               >编辑</a-button
             >
-            <a-button
-              type="primary"
-              ghost
-              class="mr-3"
-              htmlType="submit"
-              v-if="!isEditOther"
-            >
+            <a-button ghost class="mr-3" htmlType="submit" v-if="!isEditOther">
               <template #icon>
                 <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
@@ -340,7 +331,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditBase = true;
-          slot.emit("close");
+          // slot.emit("close");
         }
       });
     };
@@ -348,7 +339,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditOther = true;
-          slot.emit("close");
+          // slot.emit("close");
         }
       });
     };

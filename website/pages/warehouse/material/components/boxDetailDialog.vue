@@ -53,8 +53,6 @@
               </a-button>
 
               <a-button
-                type="primary"
-                ghost
                 class="mr-3"
                 v-if="isEditBase && dataSource.status == 1"
                 @click="isEditBase = false"
@@ -64,8 +62,6 @@
                 >编辑</a-button
               >
               <a-button
-                type="primary"
-                ghost
                 class="flex flex-row items-center mr-3"
                 htmlType="submit"
                 v-if="!isEditBase"
@@ -129,7 +125,6 @@
                 删除
               </a-button>
               <a-button
-                type="primary"
                 ghost
                 class="mr-3"
                 v-if="isEditOther && dataSource.status == 1"
@@ -140,7 +135,6 @@
                 >编辑</a-button
               >
               <a-button
-                type="primary"
                 ghost
                 class="mr-3"
                 htmlType="submit"
@@ -215,7 +209,6 @@
               >删除
             </a-button>
             <a-button
-              type="primary"
               ghost
               class="mr-3"
               v-if="dataSource.status == 1 && isEditInit"
@@ -226,7 +219,6 @@
               >编辑</a-button
             >
             <a-button
-              type="primary"
               ghost
               class="mr-3"
               v-if="!isEditInit"
@@ -732,9 +724,9 @@ export default defineComponent({
         materialIds: idArr,
       };
       updateBoxData(params).then((res) => {
-        if (res.data) {
-          ctx.emit("close");
-        }
+        // if (res.data) {
+        //   ctx.emit("close");
+        // }
       });
     };
     const closeDeleteDialog = () => {

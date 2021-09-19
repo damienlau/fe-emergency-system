@@ -23,6 +23,12 @@ instance.interceptors.response.use(
       if (response.headers["authorization"]) {
         localStorage.setItem("token", response.headers["authorization"]);
       }
+      if (
+        response.data.message !== "处理成功" &&
+        response.data.message !== "处理成功"
+      ) {
+        message.info(response.data.message);
+      }
       return response.data;
     } else if (response.data.code === 402 || response.data.code === 403) {
       store.commit("userModule/SET_OFFLINE");
