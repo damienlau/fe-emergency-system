@@ -36,23 +36,39 @@ export default defineComponent({
     //扫描出仓模态框是否可见
     const visible = ref(false);
     //类型
-    const departType = ref([
-      { "1": "急救、重症" },
-      { "2": "门诊" },
-      { "3": "后勤" },
-      { "4": "指挥" },
-      { "5": "重症" },
-      { "6": "超声" },
-      { "7": "清创" },
-      { "8": "留观" },
-      { "9": "药房" },
-      { "10": "耗材" },
-      { "11": "手术" },
-      { "12": "防疫/隔离" },
-      { "13": "消毒" },
-      { "14": "住院" },
-      { "15": "检验" },
-    ])
+    const departType = ref(
+      {
+        1: "急救、重症",
+        2: "门诊",
+        3: "后勤",
+        4: "指挥",
+        5: "重症",
+        6: "超声",
+        7: "清创",
+        8: "留观",
+        9: "药房",
+        10: "耗材",
+        11: "手术",
+        12: "防疫/隔离",
+        13: "消毒",
+        14: "住院",
+        15: "检验",
+      })
+    //货架位置
+    const departRack = ref(
+      { 0: "未知" ,
+       1: "一层（下）" ,
+       2: "二层（中）" ,
+       3: "三层（上）" ,
+       4: "四层（顶）" }
+    )
+    //尺寸
+    const departSize = ref(
+      { 1: "一箱一桌(800x600x600)" ,
+       2: "一箱两柜(1200x800x800)" ,
+       3: "一箱一柜(1200x800x400)" ,
+       4: " 其它箱子" }
+    )
     //出仓列表
     const menus = ref([
       {
@@ -79,8 +95,6 @@ export default defineComponent({
       menus.value[0].data = []
       menus.value[1].data = []
       menus.value[2].data = []
-      console.log('弹框输出')
-      console.log(finishedDelivery.value.data)
       finishedDelivery.value.data.forEach((index, item, arr) => {
         if (arr[item].statusright == 0) {
           menus.value[0].data.push(index);
@@ -231,27 +245,13 @@ export default defineComponent({
       cardData.value = [];
       switch (activeKey) {
         case "1":
-          if (menus.value[0].data) {
             cardData.value = menus.value[0].data;
-          } else {
-            cardData.value = [];
-          }
           break;
         case "2":
-          if (menus.value[1].data) {
             cardData.value = menus.value[1].data;
-          } else {
-            cardData.value = [];
-          }
-          
           break;
         case "3":
-          if (menus.value[2].data) {
             cardData.value = menus.value[2].data;
-          } else {
-            cardData.value = [];
-          }
-          
           break;
         default:
           break;
@@ -322,7 +322,6 @@ export default defineComponent({
           } else {
             Object.assign(res[0],{statusright:1},{resourceType:1},{outFormId:getOutFrom.value})
             finishedDelivery.value.data.unshift(res[0]);
-            console.log(finishedDelivery.value.data)
             console.log('在全部物资查找到该物资')
           }  
       })
@@ -502,13 +501,13 @@ export default defineComponent({
                               <div class="flex items-center justify-center">
                                 <span class="text-20">
                                 {
-                                  listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:''):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:'')
+                                  listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:''):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:'')
                                 }
                                 </span>
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
                                     </span>
                                   ):''
                                 }                                
@@ -516,8 +515,8 @@ export default defineComponent({
                             </div>
                             <div class="flex py-16 px-16">
                               <div class="h-modal-lightermin w-modal-lightermin ">
-                                {listItem.resourceType == 1 && listItem.materialInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                                {listItem.resourceType == 1 && listItem.materialInfo.materialImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
@@ -660,8 +659,8 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                  {listItem.resourceType == 1  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:listItem.boxImages[0].fileUrl} />
+                                  {listItem.resourceType == 1  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:(listItem.materialImages?listItem.materialImages[0].fileUrl:'')} />
+                                  : (listItem.resourceType == 2  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:(listItem.boxImages?listItem.boxImages[0].fileUrl:'')} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
@@ -800,7 +799,11 @@ export default defineComponent({
                               <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
-                                  src={listItem.resourceType == 1?(listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.materialImages[0].fileUrl:listItem.materialImages[0].fileUrl)}
+                                  src={listItem.resourceType == 1 ? (listItem.materialInfo ?
+                                    listItem.materialInfo.materialImages[0].fileUrl :
+                                    (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
+                                    (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
+                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}
                                   fallback="assets/icon_empty_search.png"
                                   width={88}
                                   height={88}
@@ -817,7 +820,11 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.rackPosition:listItem.rackPosition):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.rackPosition:listItem.warehouseBoxInfo)
+                                    listItem.resourceType == 1 ?
+                                      (listItem.materialInfo ? departRack.value[listItem.materialInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : '')) :
+                                      (listItem.warehouseBoxInfo ? departRack.value[listItem.warehouseBoxInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : ''))
                                   }                                 
                                 </div>
                               </p>
@@ -849,7 +856,7 @@ export default defineComponent({
                               <p class="flex">
                                 <span class="text-white text-opacity-70">
                                   {
-                                    listItem.resourceType == 1 ?"箱号:":"尺寸"
+                                    listItem.resourceType == 1 ?"箱号:":"尺寸:"
                                   }
                                 </span>
                                 <div
@@ -857,7 +864,9 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 2 ? (listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.size:listItem.size):(listItem.materialInfo?listItem.materialInfo.boxName:listItem.boxName)
+                                    listItem.resourceType == 2 ?
+                                      (listItem.warehouseBoxInfo ? departSize.value[listItem.warehouseBoxInfo.size] : (listItem.size?departSize.value[listItem.size]:'')) :
+                                      (listItem.materialInfo ? listItem.materialInfo.boxName : listItem.boxName)
                                   }
                                 </div>
                               </p>
