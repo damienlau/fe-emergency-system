@@ -9,12 +9,13 @@ import {
   Image,
 } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty,Card } from "components";
-import { useRouter } from "vue-router";
+import emptyscanner from "assets/icon_empty_scanner.png";
+import emptydata from "assets/icon_empty_data.png";
+import emptysearch from "assets/icon_empty_search.png";
 
 export default defineComponent({
   setup() {
     const store = useStore();
-    const router = useRouter();
     // 待归仓标题及数据展示
     const pengdingDelivery = ref({
       label: "待归仓物资",
@@ -130,7 +131,7 @@ export default defineComponent({
     const handlePendingSubmit = () => {
       var newdata = menus.value[0].data.concat(menus.value[1].data)
       if (newdata.length == 0) {
-        message.error("暂无出仓物资")
+        message.error("暂无归仓物资")
         return
       }
       var firready = '';
@@ -208,7 +209,10 @@ export default defineComponent({
           outFormId:item.outFormId,
           resourceType: item.resourceType,
           status:item.status,
-          materialInfo:item.materialInfo,          
+          materialInfo:item.materialInfo,
+          returnMan: goBackData.value.personnelName,
+          returnJobNo: goBackData.value.description,
+          returnPhone:goBackData.value.personnelPhone
         }
       })
       var bsavefilter = savependingall.filter((a) => {
@@ -221,20 +225,23 @@ export default defineComponent({
           resourceType: item.resourceType,
           status:item.status,
           warehouseBoxInfo: item.warehouseBoxInfo,
-          outDetailList:item.outDetailList
+          outDetailList: item.outDetailList,
+          returnMan: goBackData.value.personnelName,
+          returnJobNo: goBackData.value.description,
+          returnPhone:goBackData.value.personnelPhone
         }
       })
       var newdatacommit = asavependingall.concat(bsavependingall)
-      goBackData.value.data = newdatacommit;
       console.log(newdatacommit)
       store
       .dispatch(
-        "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
-        goBackData.value                 
+        "warehouseModule/pendingModule/returnSpecifiedShortcutList",
+        newdatacommit             
       )
       .then(() => {
         finishedDelivery.value.data =[]
         visible.value = !visible.value;
+        visiblesecond.value = !visiblesecond.value;
         //handleClickTabPane();
       });   
     }
@@ -347,7 +354,7 @@ export default defineComponent({
           console.log('待归仓物资对比成功')
         } else {
           biduistatus = true;
-          console.log('左侧待出仓没有找到对应的编号物资或箱子')
+          console.log('左侧待归仓没有找到对应的编号物资或箱子')
           return
         }
       });
@@ -465,14 +472,20 @@ export default defineComponent({
       {
         label: "归还人",
         key: "personnelName",
+        labelSpan: 5,
+        wrapperSpan: 16
       },
       {
         label: "归还人工号",
         key: "description",
+        labelSpan: 5,
+        wrapperSpan: 16
       },
       {
         label: "联系电话",
         key: "personnelPhone",
+        labelSpan: 5,
+        wrapperSpan: 16
       },
     ]);
 
@@ -496,9 +509,9 @@ export default defineComponent({
 
     return () => (
       <>
-        {/* 出仓扫描 */}
+        {/* 归仓扫描 */}
         <div class="h-full flex">
-          {/* 出仓扫描-待出仓物资 */}
+          {/* 归仓扫描-待归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1">
@@ -518,8 +531,8 @@ export default defineComponent({
                     {pengdingDelivery.value.data.length == 0 ? (
                       <div class="m-auto">
                         <a-empty
-                          description="当前待出仓扫描，无'申请清单'"
-                          image={`assets/icon_empty_scanner.png`}
+                          description="当前待归仓扫描，无'申请清单'"
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -551,7 +564,7 @@ export default defineComponent({
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -570,7 +583,7 @@ export default defineComponent({
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`assets/icon_empty_data.png`}
+                                      image={emptydata}
                                     ></a-empty>
                                   </div>
                                 ) : (
@@ -597,13 +610,13 @@ export default defineComponent({
               </a-layout-content>
             </a-layout>
           </div>
-          {/* 出仓扫描-图标箭头 */}
+          {/* 归仓扫描-图标箭头 */}
           <Icon
             style="font-size:76px;color:#0e518f;width:140px;"
             class="flex items-center justify-center"
             type="arrow-right-filling"
           />
-          {/* 出仓归描-已归仓物资 */}
+          {/* 归仓归描-已归仓物资 */}
           <div class="flex-1">
             <a-layout class="h-full bg-navy-4">
               <a-layout-header class="h-64 bg-navy-4 flex items-center justify-center text-18 text-white border-b border-navy-1 relative">
@@ -631,8 +644,8 @@ export default defineComponent({
                     {finishedDelivery.value.data.length == 0 ? (
                       <div class="m-auto">
                         <a-empty
-                          description="当前已出仓扫描，无'申请清单'"
-                          image={`assets/icon_empty_scanner.png`}
+                          description="当前已归仓扫描，无'申请清单'"
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -695,7 +708,7 @@ export default defineComponent({
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -728,7 +741,7 @@ export default defineComponent({
                                     <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                     </div>
                                   )}
@@ -751,11 +764,11 @@ export default defineComponent({
             </a-layout>
           </div>
         </div>
-        {/* 扫描出仓模态框 */}
+        {/* 扫描归仓模态框 */}
         <Modal
           v-model={[visible.value, "visible"]}
           size="heavy"
-          title="出仓扫描清单"
+          title="归仓扫描清单"
         >
             <Tabs
               v-model={[menuActiveKey.value, "activeKey"]}
@@ -779,7 +792,7 @@ export default defineComponent({
               <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
                   <a-empty                   
                     description="空空如也"
-                    image={`assets/icon_empty_data.png`}>
+                    image={emptydata}>
                   </a-empty>
                 </div>
               {cardData.value.map((listItem) => {
@@ -833,7 +846,7 @@ export default defineComponent({
                                     (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
                                     (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
                                       (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}
-                                  fallback="assets/icon_empty_search.png"
+                                  fallback={emptysearch}
                                   width={88}
                                   height={88}
                                 ></Image>
@@ -927,7 +940,7 @@ export default defineComponent({
               返回扫描
             </a-button>
             <a-button ghost html-type="submit" onClick={handleClickMenuItem}>
-              确定出仓
+              确定归仓
             </a-button>
           </div>
         </Modal> 

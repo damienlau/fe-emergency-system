@@ -15,7 +15,28 @@ const createCustomPropertyStepper = (property, length, step = 1, alias) => {
 };
 
 module.exports = {
-  purge: ["./index.html", "./website/**/*.{vue,js,ts,jsx,tsx}"],
+  purge: {
+    content: ["./index.html", "./website/**/*.{vue,js,ts,jsx,tsx}"],
+    safelist: [
+      "bg-box",
+      "bg-box-hover",
+      "bg-modal-ultralight",
+      "bg-modal-lighter",
+      "bg-modal-light",
+      "bg-modal-heavy",
+      "bg-modal-bold",
+      "w-modal-ultralight",
+      "w-modal-lighter",
+      "w-modal-light",
+      "w-modal-heavy",
+      "w-modal-bold",
+      "h-modal-ultralight",
+      "h-modal-lighter",
+      "h-modal-light",
+      "h-modal-heavy",
+      "h-modal-bold",
+    ],
+  },
   darkMode: "class",
   important: true,
   theme: {
@@ -29,7 +50,6 @@ module.exports = {
         "modal-bold": "url('assets/bg_modal_dark_bold.png')",
         box: "url('assets/bg_box.png')",
         "box-hover": "url('assets/bg_box_hover.png')",
-        "shelf-partition": "linear-gradient(180deg, #06315D 0%, #0E518F 100%)",
       }),
       // 颜色
       colors: {
@@ -56,7 +76,7 @@ module.exports = {
         "modal-lighter": "620px",
         "modal-light": "620px",
         "modal-heavy": "920px",
-        "modal-bold": "1416px"
+        "modal-bold": "1416px",
       },
       // 字体
       fontSize: {

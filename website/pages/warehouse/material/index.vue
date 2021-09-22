@@ -11,6 +11,7 @@
       width="100%"
       :collapsible="false"
       :collapsedWidth="484"
+      :trigger="null"
       style="overflow-y: auto"
     >
       <div class="h-full flex flex-col">

@@ -834,7 +834,7 @@ export default defineComponent({
   width: 100%;
   position: relative;
 
-  /deep/ .ant-tabs-content {
+  :deep(.ant-tabs-content) {
     padding: 16px 0;
 
     .ant-form-item-control-input-content {
