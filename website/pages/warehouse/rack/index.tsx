@@ -1,6 +1,6 @@
 import { defineComponent, ref, onMounted } from "@vue/runtime-core";
 import { Button, Space, message } from "ant-design-vue";
-import { findBoxCountData, findBoxData, addBatchPendingDataRack } from "api/warehouse/material/box";
+import { findBoxCountData, findBoxData, findBoxAllData, addBatchPendingDataRack } from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
@@ -45,6 +45,9 @@ export default defineComponent({
     // 显示箱子详情弹窗
     const boxDetailVisible = ref(false);
 
+    // 箱子状态
+    const boxStatus = ref(0)
+
     const formData = ref({});
 
     const rackCount = ref({
@@ -76,6 +79,7 @@ export default defineComponent({
       boxCode.value = box.boxCode;
       materialRemainNumber.value = box.materialRemainNumber;
       boxDetailDialogTitle.value = box.boxName + num;
+      boxStatus.value = box.status
     };
 
     const closeBoxDetailDialog = () => {
@@ -86,8 +90,8 @@ export default defineComponent({
 
     // 初始化箱子数据
     const initBoxData = () => {
-      findBoxData(params.value as any).then((response) => {
-        boxColumn.value = response.content;
+      findBoxAllData(params.value as any).then((response) => {
+        boxColumn.value = response
       });
     };
 
@@ -158,9 +162,10 @@ export default defineComponent({
         <Modal
           v-model={[boxDetailVisible.value, "visible"]}
           title={boxDetailDialogTitle.value}
+          status={boxStatus.value}
           size="bold"
           key="box"
-          // zIndex={1}
+          zIndex="1"
         >
           {{
             default: () => (
@@ -168,6 +173,7 @@ export default defineComponent({
                 id={boxId.value}
                 boxCode={boxCode.value}
                 materialRemainNumber={materialRemainNumber.value}
+                boxHeight={500}
                 status={1}
                 onClose={closeBoxDetailDialog}
               ></BoxDetailDialog>

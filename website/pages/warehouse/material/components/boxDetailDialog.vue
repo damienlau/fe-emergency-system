@@ -152,12 +152,8 @@
         :key="'init'"
         :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
       >
-        <div class="box">
-          <div
-            class="addBox mt-8"
-            @click="showAddBoxTransfer"
-            v-if="!isEditInit"
-          >
+        <div class="box" :style="{ height: boxHeight + 'px' }">
+          <div class="addBox" @click="showAddBoxTransfer" v-if="!isEditInit">
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
           </div>
@@ -166,69 +162,69 @@
             :key="index"
             :materialInfo="item"
             :showDelete="!isEditInit"
-            @delete="deleteChoose"
+            @delete="handDeleteMeterial(item)"
           >
           </SmallMeterial>
-          <div class="footer">
-            <a-popconfirm
-              title="确认删除吗?"
-              ok-text="确认"
-              cancel-text="取消"
-              @confirm="handDelete(dataSource)"
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                !materialRemainNumber
-              "
-            >
-              <a-button
-                type="primary"
-                ghost
-                class="flex flex-row items-center mr-3"
-                danger
-              >
-                <template #icon>
-                  <Icon class="align-baseline" :type="'delete'" /> </template
-                >删除
-              </a-button>
-            </a-popconfirm>
+        </div>
+        <div class="footer">
+          <a-popconfirm
+            title="确认删除吗?"
+            ok-text="确认"
+            cancel-text="取消"
+            @confirm="handDelete(dataSource)"
+            v-if="
+              dataSource.status == 1 &&
+              dataSource.inBatchPendingStatus == 0 &&
+              !materialRemainNumber
+            "
+          >
             <a-button
               type="primary"
               ghost
-              v-if="
-                dataSource.status == 1 &&
-                dataSource.inBatchPendingStatus == 0 &&
-                materialRemainNumber
-              "
               class="flex flex-row items-center mr-3"
               danger
-              @click="deleteBoxVisible = true"
             >
               <template #icon>
                 <Icon class="align-baseline" :type="'delete'" /> </template
               >删除
             </a-button>
-            <a-button
-              ghost
-              class="mr-3"
-              v-if="dataSource.status == 1 && isEditInit"
-              @click="isEditInit = false"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'edit'" /> </template
-              >编辑</a-button
-            >
-            <a-button
-              ghost
-              class="mr-3"
-              v-if="!isEditInit"
-              @click="addBoxMaterial"
-            >
-              <template #icon>
-                <Icon class="align-baseline" :type="'save'" /> </template
-              >保存</a-button
-            >
-          </div>
+          </a-popconfirm>
+          <a-button
+            type="primary"
+            ghost
+            v-if="
+              dataSource.status == 1 &&
+              dataSource.inBatchPendingStatus == 0 &&
+              materialRemainNumber
+            "
+            class="flex flex-row items-center mr-3"
+            danger
+            @click="deleteBoxVisible = true"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'delete'" /> </template
+            >删除
+          </a-button>
+          <a-button
+            ghost
+            class="mr-3"
+            v-if="dataSource.status == 1 && isEditInit"
+            @click="isEditInit = false"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'edit'" /> </template
+            >编辑</a-button
+          >
+          <a-button
+            ghost
+            class="mr-3"
+            v-if="!isEditInit"
+            @click="addBoxMaterial"
+          >
+            <template #icon>
+              <Icon class="align-baseline" :type="'save'" /> </template
+            >保存</a-button
+          >
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -324,6 +320,7 @@ import {
   findSpecifiedBoxData,
   deleteBoxInfoData,
   findMaterialInfoAllData,
+  deleteMeterialInfoData,
 } from "api/warehouse/meterial";
 import SmallMeterial from "./smallMeterial.vue";
 import { Form, Modal } from "components";
@@ -344,6 +341,11 @@ export default defineComponent({
     id: Number,
     boxCode: String,
     materialRemainNumber: Number,
+    status: Number | undefined,
+    boxHeight: {
+      type: Number,
+      default: 320
+    }
   },
   setup(props, ctx) {
     const state = reactive({
@@ -619,7 +621,10 @@ export default defineComponent({
     };
     const initMaterialList = () => {
       state.materialList = [];
-      findMaterialInfoAllData({ boxCode: props.boxCode }).then((res) => {
+      findMaterialInfoAllData({
+        boxCode: props.boxCode,
+        status: props.status,
+      }).then((res) => {
         state.materialList = res.data;
       });
     };
@@ -744,6 +749,16 @@ export default defineComponent({
         }
       });
     };
+
+    // 删除物资
+    const handDeleteMeterial = ({ id }) => {
+      deleteMeterialInfoData({ id }).then((res) => {
+        if (res.data) {
+          ctx.emit("close");
+        }
+      });
+    };
+
     const handConfirmDelete = () => {
       const params = {
         id: state.dataSource.id,
@@ -775,23 +790,23 @@ export default defineComponent({
       closeDeleteDialog,
       handConfirmDelete,
       returnStatus,
+      handDeleteMeterial,
     };
   },
 });
 </script>
 <style lang="less" scoped>
-:deep(.ant-form-item-label) {
-  width: 100px;
-}
 .box {
   width: 100%;
-  height: 360px;
   overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 8px;
+  align-content: flex-start;
+
   .addBox {
-    width: 335px;
-    height: 180px;
+    // width: 335px;
+    height: 137px;
     background: #57799a;
     display: flex;
     flex-direction: column;
@@ -808,8 +823,28 @@ export default defineComponent({
 }
 .content {
   width: 100%;
-  height: 100%;
   position: relative;
+
+  /deep/ .ant-tabs-content {
+    padding: 16px 0;
+
+    .ant-form-item-control-input-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ant-btn {
+      width: 72px;
+      justify-content: center;
+    }
+
+    .ant-tabs-tabpane {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   .btn {
     position: absolute;
     right: 20px;
