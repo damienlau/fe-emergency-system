@@ -34,15 +34,15 @@
       <a-tab-pane
         :key="'init'"
         tab="箱内物资"
-        class="flex flex-row flex-wrap justify-start"
+        class="flex flex-row flex-wrap justify-start init"
         style="backgroud: pink"
       >
-        <div class="addBox mt-8" @click="showAddBoxTransfer">
+        <div class="addBox margin-1" @click="showAddBoxTransfer">
           <PlusOutlined :style="{ fontSize: '30px' }" />
           <span class="mt-20"> 添加物资</span>
         </div>
         <SmallMeterial
-          class="mt-8"
+          class="margin-1"
           v-for="(item, index) in materialList"
           :materialInfo="item"
           :key="index"
@@ -101,20 +101,20 @@ export default defineComponent({
       formDataOter: {},
     });
     const baseForm = ref([
-      {
-        label: "箱子名称",
-        key: "boxName",
-        required: false,
-        span: 12,
-        disabled: true,
-      },
-      {
-        label: "箱子编码",
-        key: "boxCode",
-        required: false,
-        span: 12,
-        disabled: true,
-      },
+      // {
+      //   label: "箱子名称",
+      //   key: "boxName",
+      //   required: false,
+      //   span: 12,
+      //   disabled: true,
+      // },
+      // {
+      //   label: "箱子编码",
+      //   key: "boxCode",
+      //   required: false,
+      //   span: 12,
+      //   disabled: true,
+      // },
       {
         label: "类型",
         key: "departmentType",
@@ -279,7 +279,7 @@ export default defineComponent({
         span: 12,
       },
       {
-        label: "物资图片",
+        label: "箱子图片",
         key: "boxImages",
         type: "upload",
         required: true,
@@ -319,25 +319,25 @@ export default defineComponent({
     const handleSubmitBase = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        // if (res.data) {
-        //   slot.emit("close");
-        // }
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     const handleSubmitOther = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
       addBoxData(state.boxInfo).then((res) => {
-        // if (res.data) {
-        //   slot.emit("close");
-        // }
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
 
     const handleSubmitInit = () => {
       addBoxData(state.boxInfo).then((res) => {
-        // if (res.data) {
-        //   slot.emit("close");
-        // }
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     const showAddBoxTransfer = () => {
@@ -360,9 +360,9 @@ export default defineComponent({
         ...state.formDataOter,
       };
       addBoxData(params).then((res) => {
-        // if (res.data) {
-        //   slot.emit("close");
-        // }
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     return {
@@ -382,8 +382,8 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .addBox {
-  width: 335px;
-  height: 180px;
+  width: 272px;
+  height: 137px;
   background: #57799a;
   display: flex;
   flex-direction: column;
@@ -391,7 +391,17 @@ export default defineComponent({
   align-items: center;
   cursor: pointer;
 }
+.margin-1 {
+  margin: 1px;
+}
 :deep(.ant-form-item-label) {
   width: 100px;
+}
+:deep(.ant-tabs-top-content) {
+  padding: 10px;
+}
+:deep(.ant-tabs-tabpane) {
+  height: 334px;
+  overflow-y: auto;
 }
 </style>
