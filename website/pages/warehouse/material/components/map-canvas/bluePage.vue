@@ -159,14 +159,15 @@
 
 		},
 		methods: {
-			handleMouseDown(evt) {
+			handleMouseDown(type) {
 				this.img.globalCompositeOperation = 'hard-light'
 				this.img.opacity = this.img.opacity ? 0 : 1;
 				this.lightShape.globalCompositeOperation = 'hard-light'
 				this.lightShape.opacity = this.lightShape.opacity ? 0 : 1;
 				this.diyconfig.fill = this.diyconfig.fill == "#1890FF" ? "#0F64B5" : "#1890FF";
 				this.react.fill = this.react.fill == "#1890FF" ? "#0F64B5" : "#1890FF";
-        this.toRackPage()
+        if (type === 'legend') return
+				this.toRackPage()
 			},
 			handleMouseOver(evt) {
 				this.img.globalCompositeOperation = 'hard-light'

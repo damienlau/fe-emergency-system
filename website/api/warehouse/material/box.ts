@@ -8,7 +8,8 @@ const boxRequestUrls = {
   find: "box/info/page/criteria",
   findCount: "box/info/rack/count",
   update: "box/info/update",
-  pendingDataRack: "batchPending/add/rack"
+  pendingDataRack: "batchPending/add/rack",
+  search: "box/info/rack/search"
 };
 
 export interface boxRequestProps {
@@ -62,6 +63,16 @@ export const findBoxAllData = (parameter?: boxRequestProps) => {
       return response.data;
     });
 };
+
+// 货架-搜索
+export const findBoxInfoRackSearch = (parameter?: any) => {
+  return request
+    .get(boxRequestUrls.search, { params: parameter })
+    .then((response) => {
+      return response.data;
+    });
+};
+
 
 export const findBoxCountData = (parameter?: number) => {
   return request
