@@ -3,18 +3,18 @@
 import request from "utils/request";
 
 const shortcutRequestUrls = {
-  find: "/outForm/all",
-  finddetail:"/outDetail/all",
-  save: "/outDetail/confirm/out",
-  savereturn: "/outDetail/confirm/return",
-  sweepopen: "/scan/open",
-  sweepreader: "/scan/reader",
-  sweepclose: "/scan/close",
-  allBoxinfo: "/box/info/all",
-  material: "/material/info/all",
-  infoall: "/event/info/all",
-  findoutform: "/outDetail/add",
-  saveemergency: "/outDetail/confirm/emergency"
+  find: "outForm/all",
+  finddetail:"outDetail/all",
+  save: "outDetail/confirm/out",
+  savereturn: "outDetail/confirm/return",
+  sweepopen: "scan/open",
+  sweepreader: "scan/reader",
+  sweepclose: "scan/close",
+  allBoxinfo: "box/info/all",
+  material: "material/info/all",
+  infoall: "event/info/all",
+  findoutform: "outDetail/add",
+  saveemergency: "outDetail/confirm/emergency"
 };
 
 // 出仓待出仓列表
