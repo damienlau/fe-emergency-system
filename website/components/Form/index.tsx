@@ -139,6 +139,7 @@ export default defineComponent({
           return (
             <Upload
               v-model={[formData.value[`${key}`], "fileList"]}
+              disabled={disabled || props.disabled}
               customRequest={({ file }) => {
                 uploadData(file).then((response) => {
                   formData.value[`${key}`].map((image: any, index: number) => {
