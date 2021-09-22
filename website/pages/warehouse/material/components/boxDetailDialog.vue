@@ -152,11 +152,7 @@
         :key="'init'"
         :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
       >
-<<<<<<< HEAD
         <div class="box" :style="{ height: boxHeight + 'px' }">
-=======
-        <div class="box">
->>>>>>> dev
           <div class="addBox" @click="showAddBoxTransfer" v-if="!isEditInit">
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
