@@ -109,9 +109,10 @@
 
 		},
 		methods: {
-			handleMouseDown(evt) {
+			handleMouseDown(type) {
 				this.img.globalCompositeOperation = 'hard-light'
 				this.img.opacity = this.img.opacity ? 0 : 1;
+				if (type === 'legend') return
         this.toRackPage()
 			},
 			handleMouseOver(evt) {

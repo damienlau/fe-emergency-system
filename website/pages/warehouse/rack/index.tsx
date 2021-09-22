@@ -1,6 +1,6 @@
 import { defineComponent, ref, onMounted } from "@vue/runtime-core";
 import { Button, Space, message } from "ant-design-vue";
-import { findBoxCountData, findBoxData, findBoxAllData, addBatchPendingDataRack } from "api/warehouse/material/box";
+import { findBoxCountData, findBoxData, findBoxAllData, addBatchPendingDataRack, findBoxInfoRackSearch } from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
@@ -61,6 +61,9 @@ export default defineComponent({
     // 箱子状态
     const boxStatus = ref(0)
 
+    // 搜索结果箱子id集合
+    const searchResultBoxId = ref([] as number[])
+
     // 货架位置数据
     const rackPositionData = ref({
       thirdLayer: [],
@@ -78,16 +81,7 @@ export default defineComponent({
     });
 
     const handleSearch = (keyword: any) => {
-      params.value.boxName = keyword.boxName;
-      initBoxData();
-    };
-
-    const inStockNumFilter = (stockNum: string) => {
-      return (stockNum && stockNum.split("/")[0]) || 0;
-    };
-
-    const totalStockNumFilter = (stockNum: string) => {
-      return (stockNum && stockNum.split("/")[1]) || 0;
+      boxInfoRackSearch(keyword.boxName)
     };
 
     const getBoxDetail = (box: any) => {
@@ -117,6 +111,20 @@ export default defineComponent({
         rackPositionData.value.thirdLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.thirdLayer)
       });
     };
+
+    const boxInfoRackSearch = (keyword: string) => {
+      const search = {
+        rackNumber: params.value.rackNumber,
+        boxName: keyword
+      }
+      findBoxInfoRackSearch(search).then((response) => {
+        searchResultBoxId.value = response
+      })
+    }
+
+    const hover = (boxId: number) => {
+      return searchResultBoxId.value.includes(boxId)
+    }
 
     // 初始化箱子数量和物资数量
     const initBoxCountData = () => {
@@ -161,16 +169,16 @@ export default defineComponent({
                 <p class="text-white text-opacity-70">
                   箱子在库量：
                   <span class="text-24 text-white">
-                    {rackCount.value.boxInStockNum}
+                    {rackCount.value.boxInStockNum || 0}
                   </span>
-                  /{rackCount.value.boxTotalNum}
+                  /{rackCount.value.boxTotalNum || 0}
                 </p>
                 <p class="text-white text-opacity-70">
                   物资在库量：
                   <span class="text-24 text-white">
-                    {rackCount.value.materialInStockNum}
+                    {rackCount.value.materialInStockNum || 0}
                   </span>
-                  /{rackCount.value.materialTotalNum}
+                  /{rackCount.value.materialTotalNum || 0}
                 </p>
               </Space>
             ),
@@ -183,8 +191,8 @@ export default defineComponent({
               Object.keys(rackPositionData.value).map((key) => {
                 return (
                   <div class={key}>
-                    {rackPositionData.value[key as keyof RackPosition].map((columns) => {
-                      return <Box columns={columns} onClick={getBoxDetail} />;
+                    {rackPositionData.value[key as keyof RackPosition].map((columns: any) => {
+                      return <Box hover={hover(columns.id)} columns={columns} onClick={getBoxDetail} />;
                     })}
                   </div>
                 )
@@ -216,6 +224,7 @@ export default defineComponent({
                 <MeterialList
                   racknumber={route.params.id}
                   boxcode={boxCode.value}
+                  boxid={Number(boxId.value)}
                 ></MeterialList>
               </div>
             ),

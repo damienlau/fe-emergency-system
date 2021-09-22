@@ -77,7 +77,7 @@
 
 		</v-stage>
 		<div class="legend">
-			<div class="item" v-for="(item,index) in 10">
+			<div class="item" v-for="(item,index) in 10" :key="index">
 				<div  class="tag" @mouseover="handleOver(index)" @mouseout="handleOut(index)"></div>
 			{{tags[index]}}
 			</div>
@@ -135,7 +135,7 @@
 				if (this.group[index].length > 0) {
 					for (let i in this.group[index]) {
 						let ref = 'num_' + this.group[index][i]
-						this.$refs[ref].handleMouseDown()
+						this.$refs[ref].handleMouseDown('legend')
 					}
 				}
 			},
@@ -144,7 +144,7 @@
 				if (this.group[index].length > 0) {
 					for (let i in this.group[index]) {
 						let ref = 'num_' + this.group[index][i]
-						this.$refs[ref].handleMouseDown()
+						this.$refs[ref].handleMouseDown('legend')
 					}
 				}
 			}
