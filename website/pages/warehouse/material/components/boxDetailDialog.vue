@@ -95,11 +95,7 @@
         :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
       >
         <div class="box">
-          <div
-            class="addBox"
-            @click="showAddBoxTransfer"
-            v-if="!isEditInit"
-          >
+          <div class="addBox" @click="showAddBoxTransfer" v-if="!isEditInit">
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
           </div>
@@ -194,7 +190,7 @@ export default defineComponent({
     id: Number,
     boxCode: String,
     materialRemainNumber: Number,
-    status: Number|undefined
+    status: Number | undefined,
   },
   setup(props, ctx) {
     const state = reactive({
@@ -457,7 +453,10 @@ export default defineComponent({
     };
     const initMaterialList = () => {
       state.materialList = [];
-      findMaterialInfoAllData({ boxCode: props.boxCode, status: props.status }).then((res) => {
+      findMaterialInfoAllData({
+        boxCode: props.boxCode,
+        status: props.status,
+      }).then((res) => {
         state.materialList = res.data;
       });
     };
@@ -472,7 +471,7 @@ export default defineComponent({
 
     // 删除物资
     const handDeleteMeterail = ({ id }) => {
-      console.log('handDeleteMeterail')
+      console.log("handDeleteMeterail");
       deleteMeterialInfoData({ id }).then((res) => {
         if (res.data) {
           ctx.emit("close");
@@ -525,7 +524,7 @@ export default defineComponent({
       handBack,
       handDeleteAll,
       addBoxMaterial,
-      handDeleteMeterail
+      handDeleteMeterail,
     };
   },
 });
@@ -535,7 +534,7 @@ export default defineComponent({
   width: 100%;
   overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 8px;
   .addBox {
     // width: 335px;
@@ -559,7 +558,7 @@ export default defineComponent({
   height: 100%;
   position: relative;
 
-  /deep/ .ant-tabs-content {
+  :deep(.ant-tabs-content) {
     padding: 16px 0;
 
     .ant-form-item-control-input-content {
