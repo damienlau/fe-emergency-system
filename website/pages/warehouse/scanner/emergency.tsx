@@ -34,6 +34,9 @@ export default defineComponent({
     });
     //紧急出仓包装数据生成借货单
     const emergencyData = ref({
+      eventId: "",
+      eventName: "",
+      personnelJobNo: "",
       outDetails:[]
     })
     //扫描出仓模态框是否可见
@@ -145,9 +148,9 @@ export default defineComponent({
       var newdata = asavependingall.concat(bsavependingall)
       var emergency = JSON.parse(sessionStorage.getItem("nameNo"))
       emergencyData.value.outDetails = newdata;
-      // emergencyData.value.eventId = emergency.EventId;
-      // emergencyData.value.eventName = emergency.eventName;
-      // emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
+      emergencyData.value.eventId = emergency.EventId;
+      emergencyData.value.eventName = emergency.eventName;
+      emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
