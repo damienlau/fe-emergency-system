@@ -12,7 +12,7 @@
               <a-input-search
                 v-model:value="meterialSearchValue"
                 placeholder="物资搜索"
-                allowClear
+                enter-button="搜索"
                 @search="getFirstMaterialsData"
               ></a-input-search>
               <a-button type="primary" class="ml-20" @click="showMetarialDilog"

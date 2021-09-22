@@ -93,6 +93,8 @@ export default defineComponent({
         data: [],
       },
     ]);
+    //只允许提交一次状态
+    const saveStatus = ref(true);
     //扫描出仓模态框数据初始化
     const initPendingData = () => {
       menus.value[0].data = []
@@ -115,6 +117,7 @@ export default defineComponent({
     //扫描出仓模态框控制
     const handleClickPendingItem = () => {
       initPendingData();
+      saveStatus.value = true;
       visible.value = !visible.value;
     };
     // 菜单列表当前激活值
@@ -156,6 +159,10 @@ export default defineComponent({
     }
     //获取非法物资或者箱子
     const getBoxOrMetaril = () => {
+      if (!saveStatus.value) {
+        return;
+      }
+      saveStatus.value = false;
       var menusArr = [];
       menus.value[1].data.map((item) => {
         if (item.resourceType == 1) {
@@ -188,7 +195,6 @@ export default defineComponent({
               if (res) {
                 getmenusArr.value.push(res);
                 console.log(getmenusArr.value)
-                menusArr = [];
               }
           });
         }
@@ -198,8 +204,8 @@ export default defineComponent({
 
     //整理正常物资跟仓库物资
     const readInform = () => {
-      console.log('111')
       var savependingall = menus.value[0].data.concat(getmenusArr.value)
+      getmenusArr.value = [];
       console.log(savependingall)
 
       var asavefilter = savependingall.filter((a) => {
@@ -311,7 +317,7 @@ export default defineComponent({
               })
             console.log(pengdingDelivery.value.data)
           } else {
-            message.success('没有清单')
+            //message.success('没有清单')
           }
       })
     }
@@ -397,7 +403,7 @@ export default defineComponent({
                   finddataready(listreader[i])
                 }
               } else {
-                message.success('没有新增数据')
+                //message.success('没有新增数据')
               }
             } else if(abcd.value){              
               for (let k = 0; k < readerdata.length; k++) {
@@ -453,7 +459,7 @@ export default defineComponent({
       console.log(lists)
       if (lists == true) {        
         clearInter()
-      } else if(lists == false){
+      } else if (lists == false) {        
         timeId.value = setInterval(() => {
           readerSweepGate();
         }, 5000)
@@ -551,7 +557,7 @@ export default defineComponent({
                                   listItem.outDetailList.map((ite, index) => {
                                     return (
                                       <>
-                                        <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                        <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
                                             {ite.materialInfo?ite.materialInfo.materialName:''}
                                           </span>
@@ -687,12 +693,12 @@ export default defineComponent({
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
                                   {listItem.resourceType == 2&& listItem.outDetailList ? (
-                                    listItem.outDetailList.map((item, index) => {
+                                    listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
+                                            {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
                                           </div>
                                         </>
@@ -799,7 +805,7 @@ export default defineComponent({
                         default: () => (
                           <div class="flex flex-row">
                             <div>
-                              {/* <ImagePreviewGroup>
+                              <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
                                   src={listItem.resourceType == 1 ? (listItem.materialInfo ?
@@ -811,12 +817,12 @@ export default defineComponent({
                                   width={88}
                                   height={88}
                                 ></Image>
-                              </ImagePreviewGroup> */}
-                              <a-image class="pt-3 w-80 h-80" src={listItem.resourceType == 1 ? (listItem.materialInfo ?
+                              </ImagePreviewGroup>
+                              {/* <a-image class="pt-3 w-80 h-80" src={listItem.resourceType == 1 ? (listItem.materialInfo ?
                                     listItem.materialInfo.materialImages[0].fileUrl :
                                     (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
                                     (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
-                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}  />
+                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}  /> */}
                             </div>                   
                             <div class="flex-auto ml-6 size-12 overflow-hidden">
                               <p class="flex">

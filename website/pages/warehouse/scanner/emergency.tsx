@@ -84,6 +84,8 @@ export default defineComponent({
         data: [],
       },
     ]);
+    //只允许提交一次状态
+    const saveStatus = ref(true);
     //归仓信息
     const goBackData = ref({});
     //扫描出仓模态框数据初始化
@@ -101,6 +103,7 @@ export default defineComponent({
     //扫描出仓模态框控制
     const handleClickPendingItem = () => {
       initPendingData();
+      saveStatus.value = true;
       visible.value = !visible.value;
     };
     // 菜单列表当前激活值
@@ -165,6 +168,10 @@ export default defineComponent({
     }
     //紧急出仓提交
     const saveemergen = () => {
+      if (!saveStatus.value) {
+        return;
+      }
+      saveStatus.value = false;
       store
       .dispatch(
         "warehouseModule/pendingModule/savetheEmergencyList",
@@ -278,7 +285,7 @@ export default defineComponent({
                   finddataready(readerdata[i])
                 }
               } else {
-                message.success('没有新增数据')
+                //message.success('没有新增数据')
               }
             } else if(abcd.value){              
               for (let k = 0; k < readerdata.length; k++) {
@@ -415,7 +422,7 @@ export default defineComponent({
                                   listItem.outDetailList.map((item, index) => {
                                     return (
                                       <>
-                                        <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                        <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
                                             {item.materialInfo?item.materialInfo.materialName:''}
                                           </span>
@@ -551,12 +558,12 @@ export default defineComponent({
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
                                   {listItem.resourceType == 2&& listItem.outDetailList ? (
-                                    listItem.outDetailList.map((item, index) => {
+                                    listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
+                                            {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
                                           </div>
                                         </>
