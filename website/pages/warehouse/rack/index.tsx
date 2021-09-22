@@ -81,6 +81,7 @@ export default defineComponent({
     });
 
     const handleSearch = (keyword: any) => {
+      if (!keyword.trim()) return
       boxInfoRackSearch(keyword.boxName)
     };
 
