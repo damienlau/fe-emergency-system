@@ -34,9 +34,6 @@ export default defineComponent({
     });
     //紧急出仓包装数据生成借货单
     const emergencyData = ref({
-      eventId: "",
-      eventName: "",
-      personnelJobNo: "",
       outDetails:[]
     })
     //扫描出仓模态框是否可见
@@ -118,7 +115,7 @@ export default defineComponent({
     const handlePendingSubmit = () => {
       var savependingall = menus.value[0].data;
       console.log(savependingall)
-      if (savependingall) {
+      if (!savependingall || savependingall.length == 0) {
         message.error("暂无出仓物资")
         return
       }
@@ -220,7 +217,7 @@ export default defineComponent({
       store
         .dispatch("warehouseModule/pendingModule/allmaterialPendingData",{materialCode:ready})
         .then((res) => {
-          if (res.length == 0 || typeof (res) == undefined) {
+          if (res.length == 0 || typeof (res) == undefined || !res) {
             message.error("没有找到该编号对应的箱子或物资");
           } else {
             Object.assign(res[0],{statusright:0},{resourceType:1})
@@ -235,7 +232,7 @@ export default defineComponent({
       store
       .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })
       .then((res) => {
-        if (!res||typeof(res)==undefined) {
+        if (!res||typeof(res)==undefined||res.length == 0) {
           outDetailAll(findready);
         } else {
           Object.assign(res[0],{statusright:0},{resourceType:2})
