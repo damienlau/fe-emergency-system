@@ -11,6 +11,19 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import classes from "./rackbox.module.less";
 
+interface RackPosition {
+  firstLayer: [];
+  secondLayer: [];
+  thirdLayer: [];
+}
+// 货架位置枚举
+enum RackPostionEnum {
+  firstLayer = 1,
+  secondLayer = 2,
+  thirdLayer = 3,
+  fourLayer = 4
+}
+
 export default defineComponent({
   setup() {
     const formColumn = ref([
@@ -47,6 +60,13 @@ export default defineComponent({
 
     // 箱子状态
     const boxStatus = ref(0)
+
+    // 货架位置数据
+    const rackPositionData = ref({
+      thirdLayer: [],
+      secondLayer: [],
+      firstLayer: []
+    } as RackPosition)
 
     const formData = ref({});
 
@@ -92,6 +112,9 @@ export default defineComponent({
     const initBoxData = () => {
       findBoxAllData(params.value as any).then((response) => {
         boxColumn.value = response
+        rackPositionData.value.firstLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.firstLayer)
+        rackPositionData.value.secondLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.secondLayer)
+        rackPositionData.value.thirdLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.thirdLayer)
       });
     };
 
@@ -154,10 +177,20 @@ export default defineComponent({
             extra: () => <Button type="primary" onClick={addOutFormRack}>整架借出</Button>,
           }}
         </PageHeader>
-        <div class={classes["box-content"]}>
-          {boxColumn.value.map((columns) => {
-            return <Box columns={columns} onClick={getBoxDetail} />;
-          })}
+        <div class={classes["box-wrapper"]}>
+          <div class={classes["box-content"]}>
+            {
+              Object.keys(rackPositionData.value).map((key) => {
+                return (
+                  <div class={key}>
+                    {rackPositionData.value[key as keyof RackPosition].map((columns) => {
+                      return <Box columns={columns} onClick={getBoxDetail} />;
+                    })}
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
         <Modal
           v-model={[boxDetailVisible.value, "visible"]}

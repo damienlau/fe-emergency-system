@@ -1,8 +1,24 @@
 .box {
+  &-wrapper {
+    flex: 1;
+    padding: 4.062vw 2.29vw 3.125vw;
+  }
+
   &-content {
-    padding: 4.06% 6.25%;
+    width: 100%;
+    height: 100%;
+    padding: 0 5vw 1.67vw;
     display: grid;
-    grid-template-columns: repeat(5,1fr);
-    grid-gap: 24px;
+    grid-template-columns: repeat(1,1fr);
+    grid-gap: 6.25vw 0;
+    background-image: url('assets/bg_huojia@2x.png');
+    background-size: 100% 100%;
+
+    & > div {
+      min-height: 8.854vw;
+      display: grid;
+      grid-template-columns: repeat(6,1fr);
+      grid-gap: 0 1.25vw;
+    }
   }
 }

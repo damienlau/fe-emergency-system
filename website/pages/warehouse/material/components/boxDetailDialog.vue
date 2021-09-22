@@ -374,6 +374,7 @@ export default defineComponent({
         key: "boxName",
         required: true,
         span: 12,
+        labelSpan: 6
       },
       {
         label: "箱子编码",
@@ -381,12 +382,14 @@ export default defineComponent({
         required: false,
         span: 12,
         disabled: true,
+        labelSpan: 10
       },
       {
         label: "类型",
         key: "departmentType",
         type: "select",
         span: 12,
+        labelSpan: 6,
         options: [
           {
             label: "急救/重症",
@@ -458,7 +461,7 @@ export default defineComponent({
         key: "rackNumber",
         type: "select",
         span: 8,
-        labelSpan: 9,
+        labelSpan: 15,
         options: [
           {
             label: "1号货架",
@@ -488,7 +491,7 @@ export default defineComponent({
         key: "rackPosition",
         type: "select",
         span: 4,
-        labelSpan: 3,
+        labelSpan: 2,
         options: [
           {
             label: "未知",
@@ -519,6 +522,7 @@ export default defineComponent({
         key: "size",
         type: "select",
         span: 12,
+        labelSpan: 6,
         options: [
           {
             label: "一箱一桌(800 x 600 x 600)",
@@ -544,6 +548,7 @@ export default defineComponent({
         key: "unit",
         required: true,
         span: 12,
+        labelSpan: 10
       },
       {
         label: "物资图片",
@@ -551,6 +556,7 @@ export default defineComponent({
         type: "upload",
         required: true,
         span: 24,
+        labelSpan: 3
       },
     ]);
     const otherForm = ref([
@@ -559,12 +565,14 @@ export default defineComponent({
         key: "assetCode",
         required: false,
         span: 12,
+        labelSpan: 8
       },
       {
         label: "重量",
         key: "weight",
         required: false,
         span: 12,
+        labelSpan: 8
       },
       {
         label: "备注",
@@ -572,6 +580,7 @@ export default defineComponent({
         type: "textArea",
         required: false,
         span: 24,
+        labelSpan: 4
       },
     ]);
     const initForm = ref([
