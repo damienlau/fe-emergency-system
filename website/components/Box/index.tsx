@@ -15,6 +15,9 @@ export default defineComponent({
       type: Object as PropType<boxRequestProps>,
       required: true,
     },
+    layer: {
+      type: String
+    }
   },
   emits: ['click'],
   setup(props, { emit }) {
@@ -157,7 +160,7 @@ export default defineComponent({
           ),
           default: () => (
             // Box Start
-            <div class={classes.box} onClick={showRackBoxDetailDialog}>
+            <div class={classes.box} onClick={showRackBoxDetailDialog} data-layer={props.layer}>
               {/* Badge */}
               {props.columns.status === boxStatus.out && (
                 <div class={classes['rack-out']}>
