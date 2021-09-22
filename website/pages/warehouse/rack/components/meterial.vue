@@ -113,7 +113,7 @@ export default defineComponent({
         resourceType: 2
       }
       addBatchPendingData(params).then(() => {
-        getMaterialsData()
+        getFirstMaterialsData()
       })
     }
 
