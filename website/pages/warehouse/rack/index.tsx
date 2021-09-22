@@ -80,6 +80,10 @@ export default defineComponent({
       materialTotalNum: 0,
     });
 
+    const formStyle = ref({
+      height: '500px'
+    })
+
     const handleSearch = (keyword: any) => {
       if (!keyword.trim()) return
       boxInfoRackSearch(keyword.boxName)
@@ -96,6 +100,10 @@ export default defineComponent({
       boxDetailDialogTitle.value = box.boxName + num;
       boxStatus.value = box.status
     };
+
+    const freshBoxDetailDialogTitle = (title: string) => {
+      boxDetailDialogTitle.value = title
+    }
 
     const closeBoxDetailDialog = () => {
       boxDetailVisible.value = false;
@@ -116,7 +124,7 @@ export default defineComponent({
     const boxInfoRackSearch = (keyword: string) => {
       const search = {
         rackNumber: params.value.rackNumber,
-        boxName: keyword
+        searchName: keyword
       }
       findBoxInfoRackSearch(search).then((response) => {
         searchResultBoxId.value = response
@@ -216,8 +224,10 @@ export default defineComponent({
                 boxCode={boxCode.value}
                 materialRemainNumber={materialRemainNumber.value}
                 boxHeight={500}
+                formStyle={formStyle.value}
                 status={1}
                 onClose={closeBoxDetailDialog}
+                onFreshBoxDetailDialogTitle={freshBoxDetailDialogTitle}
               ></BoxDetailDialog>
             ),
             extra: () => (

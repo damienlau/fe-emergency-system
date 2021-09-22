@@ -17,9 +17,14 @@
       </div>
     </template>
     <template #extra>
-      <a-button v-if="showDelete" type="text" danger @click.stop="handDelete"
-        >移除</a-button
+      <a-popconfirm
+        title="确认移除吗?"
+        ok-text="确认"
+        cancel-text="取消"
+        @confirm.stop="handDelete"
       >
+        <a-button v-if="showDelete" danger type="text">移除</a-button>
+      </a-popconfirm>
       <a-button
         v-if="showAdd"
         type="text"

@@ -320,9 +320,9 @@ export default defineComponent({
       state.boxDetailVisible = false;
     };
     const freshBoxDetailDialogTitle = (title) => {
-      state.showBoxDetail = false;
+      // state.showBoxDetail = false;
       state.boxDetailDialogTitle = title;
-      state.showBoxDetail = true;
+      // state.showBoxDetail = true;
     };
     return {
       ...toRefs(state),
