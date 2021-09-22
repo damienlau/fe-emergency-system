@@ -42,23 +42,23 @@ export default defineComponent({
     //扫描出仓模态框是否可见
     const visible = ref(false);
     //类型
-    const departType = ref([
-      { "1": "急救、重症" },
-      { "2": "门诊" },
-      { "3": "后勤" },
-      { "4": "指挥" },
-      { "5": "重症" },
-      { "6": "超声" },
-      { "7": "清创" },
-      { "8": "留观" },
-      { "9": "药房" },
-      { "10": "耗材" },
-      { "11": "手术" },
-      { "12": "防疫/隔离" },
-      { "13": "消毒" },
-      { "14": "住院" },
-      { "15": "检验" },
-    ])
+    const departType = ref({
+      1: "急救、重症",
+      2: "门诊",
+      3: "后勤",
+      4: "指挥",
+      5: "重症",
+      6: "超声",
+      7: "清创",
+      8: "留观",
+      9: "药房",
+      10: "耗材",
+      11: "手术",
+      12: "防疫/隔离",
+      13: "消毒",
+      14: "住院",
+      15: "检验",
+    })
     //货架位置
     const departRack = ref(
       { 0: "未知" ,
@@ -122,53 +122,53 @@ export default defineComponent({
         message.error("暂无出仓物资")
         return
       }
-      var asavefilter = savependingall.filter((a) => {
-        return (a.resourceType == 1)
+      var menusArr = [];
+      menus.value[0].data.map((item) => {
+        if (item.resourceType == 1) {
+          menusArr.push({
+            resourceType: item.resourceType,
+            materialInfo: {
+              id:item.id
+            }
+          })
+        } else if (item.resourceType == 2) {
+          menusArr.push({
+            resourceType: item.resourceType,
+            warehouseBoxInfo: {
+              id:item.id
+            },
+          })
+        }        
       })
-      console.log(asavefilter)
-      var asavependingall = asavefilter.map((item) => {       
-        return {
-          resourceType: item.resourceType,
-          materialInfo: {
-            id:item.id
-          },          
-        }
-      })
-      var bsavefilter = savependingall.filter((a) => {
-        return (a.resourceType == 2)
-      })
-      var bsavependingall = bsavefilter.map((item) => {       
-        return {
-          resourceType: item.resourceType,
-          warehouseBoxInfo: {
-            id:item.id
-          }
-        }
-      })        
-      var newdata = asavependingall.concat(bsavependingall)
       var emergency = JSON.parse(sessionStorage.getItem("nameNo"))
-      emergencyData.value.outDetails = newdata;
-      emergencyData.value.eventId = emergency.EventId;
-      emergencyData.value.eventName = emergency.eventName;
-      emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
+      emergencyData.value.outDetails.push(menusArr);
+      emergencyData.value.eventId = emergency.EventId||'';
+      emergencyData.value.eventName = emergency.eventName||'';
+      emergencyData.value.personnelJobNo = emergency.PersonnelJobNo||'';
+      console.log(emergencyData.value)
+     
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
         content: `出仓紧急扫描清单的全部物资`,
         centered: true,
         onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/savetheEmergencyList",
-              emergencyData.value                 
-            )
-            .then(() => {
-              finishedDelivery.value.data =[]
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });                
+          saveemergen()             
         }
       })
+    }
+    //紧急出仓提交
+    const saveemergen = () => {
+      store
+      .dispatch(
+        "warehouseModule/pendingModule/savetheEmergencyList",
+        emergencyData.value                 
+      )
+      .then(() => {
+        finishedDelivery.value.data =[]
+        visible.value = !visible.value;
+        //handleClickTabPane();
+      });
     }
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
@@ -477,7 +477,7 @@ export default defineComponent({
                                   ? "bg-red-400 border-danger border bg-opacity-10"
                                   : "bg-navy-2"
                               }
-                              class="mb-18 mr-8  h-modal-lightmin   ghost "
+                              class="mb-16 mr-8  h-modal-lightmin  ghost "
                             >
                               <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
                                 <div class="flex items-center justify-center">
