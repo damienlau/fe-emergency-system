@@ -1,7 +1,7 @@
 <template>
   <a-layout class="h-full bg-transparent">
     <a-layout class="bg-transparent">
-      <a-layout-content> 
+      <a-layout-content>
         <MapCanvas />
       </a-layout-content>
     </a-layout>
@@ -11,6 +11,7 @@
       width="100%"
       :collapsible="true"
       :collapsedWidth="484"
+      :trigger="null"
       style="overflow-y: auto"
     >
       <div class="h-full flex flex-col">
@@ -40,7 +41,7 @@
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { Icon } from "components";
-import MapCanvas from './components/map-canvas/index.vue'
+import MapCanvas from "./components/map-canvas/index.vue";
 import Sidebar from "./siderBar/index.vue";
 export default defineComponent({
   name: "SiderBar",
