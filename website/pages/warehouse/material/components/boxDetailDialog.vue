@@ -19,7 +19,7 @@
                 v-if="
                   dataSource.status == 1 &&
                   dataSource.inBatchPendingStatus == 0 &&
-                  !materialRemainNumber
+                  !dataSource.materialRemainNumber
                 "
               >
                 <a-button
@@ -92,7 +92,7 @@
                 v-if="
                   dataSource.status == 1 &&
                   dataSource.inBatchPendingStatus == 0 &&
-                  !materialRemainNumber
+                  !dataSource.materialRemainNumber
                 "
               >
                 <a-button
@@ -150,10 +150,17 @@
       </a-tab-pane>
       <a-tab-pane
         :key="'init'"
-        :tab="'箱内物资' + ' (' + materialRemainNumber + ')'"
+        :tab="
+          '箱内物资' +
+          ' (' +
+          dataSource.materialRemainNumber +
+          '/' +
+          dataSource.materialTotalNumber +
+          ')'
+        "
       >
         <div class="box" :style="{ height: boxHeight + 'px' }">
-          <div class="addBox" @click="showAddBoxTransfer" v-if="!isEditInit">
+          <div class="addBox" @click="showAddBoxTransfer">
             <PlusOutlined :style="{ fontSize: '30px' }" />
             <span class="mt-20"> 添加物资</span>
           </div>
@@ -161,12 +168,12 @@
             v-for="(item, index) in materialList"
             :key="index"
             :materialInfo="item"
-            :showDelete="!isEditInit"
+            :showDelete="true"
             @delete="handDeleteMeterial(item)"
           >
           </SmallMeterial>
         </div>
-        <div class="footer">
+        <!-- <div class="footer">   -- 产品最新需求  删除保存 编辑  删除
           <a-popconfirm
             title="确认删除吗?"
             ok-text="确认"
@@ -175,7 +182,7 @@
             v-if="
               dataSource.status == 1 &&
               dataSource.inBatchPendingStatus == 0 &&
-              !materialRemainNumber
+              !dataSource.materialRemainNumber
             "
           >
             <a-button
@@ -225,11 +232,11 @@
               <Icon class="align-baseline" :type="'save'" /> </template
             >保存</a-button
           >
-        </div>
+        </div> -->
       </a-tab-pane>
     </a-tabs>
 
-    <div class="btn" v-if="activeKey === 'init' && !isEditInit">
+    <div class="btn" v-if="activeKey === 'init'">
       <a-button type="text" @click="handBack">撤销</a-button>
       <a-popconfirm
         title="确认全部移除吗?"
@@ -320,7 +327,8 @@ import {
   findSpecifiedBoxData,
   deleteBoxInfoData,
   findMaterialInfoAllData,
-  deleteMeterialInfoData,
+  deleteBoxMaterialData,
+  addBoxMaterialData,
 } from "api/warehouse/meterial";
 import SmallMeterial from "./smallMeterial.vue";
 import { Form, Modal } from "components";
@@ -344,8 +352,8 @@ export default defineComponent({
     status: Number | undefined,
     boxHeight: {
       type: Number,
-      default: 320
-    }
+      default: 320,
+    },
   },
   setup(props, ctx) {
     const state = reactive({
@@ -367,6 +375,7 @@ export default defineComponent({
       value: null,
       tipsTitle: "",
       tipsContent: "",
+      boxTitle: "",
     });
     const baseForm = ref([
       {
@@ -374,7 +383,7 @@ export default defineComponent({
         key: "boxName",
         required: true,
         span: 12,
-        labelSpan: 6
+        labelSpan: 6,
       },
       {
         label: "箱子编码",
@@ -382,7 +391,7 @@ export default defineComponent({
         required: false,
         span: 12,
         disabled: true,
-        labelSpan: 10
+        labelSpan: 10,
       },
       {
         label: "类型",
@@ -548,7 +557,7 @@ export default defineComponent({
         key: "unit",
         required: true,
         span: 12,
-        labelSpan: 10
+        labelSpan: 10,
       },
       {
         label: "物资图片",
@@ -556,7 +565,7 @@ export default defineComponent({
         type: "upload",
         required: true,
         span: 24,
-        labelSpan: 3
+        labelSpan: 3,
       },
     ]);
     const otherForm = ref([
@@ -565,14 +574,14 @@ export default defineComponent({
         key: "assetCode",
         required: false,
         span: 12,
-        labelSpan: 8
+        labelSpan: 8,
       },
       {
         label: "重量",
         key: "weight",
         required: false,
         span: 12,
-        labelSpan: 8
+        labelSpan: 8,
       },
       {
         label: "备注",
@@ -580,7 +589,7 @@ export default defineComponent({
         type: "textArea",
         required: false,
         span: 24,
-        labelSpan: 4
+        labelSpan: 4,
       },
     ]);
     const initForm = ref([
@@ -626,6 +635,14 @@ export default defineComponent({
         res.data.departmentType = String(res.data.departmentType);
         state.dataSource = res.data;
         state.loading = true;
+        const num =
+          "(" +
+          res.data.materialRemainNumber +
+          "/" +
+          res.data.materialTotalNumber +
+          ")";
+        const boxTitle = res.data.boxName + num;
+        ctx.emit("freshBoxDetailDialogTitle", boxTitle);
       });
     };
     const initMaterialList = () => {
@@ -644,6 +661,18 @@ export default defineComponent({
     const chooseMeterial = (arr) => {
       state.materialList = state.materialList.concat(arr);
       state.addBoxTransferVisible = false;
+      var arr = [];
+      state.materialList.map((item) => {
+        arr.push(item.id);
+      });
+      const params = {
+        id: state.dataSource.id,
+        materialIds: arr,
+      };
+      addBoxMaterialData(params).then((res) => {
+        initData();
+        ctx.emit("freshBoxList");
+      });
     };
     const handBack = () => {
       initMaterialList();
@@ -660,24 +689,20 @@ export default defineComponent({
         state.tipsTitle = "无法批量移除";
         state.tipsContent = "箱内物资存在不在库状态物资, 无法批量移除";
       } else {
-        state.materialList = [];
+        const params = {
+          id: state.dataSource.id,
+          materialIds: [0],
+        };
+        deleteBoxMaterialData(params).then((res) => {
+          if (res.data) {
+            state.materialList = [];
+            initData();
+            ctx.emit("freshBoxList");
+          }
+        });
       }
     };
-    const deleteChoose = (data) => {
-      if (data.status === 1) {
-        state.materialList.splice(
-          state.materialList.findIndex((item) => {
-            item.id === data.id;
-          }),
-          1
-        );
-      } else {
-        state.removeMaterialVisible = true;
-        state.tipsTitle = "该物资无法移除";
-        state.tipsContent =
-          "该物资" + returnStatus(data.status).text + "状态, 无法移除";
-      }
-    };
+    // const deleteChoose = (data) => {};
     const returnStatus = (status) => {
       let state = {};
       switch (status) {
@@ -759,13 +784,29 @@ export default defineComponent({
       });
     };
 
-    // 删除物资
-    const handDeleteMeterial = ({ id }) => {
-      deleteMeterialInfoData({ id }).then((res) => {
-        if (res.data) {
-          ctx.emit("close");
-        }
-      });
+    // 删除箱内物资单个
+    const handDeleteMeterial = (data) => {
+      if (data.status === 1) {
+        const params = {
+          id: state.dataSource.id,
+          materialIds: [data.id],
+        };
+        deleteBoxMaterialData(params).then((res) => {
+          state.materialList.splice(
+            state.materialList.findIndex((item) => {
+              item.id === data.id;
+            }),
+            1
+          );
+          initData();
+          ctx.emit("freshBoxList");
+        });
+      } else {
+        state.removeMaterialVisible = true;
+        state.tipsTitle = "该物资无法移除";
+        state.tipsContent =
+          "该物资" + returnStatus(data.status).text + "状态, 无法移除";
+      }
     };
 
     const handConfirmDelete = () => {
@@ -795,7 +836,7 @@ export default defineComponent({
       handBack,
       handDeleteAll,
       addBoxMaterial,
-      deleteChoose,
+      // deleteChoose,
       closeDeleteDialog,
       handConfirmDelete,
       returnStatus,
