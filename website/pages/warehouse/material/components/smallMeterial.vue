@@ -31,7 +31,6 @@
     <div class="bottom flex flex-row w-fll">
       <a-image class="pt-3" :width="80" :height="80" :src="img" />
       <div class="right ml-20">
-
         <div class="row">
           <span class="label">货架位置</span>
           <span class="value">{{
@@ -225,8 +224,7 @@ export default defineComponent({
     height: 137px;
     background: #144071;
 
-    /deep/ .ant-card-head-wrapper {
-
+    :deep(.ant-card-head-wrapper) {
       .ant-card-head-title {
         padding: 0;
       }
