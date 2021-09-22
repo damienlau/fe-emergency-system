@@ -799,7 +799,7 @@ export default defineComponent({
                         default: () => (
                           <div class="flex flex-row">
                             <div>
-                              <ImagePreviewGroup>
+                              {/* <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
                                   src={listItem.resourceType == 1 ? (listItem.materialInfo ?
@@ -811,7 +811,12 @@ export default defineComponent({
                                   width={88}
                                   height={88}
                                 ></Image>
-                              </ImagePreviewGroup>
+                              </ImagePreviewGroup> */}
+                              <a-image class="pt-3 w-80 h-80" src={listItem.resourceType == 1 ? (listItem.materialInfo ?
+                                    listItem.materialInfo.materialImages[0].fileUrl :
+                                    (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
+                                    (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
+                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}  />
                             </div>                   
                             <div class="flex-auto ml-6 size-12 overflow-hidden">
                               <p class="flex">

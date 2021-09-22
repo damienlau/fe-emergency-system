@@ -68,7 +68,7 @@ export default defineComponent({
           name: formData.value["key"]        
         });
       }
-      visible.value = !visible.value;
+      visible.value = !visible.value;      
     };
     
     // 监听模态框表单提交事件
@@ -140,7 +140,7 @@ export default defineComponent({
 
     watch(visible, (lists) => {
       if (!lists) {        
-        formData.value = '';
+        formData.value = {};
       }
     });
 
