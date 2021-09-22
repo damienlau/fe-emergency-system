@@ -279,7 +279,7 @@ export default defineComponent({
         span: 12,
       },
       {
-        label: "物资图片",
+        label: "箱子图片",
         key: "boxImages",
         type: "upload",
         required: true,
