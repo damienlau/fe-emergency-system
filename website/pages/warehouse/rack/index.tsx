@@ -227,6 +227,7 @@ export default defineComponent({
                 formStyle={formStyle.value}
                 status={1}
                 onClose={closeBoxDetailDialog}
+                onFreshBoxList={initBoxData}
                 onFreshBoxDetailDialogTitle={freshBoxDetailDialogTitle}
               ></BoxDetailDialog>
             ),
