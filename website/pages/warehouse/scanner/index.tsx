@@ -63,11 +63,6 @@ export default defineComponent({
     // 选中扫描菜单卡片
     const handleClickMenuItem = (activedItemKey) => {
       formData.value["key"] = activedItemKey;
-      if (formData.value["key"] == "Emergency") {
-        router.push({
-          name: formData.value["key"]        
-        });
-      }
       visible.value = !visible.value;      
     };
     
@@ -78,21 +73,30 @@ export default defineComponent({
         message.info('事件或工号不能为空')
         return
       }
-      store
-        .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList"
-          , {
-            eventId: formdata.EventId,
-            personnelJobNo: formdata.PersonnelJobNo
-          })
-        .then((response) => {
-          if (response.length != 0) {
-            for (var resp = 0; resp < response.length; resp++){
-              DetailSpecifiedShortcutList(response[resp].id,fdata)
-            }              
-          } else {
-            message.info('无借货清单')
-          }
-      });             
+      if(formData.value["key"] == "Emergency") {
+        sessionStorage.setItem("nameNo", JSON.stringify(fdata));
+        visible.value = !visible.value;
+        router.push({
+          name: formData.value["key"]        
+        });
+      } else {
+          store
+          .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList"
+            , {
+              eventId: formdata.EventId,
+              personnelJobNo: formdata.PersonnelJobNo
+            })
+          .then((response) => {
+            if (response.length != 0) {
+              for (var resp = 0; resp < response.length; resp++){
+                DetailSpecifiedShortcutList(response[resp].id,fdata)
+              }              
+            } else {
+              message.info('无借货清单')
+            }
+        });  
+      }
+                 
     };
 
     //获取借货单明细
@@ -128,13 +132,7 @@ export default defineComponent({
               return
             }
         })
-      } else if(formData.value["key"] == "Emergency"){
-        sessionStorage.setItem("nameNo", JSON.stringify(fdata));
-        visible.value = !visible.value;
-        router.push({
-          name: formData.value["key"]        
-        });
-      } 
+      }
     }
 
 
