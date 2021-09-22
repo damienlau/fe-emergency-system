@@ -124,3 +124,15 @@ export function findBoxRackCount(params) {
 export function findBoxInfoDistinct(params) {
   return request.get("material/info/all/distinct", { params });
 }
+// 增加箱子里的物资
+export function addBoxMaterialData(params) {
+  return request.post("/box/info/add/material/inbox", {
+    ...params,
+  });
+}
+// 移除 批量移除箱内物资  // 约定 id:0  删除所有
+export function deleteBoxMaterialData(params) {
+  return request.post("/box/info/delete/material/inbox", {
+    ...params,
+  });
+}
