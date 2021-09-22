@@ -9,7 +9,8 @@ import {
   allBoxinfoPending,
   allmaterialPending,
   scannerInfoall,
-  findoutformId
+  findoutformId,
+  savetheEmergency
 } from "api/warehouse/pending";
 
 const state = () => ({});
@@ -50,6 +51,16 @@ const actions = {
       })
     })
   },
+
+  //紧急出仓物资确认
+  savetheEmergencyList: ({ dispatch }, params) => {
+    return new Promise((reslove) => {
+      savetheEmergency(params).then((res) => {
+        reslove(res.data);
+      })
+    })
+  },
+  
 
   //扫描门开启
   sweepGateOpenData: ({ dispatch }, params) => {

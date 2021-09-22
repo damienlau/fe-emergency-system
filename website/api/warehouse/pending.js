@@ -13,7 +13,8 @@ const shortcutRequestUrls = {
   allBoxinfo: "/box/info/all",
   material: "/material/info/all",
   infoall: "/event/info/all",
-  findoutform:"/outDetail/add"
+  findoutform: "/outDetail/add",
+  saveemergency: "/outDetail/confirm/emergency"
 };
 
 // 出仓待出仓列表
@@ -43,6 +44,13 @@ export const returnSpecifiedShortcutData = (params) => {
     return response;
   });
 };
+
+//紧急扫描出仓
+export const savetheEmergency = (params) => {
+  return request.post(shortcutRequestUrls.saveemergency,params ).then((response) => {
+    return response;
+  });
+}
 
 //扫描门开启
 export const sweepGateOpen = (params) => {

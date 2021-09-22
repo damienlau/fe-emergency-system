@@ -9,12 +9,13 @@ import {
   Image,
 } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty,Card } from "components";
-import { useRouter } from "vue-router";
+import emptyscanner from "assets/icon_empty_scanner.png";
+import emptydata from "assets/icon_empty_data.png";
+import emptysearch from "assets/icon_empty_search.png";
 
 export default defineComponent({
   setup() {
     const store = useStore();
-    const router = useRouter();
     // 待出仓标题及数据展示
     const pengdingDelivery = ref({
       label: "待出仓物资",
@@ -58,6 +59,21 @@ export default defineComponent({
       { "14": "住院" },
       { "15": "检验" },
     ])
+    //货架位置
+    const departRack = ref(
+      { 0: "未知" ,
+       1: "一层（下）" ,
+       2: "二层（中）" ,
+       3: "三层（上）" ,
+       4: "四层（顶）" }
+    )
+    //尺寸
+    const departSize = ref(
+      { 1: "一箱一桌(800x600x600)" ,
+       2: "一箱两柜(1200x800x800)" ,
+       3: "一箱一柜(1200x800x400)" ,
+       4: " 其它箱子" }
+    )
     //出仓列表
     const menus = ref([
       {
@@ -67,6 +83,8 @@ export default defineComponent({
         data: [],
       },
     ]);
+    //归仓信息
+    const goBackData = ref({});
     //扫描出仓模态框数据初始化
     const initPendingData = () => {
       menus.value[0].data = []      
@@ -92,6 +110,10 @@ export default defineComponent({
     const handleSubmit = () => {
       visible.value = !visible.value;
     };
+    //获取借货单outFrom
+    const getOutFrom = ref();
+    //非法物资数据缓存
+    const getmenusArr = ref([]);
     //监听模态框出仓事件
     const handlePendingSubmit = () => {
       var savependingall = menus.value[0].data;
@@ -106,11 +128,10 @@ export default defineComponent({
       console.log(asavefilter)
       var asavependingall = asavefilter.map((item) => {       
         return {
-          id: item.id,
-          outFormId:item.outFormId,
           resourceType: item.resourceType,
-          status:item.status,
-          materialInfo:item.materialInfo,          
+          materialInfo: {
+            id:item.id
+          },          
         }
       })
       var bsavefilter = savependingall.filter((a) => {
@@ -118,29 +139,27 @@ export default defineComponent({
       })
       var bsavependingall = bsavefilter.map((item) => {       
         return {
-          id: item.id,
-          outFormId:item.outFormId,
           resourceType: item.resourceType,
-          status:item.status,
-          warehouseBoxInfo: item.warehouseBoxInfo,
-          outDetailList:item.outDetailList
+          warehouseBoxInfo: {
+            id:item.id
+          }
         }
       })        
       var newdata = asavependingall.concat(bsavependingall)
       var emergency = JSON.parse(sessionStorage.getItem("nameNo"))
       emergencyData.value.outDetails = newdata;
-      emergencyData.value.eventId = emergency.eventId;
+      emergencyData.value.eventId = emergency.EventId;
       emergencyData.value.eventName = emergency.eventName;
-      emergencyData.value.personnelJobNo = emergency.personnelJobNo;
+      emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
-        content: `出仓符合清单和未符合清单的全部物资`,
+        content: `出仓紧急扫描清单的全部物资`,
         centered: true,
         onOk: () => {
           store
             .dispatch(
-              "warehouseModule/pendingModule/saveSpecifiedShortcutSure",
+              "warehouseModule/pendingModule/savetheEmergencyList",
               emergencyData.value                 
             )
             .then(() => {
@@ -204,8 +223,8 @@ export default defineComponent({
           if (res.length == 0 || typeof (res) == undefined) {
             message.error("没有找到该编号对应的箱子或物资");
           } else {
-            res.statusright = 0;
-            finishedDelivery.value.data.unshift(res);
+            Object.assign(res[0],{statusright:0},{resourceType:1})
+            finishedDelivery.value.data.unshift(res[0]);
             console.log('在全部物资查找到该物资')
           }  
       })
@@ -219,9 +238,8 @@ export default defineComponent({
         if (!res||typeof(res)==undefined) {
           outDetailAll(findready);
         } else {
-          res.statusright = 0;
-          //Object.assign(res,{statusright:1})
-          finishedDelivery.value.data.unshift(res);
+          Object.assign(res[0],{statusright:0},{resourceType:2})
+          finishedDelivery.value.data.unshift(res[0]);
           console.log('在全部仓库查找到该箱子')
         }                            
       })
@@ -342,30 +360,30 @@ export default defineComponent({
                           <div class="mb-16 mr-8 bg-navy-2 h-modal-lightmin">
                             <div class="h-64 flex items-center justify-center text-white border-b border-navy-1">
                               <div class="flex items-center justify-center">
-                                <span class="text-20">
+                              <span class="text-20">
                                 {
-                                  listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.boxName
+                                  listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.materialName:''):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxName:'')
                                 }
                                 </span>
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo.materialRemainNumber?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
                                     </span>
                                   ):''
-                                }                                
+                                }                               
                               </div>
                             </div>
                             <div class="flex py-16 px-16">
                               <div class="h-modal-lightermin w-modal-lightermin ">
-                              {listItem.resourceType == 1 && listItem.materialInfo.materialImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                              {listItem.resourceType == 1 && listItem.materialInfo.materialImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
+                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -393,7 +411,7 @@ export default defineComponent({
                                       <>
                                         <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:''}
                                           </span>
                                         </div>
                                       </>
@@ -465,13 +483,18 @@ export default defineComponent({
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
-                                  }
+                                      listItem.resourceType == 1 ?
+                                        (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) :
+                                        (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)
+                                    }
                                   </span>
                                   {
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
-                                        {listItem.warehouseBoxInfo.materialRemainNumber?(listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                        {listItem.warehouseBoxInfo ?
+                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          (listItem.materialRemainNumber ?
+                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
                                       </span>
                                     ):''
                                   }
@@ -497,14 +520,14 @@ export default defineComponent({
                               <div class="flex py-16 px-16">
                                 <div class="h-modal-lightermin w-modal-lightermin ">
                                   <div class="h-modal-lightermin w-modal-lightermin ">
-                                    {listItem.resourceType == 1 && listItem.materialInfo.materialImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo.materialImages[0].fileUrl} />
-                                  : (listItem.resourceType == 2 && listItem.warehouseBoxInfo.boxImages[0].fileUrl ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo.boxImages[0].fileUrl} />
+                                  {listItem.resourceType == 1  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.materialInfo?listItem.materialInfo.materialImages[0].fileUrl:(listItem.materialImages?listItem.materialImages[0].fileUrl:'')} />
+                                  : (listItem.resourceType == 2  ? <img class="h-modal-lightermin w-modal-lightermin" src={listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxImages[0].fileUrl:(listItem.boxImages?listItem.boxImages[0].fileUrl:'')} />
                                     :(
                                       <div class="flex items-center justify-center h-full">
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -515,31 +538,31 @@ export default defineComponent({
                                 </div>
                                 <div
                                   class={
-                                    !listItem.warehouseBoxInfo
+                                    listItem.resourceType == 1
                                       ? "flex items-center"
                                       : ""
                                   }
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
-                                  {!listItem.warehouseBoxInfo ? (
-                                    <div class="m-auto">
-                                      <a-empty
-                                        description="空空如也"
-                                        image={`/website/assets/icon_empty_data.png`}
-                                      ></a-empty>
-                                    </div>
-                                  ) : (
+                                  {listItem.resourceType == 2&& listItem.outDetailList ? (
                                     listItem.outDetailList.map((item, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                              {item.materialInfo.materialName}
+                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
                                             </span>
                                           </div>
                                         </>
                                       );
                                     })
+                                  ) : (
+                                    <div class="m-auto">
+                                      <a-empty
+                                        description="空空如也"
+                                        image={emptydata}
+                                      ></a-empty>
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -600,16 +623,16 @@ export default defineComponent({
                         <p class="text-16 font-medium">
                           <span>
                             {
-                              listItem.resourceType == 1 ? listItem.materialInfo.materialName:listItem.warehouseBoxInfo.materialName
+                              listItem.resourceType == 1 ? (listItem.materialInfo ? listItem.materialInfo.materialName : listItem.materialName) : (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxName : listItem.boxName)                              
                             }
                             </span>
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo.materialRemainNumber/listItem.warehouseBoxInfo.materialTotalNumber}                                      
+                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
                                 </span>
                               ):''
-                            }                          
+                            }                         
                         </p>
                       ),
                       // 卡片自定义附加操作区
@@ -637,8 +660,12 @@ export default defineComponent({
                               <ImagePreviewGroup>
                                 <Image
                                   class="w-full h-full object-cover rounded"
-                                  src={listItem.url}
-                                  fallback="assets/icon_empty_search.png"
+                                  src={listItem.resourceType == 1 ? (listItem.materialInfo ?
+                                    listItem.materialInfo.materialImages[0].fileUrl :
+                                    (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
+                                    (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
+                                      (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}
+                                  fallback={emptysearch}
                                   width={88}
                                   height={88}
                                 ></Image>
@@ -654,29 +681,40 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.rackPosition:listItem.warehouseBoxInfo.rackPosition
+                                    listItem.resourceType == 1 ?
+                                      (listItem.materialInfo ? departRack.value[listItem.materialInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : '')) :
+                                      (listItem.warehouseBoxInfo ? departRack.value[listItem.warehouseBoxInfo.rackPosition] :
+                                        (listItem.rackPosition ? departRack.value[listItem.rackPosition] : ''))
                                   }                                 
                                 </div>
                               </p>
                               <p class="flex">
-                                <span class="text-white text-opacity-70">
-                                  类型:
-                                </span>
-                                <div
+                              <div class={listItem.resourceType == 1?"":"hidden"}
                                   style="white-space: nowrap;overflow: hidden;"
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ?
-                                    departType[listItem.materialInfo.departmentType] :
-                                    departType[listItem.warehouseBoxInfo.departmentType]
+                                     (listItem.materialInfo
+                                      ? departType.value[listItem.materialInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
+                                   }
+                                </div>
+                                <div class={listItem.resourceType == 2?"":"hidden"}
+                                  style="white-space: nowrap;overflow: hidden;"
+                                  class="overflow-ellipsis flex-1"
+                                >
+                                  {
+                                    (listItem.warehouseBoxInfo
+                                      ? departType.value[listItem.warehouseBoxInfo.departmentType] :
+                                      departType.value[listItem.departmentType])
                                   }
                                 </div>
                               </p>
                               <p class="flex">
-                                <span class="text-white text-opacity-70">
+                              <span class="text-white text-opacity-70">
                                   {
-                                    listItem.resourceType == 1 ?"箱号:":"尺寸"
+                                    listItem.resourceType == 1 ?"箱号:":"尺寸:"
                                   }
                                 </span>
                                 <div
@@ -684,7 +722,9 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxName:listItem.warehouseBoxInfo.size
+                                    listItem.resourceType == 2 ?
+                                      (listItem.warehouseBoxInfo ? departSize.value[listItem.warehouseBoxInfo.size] : (listItem.size?departSize.value[listItem.size]:'')) :
+                                      (listItem.materialInfo ? listItem.materialInfo.boxName : listItem.boxName)
                                   }
                                 </div>
                               </p>
@@ -697,7 +737,7 @@ export default defineComponent({
                                   class="overflow-ellipsis flex-1"
                                 >
                                   {
-                                    listItem.resourceType == 1 ? listItem.materialInfo.boxCode:listItem.warehouseBoxInfo.boxCode
+                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:listItem.boxCode)
                                   }
                                 </div>
                               </p>

@@ -64,6 +64,11 @@ export default defineComponent({
     const handleClickMenuItem = (activedItemKey) => {
       visible.value = !visible.value;
       formData.value["key"] = activedItemKey;
+      // if (formData.value["key"] == "Emergency") {
+      //   router.push({
+      //     name: formData.value["key"]        
+      //   });
+      // }
     };
     
     // 监听模态框表单提交事件
@@ -105,6 +110,7 @@ export default defineComponent({
               });
             } else {
               message.info('无借货清单!')
+              return
             }
         })
       } else if (formData.value["key"] == "Belong") {
@@ -119,11 +125,16 @@ export default defineComponent({
               });
             } else {
               message.info('无借货清单!')
+              return
             }
         })
-      } else {
-        message.info('紧急出仓入口')
-      }
+      } else if(formData.value["key"] == "Emergency"){
+        sessionStorage.setItem("nameNo", JSON.stringify(fdata));
+        visible.value = !visible.value;
+        router.push({
+          name: formData.value["key"]        
+        });
+      } 
     }
 
 

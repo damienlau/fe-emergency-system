@@ -10,8 +10,11 @@ import {
 } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty,Card } from "components";
 import { useRouter } from "vue-router";
-import { read } from "fs";
-import { type } from "os";
+import emptyscanner from "assets/icon_empty_scanner.png";
+import emptydata from "assets/icon_empty_data.png";
+import emptysearch from "assets/icon_empty_search.png";
+
+
 
 export default defineComponent({
   setup() {
@@ -490,7 +493,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前待出仓扫描，无'申请清单'"
-                          image={`assets/icon_empty_scanner.png`}
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -522,7 +525,7 @@ export default defineComponent({
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -541,16 +544,16 @@ export default defineComponent({
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`assets/icon_empty_data.png`}
+                                      image={emptydata}
                                     ></a-empty>
                                   </div>
                                 ) : (
-                                  listItem.outDetailList.map((item, index) => {
+                                  listItem.outDetailList.map((ite, index) => {
                                     return (
                                       <>
                                         <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:''}
+                                            {ite.materialInfo?ite.materialInfo.materialName:''}
                                           </span>
                                         </div>
                                       </>
@@ -603,7 +606,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前已出仓扫描，无'申请清单'"
-                          image={`assets/icon_empty_scanner.png`}
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -666,7 +669,7 @@ export default defineComponent({
                                       <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                       </div>
                                       </div>
@@ -699,7 +702,7 @@ export default defineComponent({
                                     <div class="m-auto">
                                       <a-empty
                                         description="空空如也"
-                                        image={`assets/icon_empty_data.png`}
+                                        image={emptydata}
                                       ></a-empty>
                                     </div>
                                   )}
@@ -750,7 +753,7 @@ export default defineComponent({
               <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
                   <a-empty                   
                     description="空空如也"
-                    image={`assets/icon_empty_data.png`}>
+                    image={emptydata}>
                   </a-empty>
                 </div>
               {cardData.value.map((listItem) => {
@@ -804,7 +807,7 @@ export default defineComponent({
                                     (listItem.materialImages?listItem.materialImages[0].fileUrl:'')) :
                                     (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxImages[0].fileUrl :
                                       (listItem.boxImages?listItem.boxImages[0].fileUrl:''))}
-                                  fallback="assets/icon_empty_search.png"
+                                  fallback={emptysearch}
                                   width={88}
                                   height={88}
                                 ></Image>
