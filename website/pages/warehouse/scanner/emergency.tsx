@@ -148,9 +148,9 @@ export default defineComponent({
       var newdata = asavependingall.concat(bsavependingall)
       var emergency = JSON.parse(sessionStorage.getItem("nameNo"))
       emergencyData.value.outDetails = newdata;
-      emergencyData.value.eventId = emergency.EventId;
-      emergencyData.value.eventName = emergency.eventName;
-      emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
+      // emergencyData.value.eventId = emergency.EventId;
+      // emergencyData.value.eventName = emergency.eventName;
+      // emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
@@ -351,7 +351,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前待出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -402,7 +402,7 @@ export default defineComponent({
                                   <div class="m-auto">
                                     <a-empty
                                       description="空空如也"
-                                      image={`/website/assets/icon_empty_data.png`}
+                                      image={emptydata}
                                     ></a-empty>
                                   </div>
                                 ) : (
@@ -464,7 +464,7 @@ export default defineComponent({
                       <div class="m-auto">
                         <a-empty
                           description="当前已出仓扫描，无'申请清单'"
-                          image={`/website/assets/icon_empty_scanner.png`}
+                          image={emptyscanner}
                         ></a-empty>
                       </div>
                     ) : (
@@ -611,7 +611,7 @@ export default defineComponent({
               <div class={cardData.value.length == 0?'':'hidden'} style="top:50%;left:50%;margin-left:-85px;margin-top:-50px;" class="absolute">
                   <a-empty                   
                     description="空空如也"
-                    image={`/website/assets/icon_empty_data.png`}>
+                    image={emptydata}>
                   </a-empty>
                 </div>
               {cardData.value.map((listItem) => {

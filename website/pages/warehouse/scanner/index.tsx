@@ -62,13 +62,13 @@ export default defineComponent({
 
     // 选中扫描菜单卡片
     const handleClickMenuItem = (activedItemKey) => {
-      visible.value = !visible.value;
       formData.value["key"] = activedItemKey;
-      // if (formData.value["key"] == "Emergency") {
-      //   router.push({
-      //     name: formData.value["key"]        
-      //   });
-      // }
+      if (formData.value["key"] == "Emergency") {
+        router.push({
+          name: formData.value["key"]        
+        });
+      }
+      visible.value = !visible.value;
     };
     
     // 监听模态框表单提交事件
