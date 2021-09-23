@@ -1,5 +1,11 @@
 import { computed, defineComponent, ref } from "@vue/runtime-core";
-import { Button, Modal as AntModal, Popconfirm, Space } from "ant-design-vue";
+import {
+  Button,
+  Modal as AntModal,
+  Popconfirm,
+  Space,
+  Tooltip,
+} from "ant-design-vue";
 import { responseProps } from "api/utils";
 import {
   addLendOutData,
@@ -383,9 +389,17 @@ export default defineComponent({
                             {item?.resourceType === materialType.box
                               ? `箱子编码：`
                               : `物资编码：`}
-                            {item?.resourceType === materialType.box
-                              ? item?.warehouseBoxInfo?.boxCode
-                              : item?.warehouseMaterialInfo?.materialCode}
+                            <Tooltip
+                              title={
+                                item?.resourceType === materialType.box
+                                  ? item?.warehouseBoxInfo?.boxCode
+                                  : item?.warehouseMaterialInfo?.materialCode
+                              }
+                            >
+                              {item?.resourceType === materialType.box
+                                ? item?.warehouseBoxInfo?.boxCode
+                                : item?.warehouseMaterialInfo?.materialCode}
+                            </Tooltip>
                           </p>
                         </div>
                       </section>

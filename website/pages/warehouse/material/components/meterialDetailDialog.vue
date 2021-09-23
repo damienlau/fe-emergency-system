@@ -63,6 +63,7 @@
         :columns="otherForm"
         :disabled="isEditOther"
         @submit="handleSubmitOther"
+        :footerBtnClassName="'otherFooterBtn'"
       >
         <template #button>
           <div class="flex flex-row items-center justify-center">
@@ -384,5 +385,11 @@ export default defineComponent({
 <style lang="less" scoped>
 :deep(.ant-form-item-label) {
   width: 100px;
+}
+:deep(.ant-calendar-picker-input) {
+  width: 323px;
+}
+:deep(.otherFooterBtn) {
+  margin-top: 60px;
 }
 </style>

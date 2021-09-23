@@ -4,7 +4,8 @@ import { useStore } from "vuex";
 import { TableSelct } from "components";
 import { Icon } from "components";
 export default defineComponent({
-  setup() {
+  emits: ["handDetail"],
+  setup(props, { emit, slots }) {
     const store = useStore();
     // 表格数据
     const tableData = ref([]);
@@ -251,10 +252,7 @@ export default defineComponent({
           <a-button
             type="link"
             onClick={() => {
-              store.commit(
-                "warehouseModule/recordModule/OPEN_DETAILDIALOG",
-                record
-              );
+              emit("handDetail", record);
             }}
           >
             {record.goodsName.resourceType == 1

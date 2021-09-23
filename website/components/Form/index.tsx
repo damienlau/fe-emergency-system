@@ -54,6 +54,10 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    footerBtnClassName: {
+      type: String,
+      required: false,
+    },
     layout: {
       type: String,
       required: false,
@@ -242,7 +246,15 @@ export default defineComponent({
           })}
           {slots.button && (
             <Col span={24}>
-              <FormItem class="text-center">{slots.button?.()}</FormItem>
+              <FormItem
+                class={
+                  props.footerBtnClassName
+                    ? props.footerBtnClassName + " text-center"
+                    : "text-center "
+                }
+              >
+                {slots.button?.()}
+              </FormItem>
             </Col>
           )}
         </Row>

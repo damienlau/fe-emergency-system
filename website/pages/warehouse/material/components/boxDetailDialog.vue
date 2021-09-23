@@ -100,7 +100,7 @@
                 <a-button
                   type="primary"
                   ghost
-                  class="flex flex-row items-center mr-3"
+                  class="flex flex-row items-center mr-3 otherFooterBtn"
                   danger
                 >
                   <template #icon>
@@ -117,7 +117,7 @@
                   dataSource.inBatchPendingStatus == 0 &&
                   dataSource.materialRemainNumber
                 "
-                class="flex flex-row items-center mr-3"
+                class="flex flex-row items-center mr-3 otherFooterBtn"
                 danger
                 @click="deleteBoxVisible = true"
               >
@@ -128,7 +128,7 @@
               </a-button>
               <a-button
                 ghost
-                class="mr-3"
+                class="mr-3 otherFooterBtn"
                 v-if="isEditOther && dataSource.status == 1"
                 @click="isEditOther = false"
               >
@@ -138,7 +138,7 @@
               >
               <a-button
                 ghost
-                class="mr-3"
+                class="mr-3 otherFooterBtn"
                 htmlType="submit"
                 v-if="!isEditOther"
               >
@@ -795,6 +795,9 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
+.otherFooterBtn {
+  margin-top: 170px;
+}
 .box {
   width: 100%;
   overflow-y: auto;
