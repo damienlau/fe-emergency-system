@@ -155,15 +155,7 @@
   </div>
 </template>
 <script>
-import {
-  defineComponent,
-  ref,
-  reactive,
-  toRefs,
-  onMounted,
-  computed,
-  watch,
-} from "vue";
+import { defineComponent, ref, reactive, toRefs, onMounted } from "vue";
 import BoxInfo from "../components/boxInfo.vue";
 import AddBoxDialog from "../components/addBoxDialog.vue";
 import AddMeterialDialog from "../components/addMeterialDialog.vue";
@@ -173,7 +165,7 @@ import BoxDetailDialog from "../components/boxDetailDialog.vue";
 import MeterialInfo from "../components/meterialInfo.vue";
 import { Modal, Tabs } from "components";
 import { findCriteriaPageData, findBoxPageData } from "api/warehouse/meterial";
-import { useStore } from "vuex";
+
 export default defineComponent({
   name: "SiderBar",
   components: {
@@ -191,7 +183,6 @@ export default defineComponent({
   setup() {
     const meterialSearchValue = ref("");
     const boxSearchValue = ref("");
-    const store = useStore();
     const state = reactive({
       activeKey: "materials",
       meterialAddVisible: false, //新增物资
@@ -220,14 +211,7 @@ export default defineComponent({
       },
       showBoxDetail: true,
     });
-    const openDetailDialog = computed(() => {
-      return store.state.warehouseModule.recordModule.openDetailDialog;
-    });
-    watch(openDetailDialog, (val) => {
-      console.log(val, "vavava111111111111111111111");
-    });
     onMounted(() => {
-      console.log(openDetailDialog, "openDetailDialog");
       getFirstMaterialsData();
     });
     const getMaterialsData = () => {
@@ -346,8 +330,6 @@ export default defineComponent({
       ...toRefs(state),
       meterialSearchValue,
       boxSearchValue,
-      store,
-      openDetailDialog,
       getMaterialsData,
       getBoxData,
       tabClick,
