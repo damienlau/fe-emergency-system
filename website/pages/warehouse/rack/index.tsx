@@ -1,6 +1,12 @@
 import { defineComponent, ref, onMounted } from "@vue/runtime-core";
 import { Button, Space, message } from "ant-design-vue";
-import { findBoxCountData, findBoxData, findBoxAllData, addBatchPendingDataRack, findBoxInfoRackSearch } from "api/warehouse/material/box";
+import {
+  findBoxCountData,
+  findBoxData,
+  findBoxAllData,
+  addBatchPendingDataRack,
+  findBoxInfoRackSearch,
+} from "api/warehouse/material/box";
 import Box from "components/Box";
 import Form from "components/Form";
 import PageHeader from "components/PageHeader";
@@ -21,7 +27,7 @@ enum RackPostionEnum {
   firstLayer = 1,
   secondLayer = 2,
   thirdLayer = 3,
-  fourLayer = 4
+  fourLayer = 4,
 }
 
 export default defineComponent({
@@ -31,7 +37,7 @@ export default defineComponent({
         key: "boxName",
         placeholder: "物资或箱子名称",
         type: "search",
-        required: false
+        required: false,
       },
     ]);
     const boxColumn = ref([]);
@@ -59,20 +65,20 @@ export default defineComponent({
     const boxDetailVisible = ref(false);
 
     // 箱子状态
-    const boxStatus = ref(0)
+    const boxStatus = ref(0);
 
     // 借出状态
-    const inbatchpendingstatus = ref(0)
+    const inbatchpendingstatus = ref(0);
 
     // 搜索结果箱子id集合
-    const searchResultBoxId = ref([] as number[])
+    const searchResultBoxId = ref([] as number[]);
 
     // 货架位置数据
     const rackPositionData = ref({
       thirdLayer: [],
       secondLayer: [],
-      firstLayer: []
-    } as RackPosition)
+      firstLayer: [],
+    } as RackPosition);
 
     const formData = ref({});
 
@@ -84,15 +90,15 @@ export default defineComponent({
     });
 
     const formStyle = ref({
-      height: '500px'
-    })
+      height: "500px",
+    });
 
     const handleSearch = (keyword: any) => {
       if (!keyword.boxName.trim()) {
-        searchResultBoxId.value = []
-        return
+        searchResultBoxId.value = [];
+        return;
       }
-      boxInfoRackSearch(keyword.boxName)
+      boxInfoRackSearch(keyword.boxName);
     };
 
     const getBoxDetail = (box: any) => {
@@ -104,17 +110,17 @@ export default defineComponent({
       boxCode.value = box.boxCode;
       materialRemainNumber.value = box.materialRemainNumber;
       boxDetailDialogTitle.value = box.boxName + num;
-      boxStatus.value = box.status
-      inbatchpendingstatus.value = box.inBatchPendingStatus
+      boxStatus.value = box.status;
+      inbatchpendingstatus.value = box.inBatchPendingStatus;
     };
 
     const freshBoxDetailDialogTitle = (title: string) => {
-      boxDetailDialogTitle.value = title
-    }
+      boxDetailDialogTitle.value = title;
+    };
 
     const freshBoxInBatchPendingStatus = (status: number) => {
-      inbatchpendingstatus.value = status
-    }
+      inbatchpendingstatus.value = status;
+    };
 
     const closeBoxDetailDialog = () => {
       boxDetailVisible.value = false;
@@ -125,26 +131,32 @@ export default defineComponent({
     // 初始化箱子数据
     const initBoxData = () => {
       findBoxAllData(params.value as any).then((response) => {
-        boxColumn.value = response
-        rackPositionData.value.firstLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.firstLayer)
-        rackPositionData.value.secondLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.secondLayer)
-        rackPositionData.value.thirdLayer = response.filter((item: any) => item.rackPosition === RackPostionEnum.thirdLayer)
+        boxColumn.value = response;
+        rackPositionData.value.firstLayer = response.filter(
+          (item: any) => item.rackPosition === RackPostionEnum.firstLayer
+        );
+        rackPositionData.value.secondLayer = response.filter(
+          (item: any) => item.rackPosition === RackPostionEnum.secondLayer
+        );
+        rackPositionData.value.thirdLayer = response.filter(
+          (item: any) => item.rackPosition === RackPostionEnum.thirdLayer
+        );
       });
     };
 
     const boxInfoRackSearch = (keyword: string) => {
       const search = {
         rackNumber: params.value.rackNumber,
-        searchName: keyword
-      }
+        searchName: keyword,
+      };
       findBoxInfoRackSearch(search).then((response) => {
-        searchResultBoxId.value = response
-      })
-    }
+        searchResultBoxId.value = response;
+      });
+    };
 
     const hover = (boxId: number) => {
-      return searchResultBoxId.value.includes(boxId)
-    }
+      return searchResultBoxId.value.includes(boxId);
+    };
 
     // 初始化箱子数量和物资数量
     const initBoxCountData = () => {
@@ -157,10 +169,11 @@ export default defineComponent({
     const addOutFormRack = () => {
       const rackNumber = params.value.rackNumber;
       addBatchPendingDataRack(rackNumber).then(() => {
-        initBoxData()
-        message.success('借出成功')
-      })
-    }
+        initBoxData();
+        store.dispatch("warehouseModule/shortcutModule/getTotals");
+        message.success("借出成功");
+      });
+    };
 
     onMounted(() => {
       params.value.rackNumber = route.params.id as string;
@@ -202,22 +215,33 @@ export default defineComponent({
                 </p>
               </Space>
             ),
-            extra: () => <Button type="primary" onClick={addOutFormRack}>整架借出</Button>,
+            extra: () => (
+              <Button type="primary" onClick={addOutFormRack}>
+                整架借出
+              </Button>
+            ),
           }}
         </PageHeader>
         <div class={classes["box-wrapper"]}>
           <div class={classes["box-content"]}>
-            {
-              Object.keys(rackPositionData.value).map((key) => {
-                return (
-                  <div class={key}>
-                    {rackPositionData.value[key as keyof RackPosition].map((columns: any) => {
-                      return <Box hover={hover(columns.id)} columns={columns} onClick={getBoxDetail} onFreshBoxList={initBoxData} />;
-                    })}
-                  </div>
-                )
-              })
-            }
+            {Object.keys(rackPositionData.value).map((key) => {
+              return (
+                <div class={key}>
+                  {rackPositionData.value[key as keyof RackPosition].map(
+                    (columns: any) => {
+                      return (
+                        <Box
+                          hover={hover(columns.id)}
+                          columns={columns}
+                          onClick={getBoxDetail}
+                          onFreshBoxList={initBoxData}
+                        />
+                      );
+                    }
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
         <Modal

@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import request from "utils/request";
 import { materialImageRequestProps } from "./index";
 
@@ -6,7 +7,7 @@ const goodsRequestUrls = {
   delete: "material/info/deleteBatch",
   find: "material/info/page/criteria",
   update: "material/info/update",
-  distinct: "/material/info/all/distinct"
+  distinct: "/material/info/all/distinct",
 };
 
 export interface goodsRequestProps {
@@ -52,8 +53,8 @@ export const deleteGoodsData = (parameter: goodsRequestProps) => {
 export const findGoodsData = (parameter?: goodsRequestProps) => {
   return request
     .get(goodsRequestUrls.find, { params: parameter })
-    .then((response) => {
-      return response;
+    .then((response: AxiosResponse) => {
+      return response.data;
     });
 };
 
@@ -66,6 +67,6 @@ export const updateGoodsData = (parameter: goodsRequestProps) => {
 // 获取箱内物资清单-去重
 export const findBoxDistinct = (params: any) => {
   return request.get(goodsRequestUrls.distinct, { params }).then((response) => {
-    return response
-  })
-}
+    return response;
+  });
+};
