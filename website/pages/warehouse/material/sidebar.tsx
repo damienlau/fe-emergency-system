@@ -130,7 +130,7 @@ export default defineComponent({
                       {!collapsed.value && (
                         <FormItem label="类型">
                           {/* Select */}
-                          <Select>
+                          <Select placeholder="全部">
                             {selectOptions.value.map((option) => {
                               return (
                                 <SelectOption
@@ -152,7 +152,13 @@ export default defineComponent({
                     </Button>
                   </Col>
                 </Row>
-                <div class="flex-1">
+                <div
+                  class={
+                    collapsed.value
+                      ? "flex-1 grid grid-cols-1 gap-16 mt-24 overflow-y-auto"
+                      : "flex-1 grid grid-cols-4 gap-16 mt-24 overflow-y-auto"
+                  }
+                >
                   {cardData.value.map((lists: goodsRequestProps) => {
                     return (
                       // Card Start
