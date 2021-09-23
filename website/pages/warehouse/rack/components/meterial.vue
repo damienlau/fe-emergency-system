@@ -3,9 +3,11 @@
     <a-form layout="inline">
       <a-form-item>
         <div class="flex flex-row">
-          <a-button type="primary" class="mr-20" @click="outForm"
+          <a-button v-if="isPending" danger ghost class="mr-20" @click="cancelOut">取消借出</a-button>
+          <a-button v-else type="primary" class="mr-20" :disabled="outDisabled" @click="outForm"
             >整箱借出</a-button
           >
+          
           <a-input-search
             v-model:value="keyword"
             placeholder="物资搜索"
@@ -42,11 +44,12 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, toRefs, onMounted, reactive } from "vue";
+import { defineComponent, ref, toRefs, onMounted, reactive, computed } from "vue";
 import { message } from 'ant-design-vue'
 import MeterialInfo from "pages/warehouse/material/components/meterialInfo.vue";
 import { Tabs } from "components";
-import { findCriteriaInbox, addBatchPendingData } from "api/warehouse/meterial";
+import { findCriteriaInbox, addBatchPendingData, deleteByFindData } from "api/warehouse/meterial";
+import { BoxStatusEnum, InBatchPendingStatus } from "config/enums";
 export default defineComponent({
   name: "MeterialList",
   components: {
@@ -56,10 +59,12 @@ export default defineComponent({
   props: {
     racknumber: String,
     boxcode: String,
-    boxid: Number
+    boxid: Number,
+    boxstatus: Number,
+    inbatchpendingstatus: Number
   },
-
-  setup(props) {
+  emits: ['freshBoxList', 'freshBoxInBatchPendingStatus'],
+  setup(props, { emit }) {
     const state = reactive({
       keyword: '',
       materialsList: [],
@@ -76,6 +81,16 @@ export default defineComponent({
     onMounted(() => {
       getFirstMaterialsData();
     });
+
+    // 禁用借出按钮
+    const outDisabled = computed(() => {
+      return props.boxstatus !== BoxStatusEnum.inStock
+    })
+
+    // 是否借出
+    const isPending = computed(() => {
+      return props.inbatchpendingstatus === InBatchPendingStatus.out
+    })
     const getMaterialsData = () => {
       const pageOrdersJSON = encodeURIComponent(
         `[{'direction':'desc','property':'id'}]`
@@ -114,6 +129,24 @@ export default defineComponent({
       }
       addBatchPendingData(params).then(() => {
         getFirstMaterialsData()
+        emit('freshBoxList')
+        emit('freshBoxInBatchPendingStatus', InBatchPendingStatus.out)
+      })
+    }
+
+    // 取消借出
+    const cancelOut = () => {
+      const params = {
+        operationType: 1,
+        resourceType: 2,
+        boxId: props.boxid,
+      }
+      deleteByFindData(params).then((res) => {
+        if (res) { 
+          getFirstMaterialsData()
+          emit('freshBoxList')
+          emit('freshBoxInBatchPendingStatus', InBatchPendingStatus.normal)
+        }
       })
     }
 
@@ -122,7 +155,10 @@ export default defineComponent({
       getMaterialsData,
       tabClick,
       getFirstMaterialsData,
-      outForm
+      outForm,
+      outDisabled,
+      isPending,
+      cancelOut
     };
   },
 });

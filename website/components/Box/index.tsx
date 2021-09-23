@@ -2,29 +2,12 @@ import { defineComponent, PropType, onMounted, ref } from "@vue/runtime-core";
 import { Popover, Tooltip } from "ant-design-vue";
 import { boxRequestProps } from "api/warehouse/material/box";
 import { findGoodsData, goodsRequestProps, findBoxDistinct } from "api/warehouse/material/goods";
+import { addShortcutData, deleteByFindData } from "api/warehouse/shortcut"
 import Images from "components/Images";
-import { boxSize, boxStatus, departments, shelfPosition } from "config/enums";
+import { boxSize, boxStatus, departments, shelfPosition, DepartmentTypeEnum, BoxStatusEnum, InBatchPendingStatus } from "config/enums";
 import { emit } from "node:process";
 import { useStore } from "vuex";
 import classes from "./style.module.less";
-
-enum DepartmentTypeEnum {
-  firstAid = 1, // 急救/重症
-  outpatient = 2, // 门诊
-  logistics = 3, // 后勤
-  command = 4, // 指挥
-  severeCase = 5, // 重症
-  ultrasonic = 6, // 超声
-  debridement = 7, // 清创
-  observation = 8,// 留观
-  pharmacy = 9, // 药房
-  consumables = 10, // 耗材
-  operation =  11, // 手术
-  isolation = 12, // 防疫/隔离
-  disinfection = 13, // 消毒
-  hospitalization = 14, // 住院
-  inspection = 15 // 检验
-}
 
 export default defineComponent({
   name: "Box",
@@ -41,7 +24,7 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['click'],
+  emits: ['click', 'freshBoxList'],
   setup(props, { emit }) {
     const popoverVisible = ref(false)
     const goodsList = ref<{inBoxMaterials: any, outBoxMaterials: any}>();
@@ -88,6 +71,38 @@ export default defineComponent({
     const boxClass = () => {
       if (!props.hover) return ''
       return classes['box-hover']
+    }
+
+    // 借出
+    const outForm = () => {
+      const params = {
+        boxId: props.columns.id,
+        operationType: 1,
+        resourceType: 2
+      }
+      addShortcutData(params).then(() => {
+        emit('freshBoxList')
+      })
+    }
+
+    // 取消借出
+    const cancelOut = () => {
+      const params = {
+        operationType: 1,
+        resourceType: 2,
+        boxId: props.columns.id,
+      }
+      deleteByFindData(params).then((res) => {
+        if (res) { 
+          emit('freshBoxList')
+        }
+      })
+    }
+
+    // 是否禁用借出按钮
+    const outDisabled = () => {
+      console.log('props.columns.status', props.columns.status, BoxStatusEnum.inStock)
+      return props.columns.status !== BoxStatusEnum.inStock
     }
   
     onMounted(() => {
@@ -183,30 +198,42 @@ export default defineComponent({
               </div>
               <div class="py-16">
                 <p class="text-16 text-white mb-16">箱内物资</p>
-                <div class="grid grid-cols-3 gap-x-68 gap-y-8" style="color: #00C44A">
+                <div class="grid grid-cols-3 gap-x-20 gap-y-8" style="color: #00C44A">
                   {
                     goodsList.value?.inBoxMaterials && Object.keys(goodsList.value?.inBoxMaterials).map((material) => {
                       return (
-                        <p class="truncate text-16" style="display: flex;justify-content: space-between">
-                          <span>{material}</span>
+                        <p class="text-16" style="display: flex;justify-content: space-between">
+                          <span class="truncate">{material}</span>
                           <span>x{goodsList.value?.inBoxMaterials[material]}</span>
                         </p>
                       )
                     })
                   }
                 </div>
-                <div class="grid grid-cols-3 gap-x-68 gap-y-8" style="color: #FF6061">
+                <div class="grid grid-cols-3 gap-x-20 gap-y-8" style="color: #FF6061">
                   {
                     goodsList.value?.outBoxMaterials && Object.keys(goodsList.value?.outBoxMaterials).map((material) => {
                       return (
-                        <p class="truncate text-16">
-                          <span>{material}</span>
+                        <p class="text-16">
+                          <span class="truncate">{material}</span>
                           <span>{goodsList.value?.outBoxMaterials[material]}</span>
                         </p>
                       )
                     })
                   }
                 </div>
+              </div>
+              <div class="py-3 text-center">
+                {
+                  props.columns.inBatchPendingStatus === InBatchPendingStatus.normal && (
+                    <a-button type="primary" disabled={outDisabled()} class="mr-20" onClick={outForm}>整箱借出</a-button>
+                  )
+                }
+                {
+                  props.columns.inBatchPendingStatus === InBatchPendingStatus.out && (
+                    <a-button danger ghost class="mr-20" onClick={cancelOut}>取消借出</a-button>
+                  )
+                }
               </div>
             </>
           ),

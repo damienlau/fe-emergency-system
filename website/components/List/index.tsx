@@ -47,9 +47,9 @@ export default defineComponent({
           renderItem: (render: any) => (
             <ListItem>{slots.card?.(render)}</ListItem>
           ),
-          loadMore: () => {
-            return cardListsData.value && <Button>加载更多</Button>;
-          },
+          // loadMore: () => {
+          //   return cardListsData.value && <Button>加载更多</Button>;
+          // },
         }}
       </List>
     );
