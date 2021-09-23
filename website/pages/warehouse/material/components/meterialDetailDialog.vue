@@ -363,9 +363,9 @@ export default defineComponent({
         id: data.id,
       };
       deleteMeterialInfoData(params).then((res) => {
-        // if (res.data) {
-        //   slot.emit("close");
-        // }
+        if (res.data) {
+          slot.emit("close");
+        }
       });
     };
     return {
