@@ -129,6 +129,7 @@
             class="flex flex-row items-center mr-3"
             htmlType="submit"
             v-if="!isEditBase"
+            @click="handSave(dataSource)"
           >
             <template #icon>
               <Icon class="align-baseline" :type="'save'" /> </template
@@ -266,6 +267,7 @@
             class="mr-3"
             htmlType="submit"
             v-if="!isEditOther"
+            @click="handSave(dataSource)"
           >
             <template #icon>
               <Icon class="align-baseline" :type="'save'" /> </template
@@ -483,10 +485,10 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          height: "320px"
-        }
-      }
-    }
+          height: "320px",
+        };
+      },
+    },
   },
   setup(props, ctx) {
     const state = reactive({
@@ -737,7 +739,15 @@ export default defineComponent({
       initData();
       initMaterialList();
     });
-
+    const handSave = (data) => {
+      console.log(data, "ddd");
+      updateBoxData(data).then((res) => {
+        if (res.data) {
+          state.isEditBase = true;
+          initData();
+        }
+      });
+    };
     const handleSubmitBase = (data) => {
       updateBoxData(data).then((res) => {
         if (res.data) {
@@ -974,7 +984,8 @@ export default defineComponent({
       closeDeleteDialog,
       handConfirmDelete,
       returnStatus,
-      handDeleteMeterial
+      handDeleteMeterial,
+      handSave,
     };
   },
 });
