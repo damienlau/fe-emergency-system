@@ -332,7 +332,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditBase = true;
-          // slot.emit("close");
+          slot.emit("close");
         }
       });
     };
@@ -340,7 +340,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditOther = true;
-          // slot.emit("close");
+          slot.emit("close");
         }
       });
     };
