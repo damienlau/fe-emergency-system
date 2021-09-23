@@ -170,6 +170,7 @@ export default defineComponent({
                         <div class="flex flex-row border-b border-navy-1 pb-8">
                           {/* thumbnail */}
                           <Images
+                            class="mr-16"
                             columns={lists.materialImages}
                             size={162}
                           ></Images>
