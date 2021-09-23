@@ -11,7 +11,13 @@
         <a-tag
           size="mini"
           :color="info.status && returnStatus(info.status).color"
-          style="margin-left: 8px;height: 18px;line-height: 18px;border-radius: 9px;font-size: 12px"
+          style="
+            margin-left: 8px;
+            height: 18px;
+            line-height: 18px;
+            border-radius: 9px;
+            font-size: 12px;
+          "
           >{{ info.status && returnStatus(info.status).text }}</a-tag
         >
       </div>
@@ -34,13 +40,16 @@
       >
     </template>
     <div class="bottom flex flex-row w-fll">
-      <a-image class="pt-3" :width="80" :height="80" :src="img" />
+      <a-image class="pt-3" :width="60" :height="60" :src="img" />
       <div class="right ml-20">
         <div class="row">
           <span class="label">货架位置</span>
-          <span class="value">{{
-            positionInfo[info.rackPosition] || "- -"
-          }}</span>
+          <span class="value">
+            <span v-if="info.rackNumber">{{
+              info.rackNumber === "520" ? "物料架" : info.rackNumber + "号货架"
+            }}</span>
+            <span>{{ positionInfo[info.rackPosition] || "- -" }}</span>
+          </span>
         </div>
         <div class="row">
           <span class="label">类型</span>
@@ -200,7 +209,7 @@ export default defineComponent({
   }
   .label {
     position: relative;
-    width: 55px;
+    width: 47px;
     margin-right: 10px;
     color: rgba(255, 255, 255, 0.7);
     font-size: 12px;
@@ -218,7 +227,7 @@ export default defineComponent({
     }
   }
   .value {
-    width: 85px;
+    font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

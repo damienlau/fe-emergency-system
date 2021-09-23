@@ -26,7 +26,7 @@
           </a-layout-content>
         </a-layout>
         <a-pagination
-          class="mt-10"
+          class="mt-10 pagination"
           show-size-changer
           v-model:current="pagination.current"
           v-model:pageSize="pagination.pageSize"
@@ -181,6 +181,9 @@ export default defineComponent({
 });
 </script>
 <style lang="less" scoped>
+.pagination {
+  z-index: 999999;
+}
 .content {
   position: relative;
   height: 100%;
@@ -207,11 +210,13 @@ export default defineComponent({
     height: 35px;
     line-height: 35px;
     text-align: center;
+    padding: 0 10px;
   }
   .addbox-lay-cont {
     width: 360px;
     height: 315px;
     overflow-y: auto;
+    padding: 0 10px;
   }
 }
 </style>

@@ -236,8 +236,8 @@ export default defineComponent({
         `[{'direction':'desc','property':'id'}]`
       );
       const params = {
-        currentPage: state.paginationMaterials.current,
-        pageSize: state.paginationMaterials.pageSize,
+        currentPage: state.paginationBox.current,
+        pageSize: state.paginationBox.pageSize,
         pageOrdersJSON: pageOrdersJSON,
         boxName: search,
       };
@@ -299,6 +299,7 @@ export default defineComponent({
     };
     const handAddMoreBox = () => {
       state.paginationBox.current++;
+      console.log(state.paginationBox.current, " state.paginationBox.current");
       getBoxData();
     };
     const getFirstBoxData = () => {

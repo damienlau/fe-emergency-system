@@ -9,8 +9,8 @@
     <div class="top flex flex-row w-fll pb-3">
       <a-image
         class="pt-3"
-        :width="100"
         :height="100"
+        :width="100"
         :src="img"
         @click.stop="unshowBoxDialog"
       />
@@ -33,6 +33,9 @@
 
         <div class="row">
           <span class="label">货架位置:</span>
+          <span class="value" v-if="info.rackNumber">{{
+            info.rackNumber === "520" ? "物料架" : info.rackNumber + "号货架"
+          }}</span>
           <span class="value">{{
             positionInfo[info.rackPosition] || "- -"
           }}</span>
