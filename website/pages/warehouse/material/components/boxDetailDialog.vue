@@ -450,10 +450,10 @@ export default defineComponent({
         span: 4,
         labelSpan: 2,
         options: [
-          {
-            label: "未知",
-            key: "0",
-          },
+          // {
+          //   label: "未知",
+          //   key: "0",
+          // },
           {
             label: "一层(下)",
             key: "1",
@@ -466,10 +466,10 @@ export default defineComponent({
             label: "三层(上)",
             key: "3",
           },
-          {
-            label: "四层(顶)",
-            key: "4",
-          },
+          // {
+          //   label: "四层(顶)",
+          //   key: "4",
+          // },
         ],
         placeholder: "位置",
         required: true,
