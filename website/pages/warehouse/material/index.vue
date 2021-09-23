@@ -2,10 +2,10 @@
   <a-layout class="h-full bg-transparent">
     <a-layout class="bg-transparent">
       <a-layout-content>
-        <MapCanvas />
+        <!-- <MapCanvas /> -->
       </a-layout-content>
     </a-layout>
-    <a-layout-sider
+    <!-- <a-layout-sider
       v-model:collapsed="collapsed"
       class="bg-navy-4"
       width="100%"
@@ -35,8 +35,8 @@
         </button>
         <Sidebar />
       </div>
-    </a-layout-sider>
-    <!-- <Sidebar /> -->
+    </a-layout-sider> -->
+    <Sidebar />
   </a-layout>
 </template>
 <script>
