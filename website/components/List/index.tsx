@@ -1,5 +1,5 @@
 import { defineComponent, ref, toRefs, watch, PropType } from "vue";
-import { List, ListItem } from "ant-design-vue";
+import { Button, List, ListItem } from "ant-design-vue";
 import { responseProps } from "api/utils";
 
 export default defineComponent({
@@ -25,13 +25,20 @@ export default defineComponent({
     const cardListPagination = ref({});
 
     watch(dataSource, (lists) => {
+      console.log(lists);
+
       cardListsData.value = lists?.content;
-      // cardListPagination.value = lists.pagination;
+      cardListPagination.value = {
+        current: lists?.currentPage,
+        pageSize: lists?.totalNum,
+        defaultPageSize: lists?.totalNum,
+        total: lists?.totalNum,
+      };
     });
 
     return () => (
       <List
-        class="flex flex-col overflow-auto"
+        class="h-full flex flex-col overflow-x-hidden overflow-y-auto"
         dataSource={cardListsData.value}
         grid={cardListGrid.value}
         // pagination={cardListPagination.value}
@@ -40,9 +47,9 @@ export default defineComponent({
           renderItem: (render: any) => (
             <ListItem>{slots.card?.(render)}</ListItem>
           ),
-          // loadMore: () => {
-          //   return cardListsData.value && <Button>加载更多</Button>;
-          // },
+          loadMore: () => {
+            return cardListsData.value && <Button>加载更多</Button>;
+          },
         }}
       </List>
     );
