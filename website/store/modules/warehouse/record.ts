@@ -7,7 +7,9 @@ import {
   findDailyData,
   deleteOutDetailData,
 } from "api/warehouse/record";
-const state = () => ({});
+const state = () => ({
+  openDetailDialog: {},
+});
 const options = [
   {
     label: "急救/重症",
@@ -139,14 +141,7 @@ const actions = {
                   if (item.outDetailSet.length > 0) {
                     item.outDetailSet.map((val, index) => {
                       eventExpandTableData.push({
-                        goodsName:
-                          val.resourceType == 1
-                            ? (val.materialInfo &&
-                                val.materialInfo.materialName) ||
-                              "--"
-                            : (val.warehouseBoxInfo &&
-                                val.warehouseBoxInfo.boxName) ||
-                              "--",
+                        goodsName: val,
                         boxName: val.materialInfo && val.materialInfo.boxName,
                         departmentName: getDepartmentName(item.departmentType),
                         personnelName: item.personnelName,
@@ -247,7 +242,11 @@ const actions = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  OPEN_DETAILDIALOG: (state, data) => {
+    state.openDetailDialog = data;
+  },
+};
 
 export default {
   namespaced: true,

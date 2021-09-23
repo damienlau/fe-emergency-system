@@ -38,6 +38,8 @@ export default defineComponent({
         title: "箱子/物资名称",
         dataIndex: "goodsName",
         key: "goodsName",
+        width: 140,
+        slots: { customRender: "renderDetail" },
       },
       {
         title: "所属箱子",
@@ -192,6 +194,7 @@ export default defineComponent({
           rowKey={(record) => record.key}
         >
           {{
+            renderDetail: ({ record }) => rendOpenDetail(record),
             customTitle: () => {
               return (
                 <>
@@ -238,6 +241,30 @@ export default defineComponent({
           <span style={record.status == 1 ? "color:orange" : ""}>
             {record.outTime}
           </span>
+        </div>
+      );
+    };
+    const rendOpenDetail = (record) => {
+      console.log(record, "record");
+      return (
+        <div class="flex flex-row items-center justify-start">
+          <a-button
+            type="link"
+            onClick={() => {
+              store.commit(
+                "warehouseModule/recordModule/OPEN_DETAILDIALOG",
+                record
+              );
+            }}
+          >
+            {record.goodsName.resourceType == 1
+              ? (record.goodsName.materialInfo &&
+                  record.goodsName.materialInfo.materialName) ||
+                "--"
+              : (record.goodsName.warehouseBoxInfo &&
+                  record.goodsName.warehouseBoxInfo.boxName) ||
+                "--"}
+          </a-button>
         </div>
       );
     };
