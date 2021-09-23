@@ -20,6 +20,7 @@
         v-model:dataSource="formDataOter"
         :columns="otherForm"
         @submit="handleSubmitOther"
+        :footerBtnClassName="'otherFooterBtn'"
       >
         <template #button>
           <a-button type="primary" ghost class="mr-3" htmlType="submit">
@@ -237,5 +238,11 @@ export default defineComponent({
 <style lang="less" scoped>
 :deep(.ant-form-item-label) {
   width: 100px;
+}
+:deep(.ant-calendar-picker-input) {
+  width: 323px;
+}
+:deep(.otherFooterBtn) {
+  margin-top: 60px;
 }
 </style>
