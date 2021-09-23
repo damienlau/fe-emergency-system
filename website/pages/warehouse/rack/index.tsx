@@ -85,7 +85,10 @@ export default defineComponent({
     })
 
     const handleSearch = (keyword: any) => {
-      if (!keyword.boxName.trim()) return
+      if (!keyword.boxName.trim()) {
+        searchResultBoxId.value = []
+        return
+      }
       boxInfoRackSearch(keyword.boxName)
     };
 
