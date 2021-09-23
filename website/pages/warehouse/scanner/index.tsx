@@ -92,7 +92,7 @@ export default defineComponent({
                 DetailSpecifiedShortcutList(response[resp].id,fdata)
               }              
             } else {
-              message.info('无借货清单')
+              //message.info('无借货清单')
             }
         });  
       }
@@ -113,7 +113,7 @@ export default defineComponent({
                 name: formData.value["key"]        
               });
             } else {
-              message.info('无借货清单!')
+              //message.info('无借货清单!')
               return
             }
         })
@@ -128,7 +128,7 @@ export default defineComponent({
                 name: formData.value["key"]        
               });
             } else {
-              message.info('无借货清单!')
+              //message.info('无借货清单!')
               return
             }
         })
