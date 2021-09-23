@@ -19,6 +19,9 @@ export default defineComponent({
       type: Number,
       required: false,
     },
+    zIndex: {
+      type: Number
+    }
   },
   setup(props, { emit, slots }) {
     // 点击关闭

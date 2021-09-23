@@ -1,4 +1,4 @@
-import { defineComponent, PropType, onMounted, ref } from "@vue/runtime-core";
+import { defineComponent, PropType, onMounted, ref, nextTick } from "@vue/runtime-core";
 import { Popover, Tooltip } from "ant-design-vue";
 import { boxRequestProps } from "api/warehouse/material/box";
 import { findGoodsData, goodsRequestProps, findBoxDistinct } from "api/warehouse/material/goods";
@@ -28,17 +28,22 @@ export default defineComponent({
   setup(props, { emit }) {
     const popoverVisible = ref(false)
     const goodsList = ref<{inBoxMaterials: any, outBoxMaterials: any}>();
+    const goodsListLoaded = ref(false) // 记录物资内容是否已经加载过，加载过则不重新请求
     const store = useStore();
 
     // 科室类型选项
     const departmentChoices = ref([]) as any
 
-    const handleGetGoodsLists = async (visible: boolean) => {
+    const handleGetGoodsLists = (visible: boolean) => {
       popoverVisible.value = visible
       if (!visible) return
 
-      const { data } = await findBoxDistinct({ boxCode: props.columns.boxCode })
-      goodsList.value = data
+      if (goodsListLoaded.value) return
+      nextTick(async () => {
+        const { data } = await findBoxDistinct({ boxCode: props.columns.boxCode })
+        goodsList.value = data
+        goodsListLoaded.value = true
+      })
     };
 
     const handleRemarkVisible = (val: boolean) => {
@@ -101,10 +106,9 @@ export default defineComponent({
 
     // 是否禁用借出按钮
     const outDisabled = () => {
-      console.log('props.columns.status', props.columns.status, BoxStatusEnum.inStock)
       return props.columns.status !== BoxStatusEnum.inStock
     }
-  
+
     onMounted(() => {
       departmentChoices.value = departmentEnumToArray(DepartmentTypeEnum)
     })
@@ -203,7 +207,20 @@ export default defineComponent({
                     goodsList.value?.inBoxMaterials && Object.keys(goodsList.value?.inBoxMaterials).map((material) => {
                       return (
                         <p class="text-16" style="display: flex;justify-content: space-between">
-                          <span class="truncate">{material}</span>
+                          {
+                            material && <Tooltip overlayClassName="box-tooltip" placement="bottom">
+                              {{
+                                title: () => (
+                                  <span>{material}</span>
+                                ),
+                                default: () => (
+                                  <span class="truncate">
+                                    {material}
+                                  </span>
+                                )
+                              }}
+                            </Tooltip>
+                          }
                           <span>x{goodsList.value?.inBoxMaterials[material]}</span>
                         </p>
                       )

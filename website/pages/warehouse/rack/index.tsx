@@ -226,7 +226,7 @@ export default defineComponent({
           status={boxStatus.value}
           size="bold"
           key="box"
-          zIndex="1"
+          zIndex={1}
         >
           {{
             default: () => (

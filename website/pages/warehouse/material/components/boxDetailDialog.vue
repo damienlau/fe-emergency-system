@@ -215,7 +215,6 @@
           type="tip"
         />
         <span>确定要删除这个箱子吗?</span>
-        <InfoCircleOutlined />
       </div>
       <a-radio-group
         v-model:value="value"
@@ -249,7 +248,6 @@
           type="error"
         />
         <span>{{ tipsTitle }}</span>
-        <InfoCircleOutlined />
       </div>
       <div class="text-white text-opacity-70 px-40 py-20">
         {{ tipsContent }}
