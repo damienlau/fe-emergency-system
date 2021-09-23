@@ -39,7 +39,7 @@ export default defineComponent({
     formStyle: {
       type: Object,
       required: false,
-      default: () => {}
+      default: () => {},
     },
     columns: {
       type: Object as PropType<formItemProps[]>,
@@ -164,6 +164,11 @@ export default defineComponent({
               listType="picture-card"
               accept="image/*"
               multiple={true}
+              onChange={(e) => {
+                if (!e.fileList.length) {
+                  formData.value[`${key}`] = null;
+                }
+              }}
             >
               <span>上传图片</span>
             </Upload>

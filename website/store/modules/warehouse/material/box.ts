@@ -15,8 +15,6 @@ const actions = {
   getBoxCount: ({ commit }: Store<Commit>, shelfNumber: number) => {
     return new Promise((reslove) => {
       findBoxCountData(shelfNumber).then((response) => {
-        console.log(response);
-
         reslove(response.data.content);
       });
     });
