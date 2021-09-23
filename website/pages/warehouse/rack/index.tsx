@@ -61,6 +61,9 @@ export default defineComponent({
     // 箱子状态
     const boxStatus = ref(0)
 
+    // 借出状态
+    const inbatchpendingstatus = ref(0)
+
     // 搜索结果箱子id集合
     const searchResultBoxId = ref([] as number[])
 
@@ -102,10 +105,15 @@ export default defineComponent({
       materialRemainNumber.value = box.materialRemainNumber;
       boxDetailDialogTitle.value = box.boxName + num;
       boxStatus.value = box.status
+      inbatchpendingstatus.value = box.inBatchPendingStatus
     };
 
     const freshBoxDetailDialogTitle = (title: string) => {
       boxDetailDialogTitle.value = title
+    }
+
+    const freshBoxInBatchPendingStatus = (status: number) => {
+      inbatchpendingstatus.value = status
     }
 
     const closeBoxDetailDialog = () => {
@@ -204,7 +212,7 @@ export default defineComponent({
                 return (
                   <div class={key}>
                     {rackPositionData.value[key as keyof RackPosition].map((columns: any) => {
-                      return <Box hover={hover(columns.id)} columns={columns} onClick={getBoxDetail} />;
+                      return <Box hover={hover(columns.id)} columns={columns} onClick={getBoxDetail} onFreshBoxList={initBoxData} />;
                     })}
                   </div>
                 )
@@ -240,6 +248,10 @@ export default defineComponent({
                   racknumber={route.params.id}
                   boxcode={boxCode.value}
                   boxid={Number(boxId.value)}
+                  boxstatus={boxStatus.value}
+                  inbatchpendingstatus={inbatchpendingstatus.value}
+                  onFreshBoxList={initBoxData}
+                  onFreshBoxInBatchPendingStatus={freshBoxInBatchPendingStatus}
                 ></MeterialList>
               </div>
             ),

@@ -10,6 +10,7 @@ const shortcutRequestUrls = {
   find: "batchPending/list",
   findCount: "batchPending/count",
   update: "batchPending/update",
+  deleteByFind: "batchPending/deleteByFind"
 };
 
 export interface shortcutCountRequestProps {
@@ -29,6 +30,13 @@ export interface shortcutRequestProps {
   createTime?: string;
   warehouseMaterialInfo?: goodsRequestProps;
   warehouseBoxInfo?: boxRequestProps;
+}
+
+// 删除仓库批量待处理清单
+export const deleteByFindData = (params: any) => {
+  return request.get(shortcutRequestUrls.deleteByFind, { params }).then((response) => {
+    return response.data
+  })
 }
 
 export const addShortcutData = (parameter: shortcutRequestProps) => {
