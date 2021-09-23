@@ -175,6 +175,7 @@ export default defineComponent({
 
       store
         .dispatch("warehouseModule/shortcutModule/getLists", {
+          pageSize: selectedTabPane.value.count || 50,
           operationType: activeKey,
         })
         .then((response) => {

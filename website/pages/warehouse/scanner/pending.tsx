@@ -327,11 +327,11 @@ export default defineComponent({
         .dispatch("warehouseModule/pendingModule/allmaterialPendingData",{materialCode:ready})
         .then((res) => {
           if (res.length == 0 || typeof (res) == undefined) {
-            message.error("没有找到该编号对应的箱子或物资");
+            //message.error("没有找到该编号对应的箱子或物资");
           } else {
             Object.assign(res[0],{statusright:1},{resourceType:1},{outFormId:getOutFrom.value})
             finishedDelivery.value.data.unshift(res[0]);
-            console.log('在全部物资查找到该物资')
+            //console.log('在全部物资查找到该物资')
           }  
       })
     }
@@ -346,17 +346,17 @@ export default defineComponent({
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
-          console.log('待出仓箱子对比成功')
+          //console.log('待出仓箱子对比成功')
         } else if (array[index].materialInfo &&
           array[index].materialInfo.materialCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
-          console.log(finishedDelivery.value.data)
-          console.log('待出仓物资对比成功')
+          //console.log(finishedDelivery.value.data)
+          //console.log('待出仓物资对比成功')
         } else {
           biduistatus = true;
-          console.log('左侧待出仓没有找到对应的编号物资或箱子')
+          //console.log('左侧待出仓没有找到对应的编号物资或箱子')
           return;
         }
       });
@@ -370,7 +370,7 @@ export default defineComponent({
           } else {
             Object.assign(res[0],{statusright:1},{resourceType:2},{outFormId:getOutFrom.value})
             finishedDelivery.value.data.unshift(res[0]);
-            console.log('在全部仓库查找到该箱子')
+            //console.log('在全部仓库查找到该箱子')
           }                            
         })
     }
