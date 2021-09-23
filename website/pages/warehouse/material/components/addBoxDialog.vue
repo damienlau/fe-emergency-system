@@ -37,12 +37,12 @@
         class="flex flex-row flex-wrap justify-start init"
         style="backgroud: pink"
       >
-        <div class="addBox margin-1" @click="showAddBoxTransfer">
+        <div class="addBox mr-3" @click="showAddBoxTransfer">
           <PlusOutlined :style="{ fontSize: '30px' }" />
           <span class="mt-20"> 添加物资</span>
         </div>
         <SmallMeterial
-          class="margin-1"
+          class="mr-3"
           v-for="(item, index) in materialList"
           :materialInfo="item"
           :key="index"
@@ -205,14 +205,6 @@ export default defineComponent({
             label: "3号货架",
             key: "3",
           },
-          {
-            label: "4号货架",
-            key: "4",
-          },
-          {
-            label: "5号货架",
-            key: "5",
-          },
         ],
         required: true,
       },
@@ -314,7 +306,9 @@ export default defineComponent({
         required: true,
       },
     ]);
-    onMounted(() => {});
+    onMounted(() => {
+      initrackNumber();
+    });
 
     const handleSubmitBase = () => {
       state.boxInfo = { ...state.formDataBase, ...state.formDataOter };
@@ -365,6 +359,19 @@ export default defineComponent({
         }
       });
     };
+    const initrackNumber = () => {
+      baseForm.value[1].options = [];
+      for (let i = 1; i <= 42; i++) {
+        baseForm.value[1].options.push({
+          label: i + "号货架",
+          key: "" + i,
+        });
+      }
+      baseForm.value[1].options.push({
+        label: "物料架",
+        key: "520",
+      });
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -376,6 +383,7 @@ export default defineComponent({
       showAddBoxTransfer,
       chooseMeterial,
       addBoxMaterial,
+      initrackNumber,
     };
   },
 });
@@ -398,7 +406,7 @@ export default defineComponent({
   width: 100px;
 }
 :deep(.ant-tabs-top-content) {
-  padding: 10px;
+  padding: 10px 0;
 }
 :deep(.ant-tabs-tabpane) {
   height: 334px;

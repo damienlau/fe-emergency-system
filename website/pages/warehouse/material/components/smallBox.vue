@@ -30,6 +30,9 @@
 
         <div class="row">
           <span class="label">货架位置:</span>
+          <span class="value" v-if="info.rackNumber">{{
+            info.rackNumber === "520" ? "物料架" : info.rackNumber + "号货架"
+          }}</span>
           <span class="value">{{
             positionInfo[info.rackPosition] || "- -"
           }}</span>

@@ -804,7 +804,7 @@ export default defineComponent({
   align-content: flex-start;
 
   .addBox {
-    // width: 335px;
+    width: 272px;
     height: 137px;
     background: #57799a;
     display: flex;
