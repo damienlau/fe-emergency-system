@@ -15,6 +15,12 @@ import {
 import { Icon } from "components";
 import Tabs, { tabPaneClickEventProps, tabPaneProps } from "components/Tabs";
 import emptyImage from "assets/icon_empty_search.png";
+import { departments } from "config/enums";
+import { findGoodsData, goodsRequestProps } from "api/warehouse/material/goods";
+import { boxRequestProps } from "api/warehouse/material/box";
+import { AxiosResponse } from "axios";
+import { responseProps } from "api/utils";
+import Images from "components/Images";
 
 export default defineComponent({
   setup() {
@@ -33,6 +39,7 @@ export default defineComponent({
     ]);
     const selectedTabPane = ref<tabPaneProps>({});
     const searchForm = ref({});
+    const cardData = ref<goodsRequestProps[] | boxRequestProps[]>([]);
 
     // 点击标签分页
     const handleClickTabPane = ({
@@ -41,6 +48,10 @@ export default defineComponent({
     }: tabPaneClickEventProps) => {
       selectedTabPane.value = item;
       console.log(activeKey, item);
+
+      findGoodsData().then((response) => {
+        cardData.value = response.content;
+      });
     };
 
     // 点击搜索
@@ -101,7 +112,13 @@ export default defineComponent({
                       {!collapsed.value && (
                         <FormItem label="类型">
                           {/* Select */}
-                          <Select>{/* <SelectOption></SelectOption> */}</Select>
+                          <Select>
+                            {
+                              <SelectOption key="" title="">
+                                {}
+                              </SelectOption>
+                            }
+                          </Select>
                         </FormItem>
                       )}
                     </Form>
@@ -113,40 +130,50 @@ export default defineComponent({
                   </Col>
                 </Row>
                 <div class="flex-1">
-                  {/* Card Start */}
-                  <div
-                    class="bg-navy-2 hover:bg-navy-3 p-16 rounded"
-                    onClick={handleClickCard}
-                  >
-                    {/* Body */}
-                    <div class="flex flex-row border-b border-navy-1 pb-8">
-                      {/* thumbnail */}
-                      <Image
-                        width={162}
-                        height={162}
-                        src={emptyImage}
-                        fallback={emptyImage}
-                      ></Image>
-                      {/* descriptions */}
-                      <div class="my-8">
-                        <div class="flex flex-row items-center">
-                          <p class="text-16 font-medium">单兵头盔</p>
-                          <span class="text-12 bg-success inline-block px-12 ml-8 rounded-full">
-                            在库
-                          </span>
+                  {cardData.value.map((lists: goodsRequestProps) => {
+                    return (
+                      // Card Start
+                      <div
+                        class="bg-navy-2 hover:bg-navy-3 p-16 rounded"
+                        onClick={handleClickCard}
+                      >
+                        {/* Body */}
+                        <div class="flex flex-row border-b border-navy-1 pb-8">
+                          {/* thumbnail */}
+                          {/* <Image
+                            width={162}
+                            height={162}
+                            src={lists.materialImages}
+                            fallback={emptyImage}
+                          ></Image> */}
+                          <Images
+                            columns={lists.materialImages}
+                            size={162}
+                          ></Images>
+                          {/* descriptions */}
+                          <div class="my-8">
+                            <div class="flex flex-row items-center">
+                              <p class="text-16 font-medium">
+                                {lists.materialName}
+                              </p>
+                              <span class="text-12 bg-success inline-block px-12 ml-8 rounded-full">
+                                在库
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        {/* Footer */}
+                        <div class="flex flex-row justify-between pt-8">
+                          <Button type="primary">借货</Button>
+                          <Space>
+                            <Button ghost>维修</Button>
+                            <Button ghost>保养</Button>
+                          </Space>
                         </div>
                       </div>
-                    </div>
-                    {/* Footer */}
-                    <div class="flex flex-row justify-between pt-8">
-                      <Button type="primary">借货</Button>
-                      <Space>
-                        <Button ghost>维修</Button>
-                        <Button ghost>保养</Button>
-                      </Space>
-                    </div>
-                  </div>
-                  {/* Card End */}
+                      // Card End
+                    );
+                  })}
                 </div>
               </div>
             </Tabs>
