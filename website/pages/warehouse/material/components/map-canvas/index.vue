@@ -77,7 +77,7 @@
 
 		</v-stage>
 		<div class="legend">
-			<div class="item" v-for="(item,index) in 10">
+			<div class="item" v-for="(item,index) in 10" :key="index">
 				<div  class="tag" @mouseover="handleOver(index)" @mouseout="handleOut(index)"></div>
 			{{tags[index]}}
 			</div>
@@ -135,7 +135,7 @@
 				if (this.group[index].length > 0) {
 					for (let i in this.group[index]) {
 						let ref = 'num_' + this.group[index][i]
-						this.$refs[ref].handleMouseDown()
+						this.$refs[ref].handleMouseDown('legend')
 					}
 				}
 			},
@@ -144,7 +144,7 @@
 				if (this.group[index].length > 0) {
 					for (let i in this.group[index]) {
 						let ref = 'num_' + this.group[index][i]
-						this.$refs[ref].handleMouseDown()
+						this.$refs[ref].handleMouseDown('legend')
 					}
 				}
 			}
@@ -153,81 +153,80 @@
 </script>
 
 <style lang="less">
-	.stage {
-		background-image: url(../../../../../assets/img_warehouse_map.png);
-		background-repeat: no-repeat;
-		margin-left: 200px;
-	}
+.stage {
+  background-image: url(../../../../../assets/img_warehouse_map.png);
+  background-repeat: no-repeat;
+  margin-left: 200px;
+}
 
-	.legend {
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		width: 400px;
-		position: absolute;
-		bottom: 30px;
-	}
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 400px;
+  position: absolute;
+  bottom: 30px;
+}
 
-	.legend .item {
-		display: flex;
-		align-items: center;
-		color: rgba(255, 255, 255, 0.9);
-		width: 50%;
-		font-size: 12px;
-		margin: 5px 0;
+.legend .item {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.9);
+  width: 50%;
+  font-size: 12px;
+  margin: 5px 0;
+}
 
-	}
+.legend .item .tag {
+  width: 50px;
+  height: 12px;
+  border-radius: 6px;
+  border: 1px solid #ffffff;
+  margin-right: 8px;
+  cursor: pointer;
+}
 
-	.legend .item .tag {
-		width: 50px;
-		height: 12px;
-		border-radius: 6px;
-		border: 1px solid #FFFFFF;
-		margin-right: 8px;
-		cursor: pointer;
-	}
+.legend .item .tag:hover {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5) inset;
+}
 
-	.legend .item .tag:hover {
-		box-shadow: 0 0 8px rgba(255, 255, 255, 0.5) inset;
-	}
+.legend .item:nth-child(1) .tag {
+  background-color: #019183;
+}
 
-	.legend .item:nth-child(1) .tag {
-		background-color: #019183;
-	}
+.legend .item:nth-child(2) .tag {
+  background-color: #988d0f;
+}
 
-	.legend .item:nth-child(2) .tag {
-		background-color: #988D0F;
-	}
+.legend .item:nth-child(3) .tag {
+  background-color: #9e323a;
+}
 
-	.legend .item:nth-child(3) .tag {
-		background-color: #9E323A;
-	}
+.legend .item:nth-child(4) .tag {
+  background-color: #5b080f;
+}
 
-	.legend .item:nth-child(4) .tag {
-		background-color: #5B080F;
-	}
+.legend .item:nth-child(5) .tag {
+  background-color: #af7092;
+}
 
-	.legend .item:nth-child(5) .tag {
-		background-color: #AF7092;
-	}
+.legend .item:nth-child(6) .tag {
+  background-color: #019143;
+}
 
-	.legend .item:nth-child(6) .tag {
-		background-color: #019143;
-	}
+.legend .item:nth-child(7) .tag {
+  background-color: #138aba;
+}
 
-	.legend .item:nth-child(7) .tag {
-		background-color: #138ABA;
-	}
+.legend .item:nth-child(8) .tag {
+  background-color: #a7a7a5;
+}
 
-	.legend .item:nth-child(8) .tag {
-		background-color: #A7A7A5;
-	}
+.legend .item:nth-child(9) .tag {
+  background-color: #0b4173;
+}
 
-	.legend .item:nth-child(9) .tag {
-		background-color: #0B4173;
-	}
-
-	.legend .item:nth-child(10) .tag {
-		background-color: #126DC2;
-	}
+.legend .item:nth-child(10) .tag {
+  background-color: #126dc2;
+}
 </style>

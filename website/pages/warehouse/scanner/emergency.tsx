@@ -42,23 +42,24 @@ export default defineComponent({
     //扫描出仓模态框是否可见
     const visible = ref(false);
     //类型
-    const departType = ref([
-      { "1": "急救、重症" },
-      { "2": "门诊" },
-      { "3": "后勤" },
-      { "4": "指挥" },
-      { "5": "重症" },
-      { "6": "超声" },
-      { "7": "清创" },
-      { "8": "留观" },
-      { "9": "药房" },
-      { "10": "耗材" },
-      { "11": "手术" },
-      { "12": "防疫/隔离" },
-      { "13": "消毒" },
-      { "14": "住院" },
-      { "15": "检验" },
-    ])
+    const departType = ref(
+      {
+        1: "急救、重症",
+        2: "门诊",
+        3: "后勤",
+        4: "指挥",
+        5: "重症",
+        6: "超声",
+        7: "清创",
+        8: "留观",
+        9: "药房",
+        10: "耗材",
+        11: "手术",
+        12: "防疫/隔离",
+        13: "消毒",
+        14: "住院",
+        15: "检验",
+      })
     //货架位置
     const departRack = ref(
       { 0: "未知" ,
@@ -83,6 +84,8 @@ export default defineComponent({
         data: [],
       },
     ]);
+    //只允许提交一次状态
+    const saveStatus = ref(true);
     //归仓信息
     const goBackData = ref({});
     //扫描出仓模态框数据初始化
@@ -100,6 +103,7 @@ export default defineComponent({
     //扫描出仓模态框控制
     const handleClickPendingItem = () => {
       initPendingData();
+      saveStatus.value = true;
       visible.value = !visible.value;
     };
     // 菜单列表当前激活值
@@ -151,24 +155,33 @@ export default defineComponent({
       emergencyData.value.eventId = emergency.EventId;
       emergencyData.value.eventName = emergency.eventName;
       emergencyData.value.personnelJobNo = emergency.PersonnelJobNo;
+      console.log(emergencyData.value)
       AntModal.confirm({
         class: "bg-navy-3 rounded pb-0 border border-primary",
         title: `确定出仓？`,
         content: `出仓紧急扫描清单的全部物资`,
         centered: true,
         onOk: () => {
-          store
-            .dispatch(
-              "warehouseModule/pendingModule/savetheEmergencyList",
-              emergencyData.value                 
-            )
-            .then(() => {
-              finishedDelivery.value.data =[]
-              visible.value = !visible.value;
-              //handleClickTabPane();
-            });                
+          saveemergen()             
         }
       })
+    }
+    //紧急出仓提交
+    const saveemergen = () => {
+      if (!saveStatus.value) {
+        return;
+      }
+      saveStatus.value = false;
+      store
+      .dispatch(
+        "warehouseModule/pendingModule/savetheEmergencyList",
+        emergencyData.value                 
+      )
+      .then(() => {
+        finishedDelivery.value.data =[]
+        visible.value = !visible.value;
+        //handleClickTabPane();
+      });
     }
     //菜单列表切换数据展示
     const handleClickTabPane = ({ activeKey }) => {
@@ -272,7 +285,7 @@ export default defineComponent({
                   finddataready(readerdata[i])
                 }
               } else {
-                message.success('没有新增数据')
+                //message.success('没有新增数据')
               }
             } else if(abcd.value){              
               for (let k = 0; k < readerdata.length; k++) {
@@ -409,7 +422,7 @@ export default defineComponent({
                                   listItem.outDetailList.map((item, index) => {
                                     return (
                                       <>
-                                        <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                        <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
                                             {item.materialInfo?item.materialInfo.materialName:''}
                                           </span>
@@ -477,7 +490,7 @@ export default defineComponent({
                                   ? "bg-red-400 border-danger border bg-opacity-10"
                                   : "bg-navy-2"
                               }
-                              class="mb-18 mr-8  h-modal-lightmin   ghost "
+                              class="mb-16 mr-8  h-modal-lightmin  ghost "
                             >
                               <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
                                 <div class="flex items-center justify-center">
@@ -545,12 +558,12 @@ export default defineComponent({
                                   class="bg-navy-4 ml-16 overflow-y-auto h-modal-lightermin flex-1  overflow-x-hidden"
                                 >
                                   {listItem.resourceType == 2&& listItem.outDetailList ? (
-                                    listItem.outDetailList.map((item, index) => {
+                                    listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
                                           <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:(item.materialName?item.materialName:'')}
+                                            {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
                                           </div>
                                         </>

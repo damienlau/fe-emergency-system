@@ -13,7 +13,8 @@
               <a-input-search
                 v-model:value="meterialSearchValue"
                 placeholder="物资搜索"
-                allowClear
+                enter-button="搜索"
+                allow-clear
                 @search="getFirstMaterialsData"
               ></a-input-search>
               <a-button type="primary" class="ml-20" @click="showMetarialDilog"
@@ -136,6 +137,7 @@
     <Modal
       v-model:visible="boxDetailVisible"
       :title="boxDetailDialogTitle"
+      v-if="showBoxDetail"
       :status="boxDetailDialogStatus"
       @cancel="boxDetailVisible = false"
       size="heavy"
@@ -145,8 +147,9 @@
       <BoxDetailDialog
         :id="boxId"
         :boxCode="boxCode"
-        :materialRemainNumber="materialRemainNumber"
         @close="closeBoxDetailDialog"
+        @freshBoxList="getFirstBoxData"
+        @freshBoxDetailDialogTitle="freshBoxDetailDialogTitle"
       ></BoxDetailDialog>
     </Modal>
   </div>
@@ -205,6 +208,7 @@ export default defineComponent({
         pageSize: 10,
         total: 0,
       },
+      showBoxDetail: true,
     });
     onMounted(() => {
       getFirstMaterialsData();
@@ -317,6 +321,9 @@ export default defineComponent({
     const unshowBoxDialog = () => {
       state.boxDetailVisible = false;
     };
+    const freshBoxDetailDialogTitle = (title) => {
+      state.boxDetailDialogTitle = title;
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -337,6 +344,7 @@ export default defineComponent({
       getFirstMaterialsData,
       unshowMeterialDialog,
       unshowBoxDialog,
+      freshBoxDetailDialogTitle,
     };
   },
 });

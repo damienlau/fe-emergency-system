@@ -36,6 +36,11 @@ export interface formItemProps extends selectOptionProps {
 export default defineComponent({
   name: "Form",
   props: {
+    formStyle: {
+      type: Object,
+      required: false,
+      default: () => {}
+    },
     columns: {
       type: Object as PropType<formItemProps[]>,
       required: true,
@@ -184,6 +189,7 @@ export default defineComponent({
 
     return () => (
       <Form
+        style={props.formStyle}
         hideRequiredMark={true}
         layout={props.layout}
         model={formData.value}

@@ -55,7 +55,8 @@ export default defineComponent({
   },
   props: {
     racknumber: String,
-    boxcode: String
+    boxcode: String,
+    boxid: Number
   },
 
   setup(props) {
@@ -107,11 +108,12 @@ export default defineComponent({
     // 借出
     const outForm = () => {
       const params = {
-        boxCode: props.boxcode
+        boxId: props.boxid,
+        operationType: 1,
+        resourceType: 2
       }
       addBatchPendingData(params).then(() => {
-        getMaterialsData()
-        message.success('借出成功')
+        getFirstMaterialsData()
       })
     }
 
@@ -120,6 +122,7 @@ export default defineComponent({
       getMaterialsData,
       tabClick,
       getFirstMaterialsData,
+      outForm
     };
   },
 });

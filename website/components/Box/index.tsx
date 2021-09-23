@@ -8,6 +8,24 @@ import { emit } from "node:process";
 import { useStore } from "vuex";
 import classes from "./style.module.less";
 
+enum DepartmentTypeEnum {
+  firstAid = 1, // 急救/重症
+  outpatient = 2, // 门诊
+  logistics = 3, // 后勤
+  command = 4, // 指挥
+  severeCase = 5, // 重症
+  ultrasonic = 6, // 超声
+  debridement = 7, // 清创
+  observation = 8,// 留观
+  pharmacy = 9, // 药房
+  consumables = 10, // 耗材
+  operation =  11, // 手术
+  isolation = 12, // 防疫/隔离
+  disinfection = 13, // 消毒
+  hospitalization = 14, // 住院
+  inspection = 15 // 检验
+}
+
 export default defineComponent({
   name: "Box",
   props: {
@@ -15,12 +33,22 @@ export default defineComponent({
       type: Object as PropType<boxRequestProps>,
       required: true,
     },
+    layer: {
+      type: String
+    },
+    hover: {
+      type: Boolean,
+      default: false
+    }
   },
   emits: ['click'],
   setup(props, { emit }) {
     const popoverVisible = ref(false)
     const goodsList = ref<{inBoxMaterials: any, outBoxMaterials: any}>();
     const store = useStore();
+
+    // 科室类型选项
+    const departmentChoices = ref([]) as any
 
     const handleGetGoodsLists = async (visible: boolean) => {
       popoverVisible.value = visible
@@ -38,6 +66,33 @@ export default defineComponent({
     const showRackBoxDetailDialog = () => {
       emit('click', props.columns)
     };
+
+    const getBoxName = (departmentType: DepartmentTypeEnum) => {
+      const choices = departmentChoices.value
+      return choices.find((type: any) => type.value === departmentType).key
+    }
+
+    const StringIsNumber = (value: any) => isNaN(Number(value)) === false;
+
+    const departmentEnumToArray = (enumme: any) => {
+      return Object.keys(enumme)
+          .filter(StringIsNumber)
+          .map(key => {
+            return {
+              key: enumme[key],
+              value: Number(key)
+            }
+          });
+    }
+
+    const boxClass = () => {
+      if (!props.hover) return ''
+      return classes['box-hover']
+    }
+  
+    onMounted(() => {
+      departmentChoices.value = departmentEnumToArray(DepartmentTypeEnum)
+    })
 
     return () => (
       <Popover
@@ -157,7 +212,7 @@ export default defineComponent({
           ),
           default: () => (
             // Box Start
-            <div class={classes.box} onClick={showRackBoxDetailDialog}>
+            <div class={classes.box + ' ' + boxClass()} onClick={showRackBoxDetailDialog} data-layer={props.layer}>
               {/* Badge */}
               {props.columns.status === boxStatus.out && (
                 <div class={classes['rack-out']}>
@@ -188,9 +243,11 @@ export default defineComponent({
               </Tooltip>
               {/* Meta */}
               <div class="w-full h-full flex flex-col items-center justify-center">
-                <span class="bg-success px-8 py-4" style="white-space: nowrap;">
-                  {props.columns.boxName}
-                </span>
+                {
+                  departmentChoices.value.length && <span class={classes[getBoxName(props.columns.departmentType as DepartmentTypeEnum)]} style="white-space: nowrap;padding: 4px 8px">
+                    {props.columns.boxName}
+                  </span>
+                }
                 <span
                   class={
                     props.columns.materialRemainNumber ===

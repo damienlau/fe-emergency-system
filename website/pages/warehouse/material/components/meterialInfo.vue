@@ -75,12 +75,13 @@
           >取消借货</a-button
         >
       </div>
-      <div class="right" v-if="info.status === 1">
+      <div class="right">
         <a-button
           ghost
           class="mr-3"
           v-if="info.inBatchPendingStatus !== 2"
           :disabled="
+            info.status !== 1 ||
             info.inBatchPendingStatus === 1 ||
             info.inBatchPendingStatus === 2 ||
             info.inBatchPendingStatus === 3
@@ -104,6 +105,7 @@
           ghost
           v-if="info.inBatchPendingStatus !== 3"
           :disabled="
+            info.status !== 1 ||
             info.inBatchPendingStatus === 1 ||
             info.inBatchPendingStatus === 2 ||
             info.inBatchPendingStatus === 3
