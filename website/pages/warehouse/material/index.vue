@@ -2,10 +2,10 @@
   <a-layout class="h-full bg-transparent">
     <a-layout class="bg-transparent">
       <a-layout-content>
-        <MapCanvas />
+        <!-- <MapCanvas /> -->
       </a-layout-content>
     </a-layout>
-    <a-layout-sider
+    <!-- <a-layout-sider
       v-model:collapsed="collapsed"
       class="bg-navy-4"
       width="100%"
@@ -35,14 +35,16 @@
         </button>
         <Sidebar />
       </div>
-    </a-layout-sider>
+    </a-layout-sider> -->
+    <Sidebar />
   </a-layout>
 </template>
 <script>
 import { defineComponent, toRefs, reactive } from "vue";
 import { Icon } from "components";
 import MapCanvas from "./components/map-canvas/index.vue";
-import Sidebar from "./siderBar/index.vue";
+// import Sidebar from "./siderBar/index.vue";
+import Sidebar from "./sidebar.tsx";
 export default defineComponent({
   name: "SiderBar",
   components: { Icon, Sidebar, MapCanvas },
