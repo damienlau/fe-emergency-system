@@ -1,6 +1,7 @@
 <template>
   <div>
     <a-tabs
+      class="ant-tabs-nav-center h-full"
       v-model:activeKey="activeKey"
       @tabClick="tabClick"
       :animated="false"
