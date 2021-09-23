@@ -516,7 +516,7 @@ export default defineComponent({
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):''}
                                     </span>
                                   ):''
                                 }                                
@@ -627,7 +627,7 @@ export default defineComponent({
                               }
                               class="mb-16 mr-8  h-modal-lightmin  ghost "
                             >
-                              <div class="h-64 flex items-center justify-center text-white border-b border-navy-1 relative">
+                              <div class="h-56 flex items-center justify-center text-white border-b border-navy-1 relative">
                                 <div class="flex items-center justify-center">
                                   <span class="text-20">
                                   {
@@ -640,9 +640,9 @@ export default defineComponent({
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
                                         {listItem.warehouseBoxInfo ?
-                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          ("("+listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber+")") :
                                           (listItem.materialRemainNumber ?
-                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
+                                            "("+listItem.materialRemainNumber + "/" + listItem.materialTotalNumber+")":'')}
                                       </span>
                                     ):''
                                   }
@@ -777,7 +777,7 @@ export default defineComponent({
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
+                                  {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):("("+listItem.materialRemainNumber+"/"+listItem.materialTotalNumber+")")}                                      
                                 </span>
                               ):''
                             }                          

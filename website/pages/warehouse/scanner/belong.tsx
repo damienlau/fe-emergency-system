@@ -556,7 +556,7 @@ export default defineComponent({
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):''}
                                     </span>
                                   ):''
                                 }                                
@@ -680,9 +680,9 @@ export default defineComponent({
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
                                         {listItem.warehouseBoxInfo ?
-                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          ("("+listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber+")") :
                                           (listItem.materialRemainNumber ?
-                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
+                                            "("+listItem.materialRemainNumber + "/" + listItem.materialTotalNumber+")":'')}
                                       </span>
                                     ):''
                                   }
@@ -736,7 +736,7 @@ export default defineComponent({
                                     listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
-                                          <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                          <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
                                             {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
@@ -817,7 +817,7 @@ export default defineComponent({
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
+                                  {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):("("+listItem.materialRemainNumber+"/"+listItem.materialTotalNumber+")")}                                      
                                 </span>
                               ):''
                             }                          
