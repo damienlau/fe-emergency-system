@@ -75,18 +75,21 @@ export default defineComponent({
         key: "1",
         count: 0,
         data: [],
+        require:true
       },
       {
         label: "未符合清单物资",
         key: "2",
         count: 0,
         data: [],
+        require:true
       },
       {
         label: "未扫描到的物资",
         key: "3",
         count: 0,
         data: [],
+        require:true
       },
     ]);
     //只允许提交一次状态
@@ -131,12 +134,26 @@ export default defineComponent({
     //非法物资数据缓存
     const getmenusArr = ref([]);
     //监听模态框归仓事件
-    const handlePendingSubmit = () => {
+    const handlePendingSubmit = (formData) => {
       var newdata = menus.value[0].data.concat(menus.value[1].data)
       if (newdata.length == 0) {
         message.error("暂无归仓物资")
         return
       }
+      console.log(formData)
+      if (!formData.personnelName) {
+        message.error("请填写归还人信息")
+        return
+      }
+      if (!formData.description) {
+        message.error("请填写归还人工号")
+        return
+      }
+      if (!formData.personnelPhone) {
+        message.error("请填写归还人联系电话")
+        return
+      }
+      
       var firready = '';
       if (menus.value[0].data.length != 0 && menus.value[1].data.length != 0) {
         firready = menus.value[0].label + '和' + menus.value[1].label;
@@ -249,6 +266,7 @@ export default defineComponent({
         finishedDelivery.value.data =[]
         visible.value = !visible.value;
         visiblesecond.value = !visiblesecond.value;
+        message.success("归仓成功")
         //handleClickTabPane();
       });   
     }
@@ -347,18 +365,21 @@ export default defineComponent({
       var biduistatus = true;
       pengdingDelivery.value.data.forEach((value, index, array) => {
         let addDeliveryData = array[index];
+        console.log(array[index])
         if (array[index].warehouseBoxInfo &&
           array[index].warehouseBoxInfo.boxCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
           console.log('待归仓箱子对比成功')
+          return
         } else if (array[index].materialInfo &&
           array[index].materialInfo.materialCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
           console.log('待归仓物资对比成功')
+          return
         } else {
           biduistatus = true;
           console.log('左侧待归仓没有找到对应的编号物资或箱子')
@@ -387,35 +408,36 @@ export default defineComponent({
       clearInterval(timeId.value)
     }
     //轮询接口,读取扫描门
-    const abcd = ref(true)
     const readerSweepGate = () => {
       store
         .dispatch("warehouseModule/pendingModule/sweepGateReaderData")
         .then((response) => {
           var readerdata = response;
           var readerdataSession = sessionStorage.getItem("readerbelong");
+          console.log(readerdataSession)
           if (readerdata) {
-            if (readerdataSession&& !abcd.value) {
-              let listreader = readerdata.filter(items => {
-                if (!readerdataSession?.includes(items)) return items;
-              })
-              if (listreader.length != 0) {
-                readerdataSession = readerdataSession.concat(listreader)
-                sessionStorage.setItem('readerbelong', readerdataSession)
-                console.log(listreader);
-                console.log(sessionStorage.getItem('readerbelong'))
-                for (let i = 0; i < listreader.length; i++){
-                  finddataready(listreader[i])
-                }
-              } else {
-                //message.success('没有新增数据')
-              }
-            } else if(abcd.value){              
-              for (let k = 0; k < readerdata.length; k++) {
+            if (readerdataSession) {
+                  var sessionArr = readerdataSession.split(',')
+                  console.log(sessionArr)
+                  let listreader = readerdata.filter(items => {
+                    if (!sessionArr?.includes(items)) return items;
+                  })
+                  if (listreader.length != 0) {
+                    sessionArr = sessionArr.concat(listreader)
+                    sessionStorage.setItem('readerbelong', sessionArr)
+                    console.log(listreader);
+                    console.log(sessionStorage.getItem('readerbelong'))
+                    for (let i = 0; i < listreader.length; i++){
+                      finddataready(listreader[i])
+                    }
+                  } else {
+                    message.success('没有新增数据')
+                  }
+            } else {
                 sessionStorage.setItem('readerbelong', readerdata)
-                  finddataready(readerdata[k])
-              }
-              abcd.value = false;
+                for (let k = 0; k < readerdata.length; k++) {
+                    finddataready(readerdata[k])
+                }
             }
           }       
         })
@@ -502,8 +524,7 @@ export default defineComponent({
     };
     // 监听模态框表单提交事件
     const handleSubmitForm = (formData) => {
-      goBackData.value = formData;
-      handlePendingSubmit();
+      handlePendingSubmit(formData);
     };
     onMounted(() => {
       //获取待归仓物资 
@@ -594,12 +615,12 @@ export default defineComponent({
                                     ></a-empty>
                                   </div>
                                 ) : (
-                                  listItem.outDetailList.map((item, index) => {
+                                  listItem.outDetailList.map((ite, index) => {
                                     return (
                                       <>
                                         <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                           <span class="text-14 w-full overflow-hidden h-22">
-                                            {item.materialInfo?item.materialInfo.materialName:''}
+                                            {ite.materialInfo?ite.materialInfo.materialName:''}
                                           </span>
                                         </div>
                                       </>
@@ -662,7 +683,7 @@ export default defineComponent({
                             <div
                               class={
                                 listItem.statusright == 1
-                                  ? "bg-red-400 border-danger border bg-opacity-10"
+                                  ? "bg-red-400 border-danger border bg-opacity-10 mb-16"
                                   : "bg-navy-2"
                               }
                               class="mb-16 mr-8  h-modal-lightmin  ghost "
