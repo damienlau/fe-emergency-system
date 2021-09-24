@@ -133,6 +133,7 @@
         :id="meterialId"
         @close="closeMeterialDetailDialog"
         @fleshMaterialList="getFirstMaterialsData"
+        @freshMaterialDialogTitle="freshMaterialDialogTitle"
       ></MeterialDetailDialog>
     </Modal>
     <Modal
@@ -327,6 +328,9 @@ export default defineComponent({
     const freshBoxDetailDialogTitle = (title) => {
       state.boxDetailDialogTitle = title;
     };
+    const freshMaterialDialogTitle = (title) => {
+      state.meterialDetailDialogTitle = title;
+    };
     return {
       ...toRefs(state),
       meterialSearchValue,
@@ -348,6 +352,7 @@ export default defineComponent({
       unshowMeterialDialog,
       unshowBoxDialog,
       freshBoxDetailDialogTitle,
+      freshMaterialDialogTitle,
     };
   },
 });

@@ -334,6 +334,7 @@ export default defineComponent({
         if (res.data) {
           state.isEditBase = true;
           // slot.emit("close");
+          initData();
           slot.emit("fleshMaterialList");
         }
       });
@@ -342,6 +343,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditOther = true;
+          initData();
           slot.emit("fleshMaterialList");
         }
       });
@@ -358,6 +360,10 @@ export default defineComponent({
         res.data.isExpiration = String(res.data.isExpiration);
         state.dataSource = res.data;
         state.loading = true;
+        const materiaTitle = res.data.boxName
+          ? res.data.materialName + "(" + res.data.boxName + ")"
+          : res.data.materialName;
+        slot.emit("freshMaterialDialogTitle", materiaTitle);
       });
     };
     const handDelete = (data) => {
