@@ -132,6 +132,7 @@
       <MeterialDetailDialog
         :id="meterialId"
         @close="closeMeterialDetailDialog"
+        @fleshMaterialList="getFirstMaterialsData"
       ></MeterialDetailDialog>
     </Modal>
     <Modal

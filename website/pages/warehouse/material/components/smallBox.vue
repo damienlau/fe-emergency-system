@@ -23,6 +23,7 @@
           }}</span>
           <a-tag
             size="mini"
+            class="rounded-full"
             :color="info.status && returnStatus(info.status).color"
             >{{ info.status && returnStatus(info.status).text }}</a-tag
           >

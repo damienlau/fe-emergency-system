@@ -333,7 +333,8 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditBase = true;
-          slot.emit("close");
+          // slot.emit("close");
+          slot.emit("fleshMaterialList");
         }
       });
     };
@@ -341,7 +342,7 @@ export default defineComponent({
       updateSpecifiedMeterialData(data).then((res) => {
         if (res.data) {
           state.isEditOther = true;
-          slot.emit("close");
+          slot.emit("fleshMaterialList");
         }
       });
     };
