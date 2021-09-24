@@ -428,18 +428,6 @@ export default defineComponent({
             label: "2号货架",
             key: "2",
           },
-          {
-            label: "3号货架",
-            key: "3",
-          },
-          {
-            label: "4号货架",
-            key: "4",
-          },
-          {
-            label: "5号货架",
-            key: "5",
-          },
         ],
         required: true,
       },
@@ -551,6 +539,7 @@ export default defineComponent({
     onMounted(() => {
       initData();
       initMaterialList();
+      initrackNumber();
     });
 
     const handleSubmitBase = (data) => {
@@ -769,6 +758,19 @@ export default defineComponent({
           ctx.emit("close");
         }
       });
+      const initrackNumber = () => {
+        baseForm.value[1].options = [];
+        for (let i = 1; i <= 42; i++) {
+          baseForm.value[1].options.push({
+            label: i + "号货架",
+            key: "" + i,
+          });
+        }
+        baseForm.value[1].options.push({
+          label: "物料架",
+          key: "520",
+        });
+      };
     };
     return {
       ...toRefs(state),
@@ -790,6 +792,7 @@ export default defineComponent({
       handConfirmDelete,
       returnStatus,
       handDeleteMeterial,
+      initrackNumber,
     };
   },
 });
