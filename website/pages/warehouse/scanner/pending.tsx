@@ -7,6 +7,7 @@ import {
   message,
   ImagePreviewGroup,
   Image,
+  Tooltip,
 } from "ant-design-vue";
 import { Form, Icon, Modal, Tabs, Empty,Card } from "components";
 import { useRouter } from "vue-router";
@@ -244,6 +245,7 @@ export default defineComponent({
       .then(() => {
         finishedDelivery.value.data =[]
         visible.value = !visible.value;
+        message.success("出仓成功")
         //handleClickTabPane();
       });   
     }
@@ -317,7 +319,7 @@ export default defineComponent({
               })
             console.log(pengdingDelivery.value.data)
           } else {
-            //message.success('没有清单')
+            message.success('没有清单')
           }
       })
     }
@@ -327,11 +329,11 @@ export default defineComponent({
         .dispatch("warehouseModule/pendingModule/allmaterialPendingData",{materialCode:ready})
         .then((res) => {
           if (res.length == 0 || typeof (res) == undefined) {
-            //message.error("没有找到该编号对应的箱子或物资");
+            console.log("没有找到该编号对应的箱子或物资");
           } else {
             Object.assign(res[0],{statusright:1},{resourceType:1},{outFormId:getOutFrom.value})
             finishedDelivery.value.data.unshift(res[0]);
-            //console.log('在全部物资查找到该物资')
+            console.log('在全部物资查找到该物资')
           }  
       })
     }
@@ -346,17 +348,19 @@ export default defineComponent({
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
-          //console.log('待出仓箱子对比成功')
+          console.log('待出仓箱子对比成功')
+          return
         } else if (array[index].materialInfo &&
           array[index].materialInfo.materialCode == findready) {
           pengdingDelivery.value.data.splice(index, 1);
           finishedDelivery.value.data.unshift(addDeliveryData);
           biduistatus = false;
-          //console.log(finishedDelivery.value.data)
-          //console.log('待出仓物资对比成功')
+          console.log(finishedDelivery.value.data)
+          console.log('待出仓物资对比成功')
+          return
         } else {
           biduistatus = true;
-          //console.log('左侧待出仓没有找到对应的编号物资或箱子')
+          console.log('左侧待出仓没有找到对应的编号物资或箱子')
           return;
         }
       });
@@ -370,7 +374,7 @@ export default defineComponent({
           } else {
             Object.assign(res[0],{statusright:1},{resourceType:2},{outFormId:getOutFrom.value})
             finishedDelivery.value.data.unshift(res[0]);
-            //console.log('在全部仓库查找到该箱子')
+            console.log('在全部仓库查找到该箱子')
           }                            
         })
     }
@@ -381,36 +385,36 @@ export default defineComponent({
       clearInterval(timeId.value)
     }
     //轮询接口,读取扫描门
-    const abcd = ref(true)
     const readerSweepGate = () => {
       store
         .dispatch("warehouseModule/pendingModule/sweepGateReaderData")
         .then((response) => {
           var readerdata = response;
-          var readerdataSession = sessionStorage.getItem("reader");
+          var readerdataSession = sessionStorage.getItem("reader")
           if (readerdata) {
-            if (readerdataSession&& !abcd.value) {
+            if (readerdataSession) {
+              var sessionArr = readerdataSession.split(',')
+              console.log(sessionArr)
               let listreader = readerdata.filter(items => {
-                if (!readerdataSession?.includes(items)) return items;
+              if (!sessionArr?.includes(items)) return items;
               })
               if (listreader.length != 0) {
-                console.log(readerdataSession)
-                readerdataSession = readerdataSession.concat(listreader)
-                sessionStorage.setItem('reader', readerdataSession)
+                console.log(sessionArr)
+                sessionArr = sessionArr.concat(listreader)
+                sessionStorage.setItem('reader', sessionArr)
                 console.log(listreader);
                 console.log(sessionStorage.getItem('reader'))
                 for (let i = 0; i < listreader.length; i++){
                   finddataready(listreader[i])
                 }
               } else {
-                //message.success('没有新增数据')
+                message.success('没有新增数据')
               }
-            } else if(abcd.value){              
+            } else {
+              sessionStorage.setItem('reader', readerdata)
               for (let k = 0; k < readerdata.length; k++) {
-                sessionStorage.setItem('reader', readerdata)
                   finddataready(readerdata[k])
               }
-              abcd.value = false;
             }
           }       
         })
@@ -516,7 +520,7 @@ export default defineComponent({
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):''}
                                     </span>
                                   ):''
                                 }                                
@@ -622,7 +626,7 @@ export default defineComponent({
                             <div
                               class={
                                 listItem.statusright == 1
-                                  ? "bg-red-400 border-danger border bg-opacity-10"
+                                  ? "bg-red-400 border-danger border bg-opacity-10 mb-16"
                                   : "bg-navy-2"
                               }
                               class="mb-16 mr-8  h-modal-lightmin  ghost "
@@ -640,9 +644,9 @@ export default defineComponent({
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
                                         {listItem.warehouseBoxInfo ?
-                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          ("("+listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber+")") :
                                           (listItem.materialRemainNumber ?
-                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
+                                            "("+listItem.materialRemainNumber + "/" + listItem.materialTotalNumber+")":'')}
                                       </span>
                                     ):''
                                   }
@@ -696,7 +700,7 @@ export default defineComponent({
                                     listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
-                                          <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                          <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
                                             {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
@@ -777,7 +781,7 @@ export default defineComponent({
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
+                                  {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):("("+listItem.materialRemainNumber+"/"+listItem.materialTotalNumber+")")}                                      
                                 </span>
                               ):''
                             }                          
@@ -892,9 +896,21 @@ export default defineComponent({
                                   style="white-space: nowrap;overflow: hidden;"
                                   class="overflow-ellipsis flex-1"
                                 >
-                                  {
-                                    listItem.resourceType == 1 ? (listItem.materialInfo?listItem.materialInfo.boxCode:listItem.boxCode):(listItem.warehouseBoxInfo?listItem.warehouseBoxInfo.boxCode:listItem.boxCode)
-                                  }
+                                  <Tooltip
+                                    title={
+                                      listItem.resourceType == 1 ?
+                                      (listItem.materialInfo ? listItem.materialInfo.boxCode :
+                                        listItem.boxCode) :
+                                      (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxCode :
+                                        listItem.boxCode)
+                                    }
+                                  >
+                                    {listItem.resourceType == 1 ?
+                                      (listItem.materialInfo ? listItem.materialInfo.boxCode :
+                                        listItem.boxCode) :
+                                      (listItem.warehouseBoxInfo ? listItem.warehouseBoxInfo.boxCode :
+                                        listItem.boxCode)}
+                                  </Tooltip>
                                 </div>
                               </p>
                             </div>

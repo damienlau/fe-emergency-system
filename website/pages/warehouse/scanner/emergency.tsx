@@ -180,6 +180,7 @@ export default defineComponent({
       .then(() => {
         finishedDelivery.value.data =[]
         visible.value = !visible.value;
+        message.success("出仓成功")
         //handleClickTabPane();
       });
     }
@@ -264,7 +265,6 @@ export default defineComponent({
       clearInterval(timeId.value)
     }
     //轮询接口,读取扫描门
-    const abcd = ref(true)
     const readerSweepGate = () => {
       store
         .dispatch("warehouseModule/pendingModule/sweepGateReaderData")
@@ -272,27 +272,27 @@ export default defineComponent({
           var readerdata = response;
           var readerdataSession = sessionStorage.getItem("readeremer");
           if (readerdata) {
-            if (readerdataSession&& !abcd.value) {
+            if (readerdataSession) {
+              var sessionArr = readerdataSession.split(',')
               let listreader = readerdata.filter(items => {
-                if (!readerdataSession?.includes(items)) return items;
+                if (!sessionArr?.includes(items)) return items;
               })
               if (listreader.length != 0) {
-                readerdata.concat(listreader)
-                sessionStorage.setItem('readeremer', readerdata)
-                console.log(readerdata);
+                sessionArr = sessionArr.concat(listreader)
+                sessionStorage.setItem('readeremer', sessionArr)
+                console.log(listreader);
                 console.log(sessionStorage.getItem('readeremer'))
                 for (let i = 0; i < listreader.length; i++){
-                  finddataready(readerdata[i])
+                  finddataready(listreader[i])
                 }
               } else {
                 //message.success('没有新增数据')
               }
-            } else if(abcd.value){              
+            } else {
+              sessionStorage.setItem('readeremer', readerdata)
               for (let k = 0; k < readerdata.length; k++) {
-                sessionStorage.setItem('readeremer', readerdata)
                   finddataready(readerdata[k])
               }
-              abcd.value = false;
             }
           }       
         })
@@ -381,7 +381,7 @@ export default defineComponent({
                                 {
                                   listItem.resourceType == 2 ?  (
                                     <span class="text-success">
-                                      {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):''}
+                                      {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):''}
                                     </span>
                                   ):''
                                 }                               
@@ -505,9 +505,9 @@ export default defineComponent({
                                     listItem.resourceType == 2 ?  (
                                       <span class="text-success">
                                         {listItem.warehouseBoxInfo ?
-                                          (listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber) :
+                                          ("("+listItem.warehouseBoxInfo.materialRemainNumber + "/" + listItem.warehouseBoxInfo.materialTotalNumber+")") :
                                           (listItem.materialRemainNumber ?
-                                            listItem.materialRemainNumber + "/" + listItem.materialTotalNumber:'')}
+                                            "("+listItem.materialRemainNumber + "/" + listItem.materialTotalNumber+")":'')}
                                       </span>
                                     ):''
                                   }
@@ -561,7 +561,7 @@ export default defineComponent({
                                     listItem.outDetailList.map((ite, index) => {
                                       return (
                                         <>
-                                          <div class="h-54 ml-16 mr-16 border-b border-navy-1  flex items-center">
+                                          <div class="h-56 ml-16 mr-16 border-b border-navy-1  flex items-center">
                                             <span class="text-14 w-full overflow-hidden h-22">
                                             {ite.materialInfo?ite.materialInfo.materialName:(ite.materialName?ite.materialName:'')}
                                             </span>
@@ -642,7 +642,7 @@ export default defineComponent({
                             {
                               listItem.resourceType == 2 ?  (
                                 <span class="text-success">
-                                  {listItem.warehouseBoxInfo?(listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber):(listItem.materialRemainNumber+"/"+listItem.materialTotalNumber)}                                      
+                                  {listItem.warehouseBoxInfo?("("+listItem.warehouseBoxInfo.materialRemainNumber+"/"+listItem.warehouseBoxInfo.materialTotalNumber+")"):("("+listItem.materialRemainNumber+"/"+listItem.materialTotalNumber+")")}                                      
                                 </span>
                               ):''
                             }                         

@@ -23,7 +23,12 @@
           @submit="handleSubmitOther"
         >
           <template #button>
-            <a-button type="primary" ghost class="mr-3" htmlType="submit">
+            <a-button
+              type="primary"
+              ghost
+              class="mr-3 otherFooterBtn"
+              htmlType="submit"
+            >
               <template #icon>
                 <Icon class="align-baseline" :type="'save'" /> </template
               >保存</a-button
@@ -411,5 +416,8 @@ export default defineComponent({
 :deep(.ant-tabs-tabpane) {
   height: 334px;
   overflow-y: auto;
+}
+.otherFooterBtn {
+  margin-top: 120px;
 }
 </style>

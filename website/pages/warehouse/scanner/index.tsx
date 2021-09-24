@@ -68,7 +68,11 @@ export default defineComponent({
     
     // 监听模态框表单提交事件
     const handleSubmitForm = (formdata) => {
-      var fdata = formdata
+      sessionStorage.removeItem("nameNo")
+      sessionStorage.removeItem("reader")
+      sessionStorage.removeItem("readerbelong")
+      sessionStorage.removeItem("readeremer")
+      var fdata = formdata;
       if (!formdata.PersonnelJobNo || !formdata.EventId) {
         message.info('事件或工号不能为空')
         return

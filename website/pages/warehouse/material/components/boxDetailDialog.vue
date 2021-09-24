@@ -100,7 +100,7 @@
                 <a-button
                   type="primary"
                   ghost
-                  class="flex flex-row items-center mr-3"
+                  class="flex flex-row items-center mr-3 otherFooterBtn"
                   danger
                 >
                   <template #icon>
@@ -117,7 +117,7 @@
                   dataSource.inBatchPendingStatus == 0 &&
                   dataSource.materialRemainNumber
                 "
-                class="flex flex-row items-center mr-3"
+                class="flex flex-row items-center mr-3 otherFooterBtn"
                 danger
                 @click="deleteBoxVisible = true"
               >
@@ -128,7 +128,7 @@
               </a-button>
               <a-button
                 ghost
-                class="mr-3"
+                class="mr-3 otherFooterBtn"
                 v-if="isEditOther && dataSource.status == 1"
                 @click="isEditOther = false"
               >
@@ -138,7 +138,7 @@
               >
               <a-button
                 ghost
-                class="mr-3"
+                class="mr-3 otherFooterBtn"
                 htmlType="submit"
                 v-if="!isEditOther"
               >
@@ -428,18 +428,6 @@ export default defineComponent({
             label: "2号货架",
             key: "2",
           },
-          {
-            label: "3号货架",
-            key: "3",
-          },
-          {
-            label: "4号货架",
-            key: "4",
-          },
-          {
-            label: "5号货架",
-            key: "5",
-          },
         ],
         required: true,
       },
@@ -551,6 +539,7 @@ export default defineComponent({
     onMounted(() => {
       initData();
       initMaterialList();
+      initrackNumber();
     });
 
     const handleSubmitBase = (data) => {
@@ -558,6 +547,7 @@ export default defineComponent({
         if (res.data) {
           state.isEditBase = true;
           initData();
+          ctx.emit("freshBoxList");
         }
       });
     };
@@ -566,6 +556,7 @@ export default defineComponent({
         if (res.data) {
           state.isEditOther = true;
           initData();
+          ctx.emit("freshBoxList");
         }
       });
     };
@@ -770,6 +761,19 @@ export default defineComponent({
         }
       });
     };
+    const initrackNumber = () => {
+      baseForm.value[3].options = [];
+      for (let i = 1; i <= 42; i++) {
+        baseForm.value[3].options.push({
+          label: i + "号货架",
+          key: "" + i,
+        });
+      }
+      baseForm.value[3].options.push({
+        label: "物料架",
+        key: "520",
+      });
+    };
     return {
       ...toRefs(state),
       baseForm,
@@ -790,11 +794,15 @@ export default defineComponent({
       handConfirmDelete,
       returnStatus,
       handDeleteMeterial,
+      initrackNumber,
     };
   },
 });
 </script>
 <style lang="less" scoped>
+.otherFooterBtn {
+  margin-top: 170px;
+}
 .box {
   width: 100%;
   overflow-y: auto;
