@@ -547,6 +547,7 @@ export default defineComponent({
         if (res.data) {
           state.isEditBase = true;
           initData();
+          ctx.emit("freshBoxList");
         }
       });
     };
@@ -555,6 +556,7 @@ export default defineComponent({
         if (res.data) {
           state.isEditOther = true;
           initData();
+          ctx.emit("freshBoxList");
         }
       });
     };
@@ -758,19 +760,19 @@ export default defineComponent({
           ctx.emit("close");
         }
       });
-      const initrackNumber = () => {
-        baseForm.value[1].options = [];
-        for (let i = 1; i <= 42; i++) {
-          baseForm.value[1].options.push({
-            label: i + "号货架",
-            key: "" + i,
-          });
-        }
-        baseForm.value[1].options.push({
-          label: "物料架",
-          key: "520",
+    };
+    const initrackNumber = () => {
+      baseForm.value[3].options = [];
+      for (let i = 1; i <= 42; i++) {
+        baseForm.value[3].options.push({
+          label: i + "号货架",
+          key: "" + i,
         });
-      };
+      }
+      baseForm.value[3].options.push({
+        label: "物料架",
+        key: "520",
+      });
     };
     return {
       ...toRefs(state),
