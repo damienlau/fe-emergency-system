@@ -117,6 +117,7 @@ export default defineComponent({
               v-model={[formData.value[`${key}`], "value"]}
               disabled={disabled || props.disabled}
               placeholder={`请选择${label || placeholder}`}
+              showSearch
               onSelect={(val, opt) => {
                 if (secondKey) {
                   formData.value[`${secondKey}`] = opt.title;
