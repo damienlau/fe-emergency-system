@@ -126,7 +126,7 @@ export default defineComponent({
         props.materialInfo.materialImages &&
         props.materialInfo.materialImages[0]?.fileUrl
           ? props.materialInfo.materialImages[0].fileUrl
-          : "www.test";
+          : "";
     });
     const returnStatus = (status) => {
       let state = {};

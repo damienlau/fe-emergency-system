@@ -118,7 +118,7 @@ export default defineComponent({
       state.img =
         props.boxInfo.boxImages && props.boxInfo.boxImages[0].fileUrl
           ? props.boxInfo.boxImages[0].fileUrl
-          : "www.test";
+          : "";
     });
     const returnStatus = (status) => {
       let state = {};

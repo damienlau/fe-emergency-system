@@ -182,7 +182,7 @@ export default defineComponent({
         props.meterialInfo.materialImages &&
         props.meterialInfo.materialImages.length > 0
           ? props.meterialInfo.materialImages[0].fileUrl
-          : "www.test";
+          : "";
     });
     const changeMaintain = () => {
       const params = {

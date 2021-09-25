@@ -145,7 +145,7 @@ export default defineComponent({
         props.boxInfo.boxImages &&
         props.boxInfo.boxImages.length > 0
           ? props.boxInfo.boxImages[0].fileUrl
-          : "www.test";
+          : "";
     });
     const returnStatus = (status) => {
       let state = {};
