@@ -358,13 +358,13 @@ export default defineComponent({
           console.log(finishedDelivery.value.data)
           console.log('待出仓物资对比成功')
           return
-        } else {
-          biduistatus = true;
-          console.log('左侧待出仓没有找到对应的编号物资或箱子')
-          return;
         }
       });
-      if(!biduistatus){return}
+      console.log(biduistatus)
+      if (!biduistatus) {
+        return
+      }
+      console.log('左侧待出仓没有找到对应的编号物资或箱子')
       console.log('继续扫描')
       store
         .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })

@@ -703,6 +703,9 @@ export default defineComponent({
                                 </div>
                               </p>
                               <p class="flex">
+                              <span class="text-white text-opacity-70">
+                                  类型:
+                              </span>
                               <div class={listItem.resourceType == 1?"":"hidden"}
                                   style="white-space: nowrap;overflow: hidden;"
                                   class="overflow-ellipsis flex-1"

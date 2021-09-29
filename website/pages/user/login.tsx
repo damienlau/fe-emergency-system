@@ -1,7 +1,7 @@
 import { defineComponent, ref } from "@vue/runtime-core";
 import { Button } from "ant-design-vue";
 import Form, { formItemProps } from "components/Form";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteLeave, isNavigationFailure, NavigationFailureType } from "vue-router";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -18,8 +18,11 @@ export default defineComponent({
       },
     ]);
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
+    
+    console.log(router)
     return () => (
       <section class="w-full h-full flex items-center justify-center">
         <Form
@@ -28,7 +31,13 @@ export default defineComponent({
             store
               .dispatch("userModule/setUserOnline", userInfo)
               .then((response) => {
-                router.back();
+                console.log(router)
+                // if (route) {
+                // } else {
+                //   router.back();
+                // }
+                router.back()
+                //router.forward()
               });
           }}
         >

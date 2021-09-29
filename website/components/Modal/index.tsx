@@ -121,12 +121,12 @@ export default defineComponent({
             </button>
           </div>
           {/* Modal Header End */}
-          <div style="width: 100%" class="flex flex-row">
+          {/* <div style="width: 100%" class="flex flex-row"> */}
             <div class="flex-1 overflow-y-auto">
               {slots.default && slots.default()}
             </div>
             {slots.extra && renderExtra(slots.extra)}
-          </div>
+          {/* </div> */}
         </div>
       </Modal>
     );
