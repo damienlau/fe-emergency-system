@@ -386,8 +386,9 @@ export default defineComponent({
       if (!biduistatus) {
         return
       }
-      console.log('左侧待出仓没有找到对应的编号物资或箱子')
+      console.log('左侧待归仓没有找到对应的编号物资或箱子')
       console.log('继续扫描')
+      
       store
         .dispatch("warehouseModule/pendingModule/allBoxinfoPendingData", { boxCode: findready })
         .then((res) => {

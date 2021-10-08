@@ -126,8 +126,8 @@ export default defineComponent({
               {slots.default && slots.default()}
             </div>
             {slots.extra && renderExtra(slots.extra)}
-          {/* </div> */}
-        </div>
+          </div>
+        {/* </div> */}
       </Modal>
     );
   },

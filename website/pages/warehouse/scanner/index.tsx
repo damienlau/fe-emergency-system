@@ -1,7 +1,7 @@
 // 出/归仓扫描
 
 import { defineComponent, onMounted, ref,watch } from "vue";
-import { useRouter } from "vue-router";
+import router from "router";
 import { useStore } from "vuex";
 import { Form, Icon, Modal } from "components";
 import { message } from "ant-design-vue";
@@ -12,7 +12,6 @@ import emergencyimg from "assets/icon_scan_emergency.png";
 export default defineComponent({
   setup() {
     const store = useStore();
-    const router = useRouter();
     // 扫描菜单配置项
     const menus = ref([
       {
@@ -73,7 +72,8 @@ export default defineComponent({
       sessionStorage.removeItem("readerbelong")
       sessionStorage.removeItem("readeremer")
       var fdata = formdata;
-      if (!formdata.PersonnelJobNo || !formdata.EventId) {
+      console.log(fdata)
+      if (!fdata.PersonnelJobNo || !fdata.EventId) {
         message.info('事件或工号不能为空')
         return
       }
@@ -87,8 +87,8 @@ export default defineComponent({
           store
           .dispatch("warehouseModule/pendingModule/findSpecifiedShortcutList"
             , {
-              eventId: formdata.EventId,
-              personnelJobNo: formdata.PersonnelJobNo
+              eventId: fdata.EventId,
+              personnelJobNo: fdata.PersonnelJobNo
             })
           .then((response) => {
             if (response.length != 0) {
@@ -98,23 +98,24 @@ export default defineComponent({
             } else {
               message.info('无借货清单')
             }
-        });  
+          });
       }
                  
     };
 
     //获取借货单明细
     const DetailSpecifiedShortcutList = (id, fdata) => {
+      var detailRouter = formData.value["key"]
       if (formData.value["key"] == "Pending") {
         sessionStorage.setItem("nameNo", JSON.stringify(fdata));
         store
           .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:1 })
           .then((res) => {
             if (res && res.length != 0) {
-              visible.value = !visible.value;
               router.push({
-                name: formData.value["key"]        
-              });
+                name: detailRouter
+              });              
+              return
             } else {
               message.info('无借货清单!')
               return
@@ -126,10 +127,10 @@ export default defineComponent({
           .dispatch("warehouseModule/pendingModule/findDetailSpecifiedShortcutList", { outFormId: id,status:2 })
           .then((res) => {
             if (res && res.length != 0) {
-              visible.value = !visible.value;
               router.push({
-                name: formData.value["key"]        
+                name: detailRouter        
               });
+              return
             } else {
               message.info('无借货清单!')
               return
